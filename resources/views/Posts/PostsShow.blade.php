@@ -39,7 +39,7 @@
         <!-- Post Content Section -->
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg mb-8">
             <!-- Display the category name of the post -->
-            <p class="text-lg text-gray-300 mt-4"><strong>Category Name:</strong> <span class="text-gray-400">{{ $post->category->name }}</span></p>
+            <p class="text-lg text-gray-300 mt-4"><strong>Category Name:</strong> <span class="text-gray-400">{{ $post->category->id }}</span></p>
             <!-- Post Content Section -->
             <p class="text-lg text-gray-300 leading-relaxed mb-6"><strong>Content:</strong></p>
             <!-- Display the content of the post -->

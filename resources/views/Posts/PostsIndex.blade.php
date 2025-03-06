@@ -64,7 +64,7 @@
                         <div class="px-6 py-4 flex-grow">
                             <div class="font-bold text-xl mb-2">{{ $post->title }}</div> <!-- Display the post title -->
                             <p class="text-gray-300 text-sm">
-                                {{ Str::limit($post->content, 100) }} <!-- Display a preview of the content (first 100 characters) -->
+                            {{ Str::limit($post->content, 100, '...') }} <!-- Display a preview of the content (first 100 characters) -->
                             </p>
                         </div>
 

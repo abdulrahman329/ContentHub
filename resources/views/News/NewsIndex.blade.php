@@ -62,7 +62,7 @@
                             <div class="font-bold text-xl mb-2 line-clamp-2">{{ $new->title }}</div>
                             <p class="text-gray-300 text-sm line-clamp-2">
                                 <!-- Limit content preview to 100 characters -->
-                                {{ Str::limit($new->content, 100) }}
+                                {{ Str::limit($new->content, 100, '...') }}
                             </p>
                         </div>
 

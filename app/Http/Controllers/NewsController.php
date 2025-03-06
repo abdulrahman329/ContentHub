@@ -24,9 +24,7 @@ class NewsController extends Controller
         $query->where('category_id', $request->category_id);
     }
 
-    // Fetch 10 posts per page
-    $News = $query->paginate(8);
-
+    $News = $query->paginate(4);
     
 
     // Return the view 'news.Newsindex' with the retrieved news and categories

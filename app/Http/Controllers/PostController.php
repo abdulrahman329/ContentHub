@@ -24,11 +24,8 @@ class PostController extends Controller
             // Filter the posts by the selected category_id
             $query->where('category_id', $request->category_id);
         }
-
-// Fetch posts with pagination (4 posts per page)
-$posts = $query->paginate(8);
-
-
+        //paginate
+        $posts = $query->paginate(8);
 
         // Return the view with the posts and categories, passing both as data to the view
         return view('posts.postsindex', compact('posts', 'categories'));
@@ -131,4 +128,6 @@ $posts = $query->paginate(8);
         // Redirect to the posts index page after deleting the post
         return redirect()->route('posts.index');
     }
+
+    
 }

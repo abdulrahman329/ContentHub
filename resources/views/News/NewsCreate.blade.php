@@ -40,7 +40,7 @@
                 <select name="category_id" id="category_name" class="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm bg-gray-700 text-gray-300" required>
                     <!-- Loop through all categories fetched from the database and create options dynamically -->
                     @foreach($categories as $category)
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        <option value="{{ $category->id }}">{{ $category->id }}</option>
                         <!-- Each category's name is displayed, and its ID is passed as the value -->
                     @endforeach
                     <!-- This ensures that only the categories available in the database are listed for selection -->

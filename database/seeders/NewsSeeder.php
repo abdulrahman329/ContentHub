@@ -3,9 +3,9 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\News;  // Importing the News model to interact with the 'news' table
-use Illuminate\Support\Facades\File;  // Importing the File facade to read files
-use App\Models\Category;  // Importing the Category model to fetch category IDs
+use App\Models\News;  
+use Illuminate\Support\Facades\File;  
+use App\Models\Category;  
 
 class NewsSeeder extends Seeder
 {

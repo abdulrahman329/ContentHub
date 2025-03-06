@@ -3,9 +3,9 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Post;  // Importing the Post model to insert data into the posts table
-use Illuminate\Support\Facades\File;  // Importing File facade to read files
-use App\Models\Category;  // Importing the Category model to fetch category IDs
+use App\Models\Post;  
+use Illuminate\Support\Facades\File;  
+use App\Models\Category;  
 
 class PostsSeeder extends Seeder
 {

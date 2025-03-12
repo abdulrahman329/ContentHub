@@ -5,13 +5,16 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\News;  
 use Illuminate\Support\Facades\File;  
-use App\Models\Category;  
+use App\Models\Category; 
+use Faker\Factory as Faker;
+
 
 class NewsSeeder extends Seeder
 {
     public function run()
     {
-        // Path to the JSON file where the news data is stored
+        /* 
+        //Path to the JSON file where the news data is stored
         $path = storage_path('app/Newsjson.txt');  // Using storage_path to get the path to the JSON file
 
         // Check if the file exists at the specified path
@@ -40,26 +43,34 @@ class NewsSeeder extends Seeder
             $this->command->error('No valid news records found in the JSON!');
             return;  // Exit the function if no valid news records are found
         }
+        */
 
         // Fetch all category IDs from the categories table in the database
-        $categories = Category::all()->pluck('id')->toArray();  // Get the category IDs as an array
 
-        // Loop through each news record in the JSON data
-        foreach ($data['record'] as $item) {
-            // Randomly pick a category ID from the list of available categories
-            $randomCategoryId = $categories[array_rand($categories)];  // array_rand picks a random category ID
+        $faker = Faker::create();  // Create an instance of Faker
 
-            // Create a new news item in the database using the data from the JSON file
+        // Fetch all category IDs from the categories table
+        $categories = Category::all()->pluck('id')->toArray();
+
+        // Generate 10 random news records
+        foreach (range(1, 10) as $index) {
+            // Pick a random category
+            $randomCategoryId = $categories[array_rand($categories)];
+
+            // Using a static random image URL from picsum.photos
+            $imageUrl = "https://picsum.photos/400/400?random=" . $index;  // Randomize the URL with the $index
+
+
+            // Create a random news record
             News::create([
-                'title' => $item['title'],  // Set the title of the news item from the JSON data
-                'content' => $item['content'],  // Set the content of the news item from the JSON data
-                'image' => $item['image'] ?? null,  // Set the image URL (or null if not present)
-                'category_id' => $randomCategoryId,  // Set the category ID randomly picked from available categories
-                'user_id' => 2,  // Assign the news item to a specific user with ID 2 (adjust as needed)
+                'title' => $faker->sentence,  // Random title
+                'content' => $faker->paragraph,  // Random content
+                'image' => $imageUrl,  // Use external image URL
+                'category_id' => $randomCategoryId,  // Random category ID
+                'user_id' => 2,  // Hardcoded user ID (you can change it)
             ]);
         }
 
-        // Print a success message once all news items are inserted into the database
-        $this->command->info('News data imported successfully!');
+        $this->command->info('News data generated successfully!');
     }
 }

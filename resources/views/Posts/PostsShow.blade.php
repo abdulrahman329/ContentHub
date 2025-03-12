@@ -29,9 +29,9 @@
         <!-- Image Section: Conditionally displays the post image if it exists -->
         @if($post->image)
             <div class="mb-8 flex justify-center">
-                <div class="relative overflow-hidden rounded-lg shadow-xl w-full h-96">
+                <div class="relative overflow-hidden rounded-lg shadow-xl w-4/5 h-96">
                     <!-- Display the image from the storage using the asset helper -->
-                    <img src="{{ filter_var($post->image, FILTER_VALIDATE_URL) ? $post->image : asset('storage/'.$post->image) }}" alt="{{ $post->title }}" class="w-full h-56 object-cover rounded-t-lg">
+                    <img src="{{ filter_var($post->image, FILTER_VALIDATE_URL) ? $post->image : asset('storage/'.$post->image) }}" alt="{{ $post->title }}" class="w-full h-96 object-cover rounded-t-lg">
                     </div>
             </div>
         @endif

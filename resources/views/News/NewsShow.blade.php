@@ -29,8 +29,8 @@
         <!-- Image Section: Only show if there is an image for the news article -->
         @if($News->image)
             <div class="mb-8 flex justify-center">
-                <div class="relative overflow-hidden rounded-lg shadow-xl w-full h-96">
-                <img src="{{ filter_var($News->image, FILTER_VALIDATE_URL) ? $News->image : asset('storage/'.$News->image) }}" alt="{{ $News->title }}" class="w-full h-56 object-cover rounded-t-lg">
+                <div class="relative overflow-hidden rounded-lg shadow-xl w-4/5 ">
+                <img src="{{ filter_var($News->image, FILTER_VALIDATE_URL) ? $News->image : asset('storage/'.$News->image) }}" alt="{{ $News->title }}" class="w-full h-96 object-cover rounded-t-lg">
                 </div>
             </div>
         @endif

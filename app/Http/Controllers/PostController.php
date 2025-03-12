@@ -25,7 +25,7 @@ class PostController extends Controller
             $query->where('category_id', $request->category_id);
         }
         //paginate
-        $posts = $query->paginate(8);
+        $posts = $query->paginate(4);
 
         // Return the view with the posts and categories, passing both as data to the view
         return view('posts.postsindex', compact('posts', 'categories'));

@@ -18,7 +18,7 @@
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg mb-8 border border-gray-700 max-w-full overflow-hidden">
             <h3 class="text-3xl text-white mb-6">Create User</h3>
 
-            @if(Auth::user()->role == 'admin')
+            @if(Auth::user()->hasRole('admin'))
 
             <!-- The form for creating a user -->
             <form action="{{ route('User.store') }}" method="POST">
@@ -60,7 +60,7 @@
                     <select name="role" id="role" class="w-full p-3 mt-2 border border-gray-600 rounded-md focus:ring-2 focus:ring-indigo-600 bg-gray-700 text-white" required>
                         <!-- Loop through the available roles and display each as an option -->
                         @foreach($roles as $role)
-                            <option value="{{ $role }}">{{ $role }}</option>
+                            <option value="{{ $role->name }}">{{ $role->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -95,7 +95,9 @@
                             <div class="flex items-center mb-2">
                                 <!-- Display user role -->
                                 <span class="font-medium text-gray-300 mr-2">Role:</span>
-                                <span class="text-blue-600 text-xl">{{ $User->role }}</span>
+                                @foreach($User->roles as $role)
+                                <span class="text-blue-600 text-xl">{{ $role->name }}</span>
+                                @endforeach
                             </div>
                         </div>
 

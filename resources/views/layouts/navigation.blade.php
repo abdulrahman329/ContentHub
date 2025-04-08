@@ -28,15 +28,8 @@
                         {{ __('Posts') }}
                     </x-nav-link>
 
-                    <!-- User Management Link (visible only for admin) -->
-                    @if(Auth::user()->role == 'admin')
-                    <x-nav-link :href="route('User.create')" :active="request()->routeIs('User.create')">
-                        {{ __('User') }}
-                    </x-nav-link>
-                    @endif
-
                     <!-- Create Post and News Links (visible only for writers or admins) -->
-                    @if(Auth::user()->role == 'writer' || Auth::user()->role == 'admin')
+                    @if(Auth::user()->hasRole('writer') || Auth::user()->hasRole('admin'))
                     <x-nav-link :href="route('posts.create')" :active="request()->routeIs('posts.create')">
                         {{ __('Post create') }}
                     </x-nav-link>
@@ -46,11 +39,19 @@
                     @endif
 
                     <!-- Category Creation Link (visible only for admin) -->
-                    @if(Auth::user()->role == 'admin')
+                    @if(Auth::user()->hasRole('admin'))
                     <x-nav-link :href="route('categories.create')" :active="request()->routeIs('categories.create')">
                         {{ __('Category create') }}
                     </x-nav-link>
                     @endif
+
+                    <!-- User Management Link (visible only for admin) -->
+                    @if(Auth::user()->hasRole('admin'))
+                    <x-nav-link :href="route('User.create')" :active="request()->routeIs('User.create')">
+                        {{ __('User create') }}
+                    </x-nav-link>
+                    @endif
+
                 </div>
             </div>
 

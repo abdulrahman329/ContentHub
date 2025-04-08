@@ -18,9 +18,7 @@
                 @method('PUT') 
 
                 <!-- Textarea for editing the comment content -->
-                <textarea name="content" class="w-full p-4 text-gray-300 bg-gray-700 border rounded-md" rows="4" required>
-                    {{ $comment->content }}
-                </textarea>
+                <textarea name="content" class="w-full p-4 text-gray-300 bg-gray-700 border rounded-md" rows="4" required>{{ $comment->content }}</textarea>
                 <!-- Purpose of this textarea: 
                     - It allows the user to edit the content of an existing comment.
                     - It has a default value filled with the current content of the comment ({{ $comment->content }}).

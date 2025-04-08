@@ -18,7 +18,7 @@
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg mb-8 border border-gray-700 max-w-full">
             <h3 class="text-3xl text-white mb-6">Create Category</h3>
 
-            @if(Auth::user()->role == 'admin')
+            @if(Auth::user()->hasRole('admin'))
 
             <!-- Form for Creating a New Category -->
             <form action="{{ route('categories.store') }}" method="POST">

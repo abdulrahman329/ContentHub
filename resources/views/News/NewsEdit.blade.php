@@ -6,13 +6,12 @@
             {{ __('Edit News') }}
         </h2>
     </x-slot>
-
     <!-- Main container that holds the entire form -->
     <div class="container mx-auto px-4 py-12">
         <!-- Page Title: This is the main title displayed at the top of the form -->
         <h1 class="text-3xl font-bold my-6 text-center text-white">Edit News</h1>
 
-        @if(Auth::user()->role == 'writer' || Auth::user()->role == 'admin')
+    @if(Auth::id() === $News->user_id || Auth::user()->hasRole('admin'))
 
         <!-- Form to update the news article -->
         <form method="POST" action="{{ route('News.update', $News->id) }}" enctype="multipart/form-data" class="bg-gray-800 p-6 rounded-lg shadow-md">
@@ -64,7 +63,7 @@
             </div>
         </form>
         @else
-        <p class='text-white text-2xl font-bold my-6 text-center'>You don't have the authority, you have to be an admin or writer </p>
+        <p class='text-white text-2xl font-bold my-6 text-center'>You don't have the authority, you have to be an admin or the Owner </p>
         @endif
     </div>
 </x-app-layout>

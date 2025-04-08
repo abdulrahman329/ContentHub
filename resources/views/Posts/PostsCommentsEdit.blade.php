@@ -18,10 +18,15 @@
                 @method('PUT')
 
                 <!-- Textarea for editing the comment content -->
-                <textarea name="content" class="w-full p-4 text-gray-300 bg-gray-700 border rounded-md" rows="4" required>
+                <div>
+                    <label for="content" class="block text-sm text-gray-300 font-semibold mb-2">Comment Content</label>
                     <!-- Pre-fill the textarea with the current comment's content -->
-                    {{ $comment->content }}
-                </textarea>
+                    <textarea name="content" id="content" class="w-full p-4 text-gray-300 bg-gray-700 border rounded-md" rows="4" required autofocus>{{ $comment->content }}</textarea>
+                    <!-- Display error message for 'content' field if validation fails -->
+                    @error('content')
+                        <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+                    @enderror
+                </div>
 
                 <!-- Submit button for updating the comment -->
                 <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-800 w-full">

@@ -11,7 +11,7 @@
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg">
             <h3 class="text-2xl text-white mb-4">Edit Category</h3>
 
-            @if(Auth::user()->role == 'admin')
+            @if(Auth::user()->hasRole('admin'))
 
             <!-- Display Success Message if Category is Updated Successfully -->
             @if (session('success'))

@@ -31,8 +31,8 @@
 
         <!-- Button to Create News -->
         <div class="text-center mb-6">
-        @if(Auth::user()->role == 'writer' || Auth::user()->role == 'admin')
-            <a href="{{ route('News.create') }}" class="inline-block bg-blue-600 hover:bg-blue-800 text-white font-bold py-3 px-6 rounded-md shadow-md transform hover:scale-105 transition-all duration-200 ease-in-out">
+        @if(Auth::user()->hasRole('writer') || Auth::user()->hasRole('admin'))
+        <a href="{{ route('News.create') }}" class="inline-block bg-blue-600 hover:bg-blue-800 text-white font-bold py-3 px-6 rounded-md shadow-md transform hover:scale-105 transition-all duration-200 ease-in-out">
                 Create News
             </a>
             @endif
@@ -77,7 +77,7 @@
                                 </p>
 
                                 <!-- Conditional Edit/Delete Buttons (only if the logged-in user is the author or admin) -->
-                                @if(Auth::id() === $new->user_id || Auth::user()->role == 'admin')
+                                @if(Auth::id() === $new->user_id || Auth::user()->hasRole('admin'))
                                 <div class="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
 
                                     <!-- Edit Button: Redirects to the edit form for the news -->

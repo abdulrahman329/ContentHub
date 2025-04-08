@@ -35,7 +35,7 @@
 
         <!-- Create Post Button (Visible only for users with 'writer' or 'admin' roles) -->
         <div class="text-center mb-6">
-        @if(Auth::user()->role == 'writer' || Auth::user()->role == 'admin')
+        @if(Auth::user()->hasRole('writer') || Auth::user()->hasRole('admin'))
             <!-- Link to the page where users can create a new post -->
             <a href="{{ route('posts.create') }}" class="inline-block bg-blue-600 hover:bg-blue-800 text-white font-bold py-3 px-6 rounded-md shadow-md transform hover:scale-105 transition-all duration-200 ease-in-out">
                 Create Post
@@ -79,7 +79,7 @@
                                 </p>
 
                                 <!-- Edit and Delete Buttons: Only visible for the post owner or admin -->
-                                @if(Auth::id() === $post->user_id || Auth::user()->role == 'admin')
+                                @if(Auth::id() === $post->user_id || Auth::user()->hasRole('admin'))
                                     <div class="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                                         <!-- Edit Button: Link to edit the post -->
                                         <p>

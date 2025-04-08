@@ -32,11 +32,12 @@ class CommentController extends Controller
     // Show the form to edit a specific comment
     public function edit(Comment $comment)
     {
-        // Check if the logged-in user is the owner of the comment, or an admin user
-        if ($comment->user_id !== Auth::id() && Auth::user()->role !== 'admin') {
-            // If not authorized, redirect back to the news page with an error message
-            return redirect()->route('News.show', $comment->news_id)->with('error', 'You are not authorized to edit this comment.');
-        }
+        // Check if the logged-in user is the owner of the comment or has the 'admin' role
+if ($comment->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
+    // If not authorized to edit the comment, redirect the user back with an error message
+    return redirect()->route('News.show', $comment->News_id)
+                     ->with('error', 'You are not authorized to edit this comment.');
+}
 
         // Return the 'newsCommentsedit' view to allow the user to edit the comment
         return view('News.newsCommentsedit', compact('comment'));
@@ -52,10 +53,10 @@ class CommentController extends Controller
             'content' => 'required|string|max:1000', // Ensure content is a string with a maximum length of 1000 characters
         ]);
 
-        // Check if the logged-in user is the owner of the comment or an admin user
-        if ($comment->user_id !== Auth::id() && Auth::user()->role !== 'admin') {
-            // If not authorized, redirect back to the news article with an error message
-            return redirect()->route('News.show', $comment->news_id)->with('error', 'You are not authorized to edit this comment.');
+        if ($comment->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
+            // If not authorized to edit the comment, redirect the user back with an error message
+            return redirect()->route('News.show', $comment->News_id)
+                             ->with('error', 'You are not authorized to edit this comment.');
         }
 
         // Update the comment content with the new value from the request
@@ -73,10 +74,10 @@ class CommentController extends Controller
     // Delete a specific comment
     public function destroy(News $news, Comment $comment)
     {
-        // Check if the logged-in user is the owner of the comment or an admin
-        if ($comment->user_id !== Auth::id() && Auth::user()->role !== 'admin') {
-            // If not authorized, redirect back to the news article with an error message
-            return redirect()->route('News.show', $news->id)->with('error', 'You are not authorized to delete this comment.');
+        if ($comment->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
+            // If not authorized to edit the comment, redirect the user back with an error message
+            return redirect()->route('News.show', $comment->News_id)
+                             ->with('error', 'You are not authorized to edit this comment.');
         }
 
         // Delete the comment from the database

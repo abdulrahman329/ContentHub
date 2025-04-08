@@ -9,6 +9,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\JsonController;
 use Illuminate\Support\Facades\Route;
+use Spatie\Permission\Models\Role;
 
 
 // Home route
@@ -32,15 +33,15 @@ Route::middleware('auth')->group(function () {
 require __DIR__.'/auth.php';
 
 
+// Routes for authenticated admin
+Route::middleware(['auth', 'role:admin'])->group(function () {
+
 // Resource routes for managing posts
 Route::resource('posts', PostController::class);
 
 
-
 // Resource routes for managing news articles
 Route::resource('News', NewsController::class); 
-
-
 
 
 // Routes for category management
@@ -57,9 +58,6 @@ Route::put('/categories/{category}', [CategoryController::class, 'update'])->nam
 Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 
 
-
-
-
 // User management routes
 Route::get('/User/create', [UsersController::class, 'create'])->name('User.create');
 Route::post('/Users', [UsersController::class, 'store'])->name('User.store');
@@ -73,9 +71,43 @@ Route::put('/Users/{User}', [UsersController::class, 'update'])->name('User.upda
 // Delete the User
 Route::delete('/Users/{User}', [UsersController::class, 'destroy'])->name('User.destroy');
 
+});
 
 
+// Routes for authenticated writer
+Route::middleware(['auth', 'role:writer'])->group(function () {
+    Route::resource('News', NewsController::class); // Editors can manage news
 
+    Route::resource('posts', PostController::class); // Editors can manage posts
+    
+// Comment-related routes for news articles
+Route::post('/news/{news}/comments', [CommentController::class, 'store'])->name('news.storeComment');
+Route::delete('news/{news}/comment/{comment}', [CommentController::class, 'destroy'])->name('news.destroyComment');
+
+// Route to edit a comment for news
+Route::get('/news_comments/{comment}/edit', [CommentController::class, 'edit'])->name('news_comments.edit');
+
+// Route to update a comment after editing for news
+Route::put('/news_comments/{comment}', [CommentController::class, 'update'])->name('news_comments.update');
+
+// Comment-related routes for posts
+Route::post('/posts/{post}/comments', [PostsCommentController::class, 'store'])->name('posts.storeComment');
+Route::delete('posts/{post}/comment/{comment}', [PostsCommentController::class, 'destroy'])->name('posts.destroyComment');
+
+// Route to edit a comment for posts
+Route::get('/posts_comments/{comment}/edit', [PostsCommentController::class, 'edit'])->name('posts_comments.edit');
+
+// Route to update a comment after editing for posts
+Route::put('/posts_comments/{comment}', [PostsCommentController::class, 'update'])->name('posts_comments.update');
+});
+
+
+// Routes for authenticated users
+Route::middleware(['auth'])->group(function () {
+    
+    Route::resource('News', NewsController::class); // Editors can manage news
+
+    Route::resource('posts', PostController::class); // Editors can manage posts
 
 // Comment-related routes for news articles
 Route::post('/news/{news}/comments', [CommentController::class, 'store'])->name('news.storeComment');
@@ -89,8 +121,6 @@ Route::get('/news_comments/{comment}/edit', [CommentController::class, 'edit'])-
 Route::put('/news_comments/{comment}', [CommentController::class, 'update'])->name('news_comments.update');
 
 
-
-
 // Comment-related routes for posts
 Route::post('/posts/{post}/comments', [PostsCommentController::class, 'store'])->name('posts.storeComment');
 Route::delete('posts/{post}/comment/{comment}', [PostsCommentController::class, 'destroy'])->name('posts.destroyComment');
@@ -101,3 +131,4 @@ Route::get('/posts_comments/{comment}/edit', [PostsCommentController::class, 'ed
 // Route to update a comment after editing for posts
 Route::put('/posts_comments/{comment}', [PostsCommentController::class, 'update'])->name('posts_comments.update');
 
+});

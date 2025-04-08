@@ -7,10 +7,10 @@
     </x-slot>
 
     <div class="container mx-auto px-4 py-12">
-        <!-- Page Title: Display "Edit Post" at the center of the page -->
+        <!-- Page Title: Display "Edit Post" at the center of the page -->  
         <h1 class="text-3xl font-bold my-6 text-center text-white">Edit Post</h1>
 
-        @if(Auth::user()->role == 'writer' || Auth::user()->role == 'admin')
+        @if(Auth::id() === $post->user_id || Auth::user()->hasRole('admin'))
 
         <!-- Form for editing the post -->
         <form method="POST" action="{{ route('posts.update', $post->id) }}" enctype="multipart/form-data" class="bg-gray-800 p-6 rounded-lg shadow-md">
@@ -65,7 +65,7 @@
             </div>
         </form>
         @else
-        <p class='text-white text-2xl font-bold my-6 text-center'>You don't have the authority, you have to be an admin or writer </p>
+        <p class='text-white text-2xl font-bold my-6 text-center'>You don't have the authority, you have to be an admin or the Owner </p>
         @endif
     </div>
 </x-app-layout>

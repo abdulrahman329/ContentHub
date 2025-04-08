@@ -71,8 +71,8 @@
                     <!-- Display the content of the comment -->
                     <p class="text-gray-300">{{ $comment->content }}</p>
 
+                    @if($comment->user_id === Auth::id() || Auth::user()->hasRole('admin'))
                     <!-- If the logged-in user is the comment owner or an admin, show edit and delete options -->
-                    @if($comment->user_id === Auth::id() || Auth::user()->role == 'admin')
                         <div class="flex justify-end space-x-4 mt-4">
                             <!-- Edit Button: Link to the edit page for the specific comment -->
                             <a href="{{ route('posts_comments.edit', $comment->id) }}" class="text-yellow-500 hover:text-yellow-700">Edit</a>
@@ -83,8 +83,7 @@
                                 <button type="submit" class="text-red-600 hover:text-red-800" onclick="return confirm('Are you sure you want to delete this Comment?')">Delete</button>
                             </form>
                         </div>
-                    @endif
-
+                        @endif
                     <!-- Display the time when the comment was posted -->
                     <p class="text-sm text-gray-400 mt-2">Posted {{ $comment->created_at->diffForHumans() }}</p>
                 </div>
@@ -101,11 +100,9 @@
 
             <div class="space-x-6">
                 <!-- Edit Button: Only visible if the logged-in user is the post owner or an admin -->
-                @if(Auth::id() == $post->user_id || Auth::user()->role == 'admin')
-                    <a href="{{ route('posts.edit', $post->id) }}" class="inline-block text-lg text-white bg-yellow-500 hover:bg-yellow-700 hover:scale-105 duration-200 px-6 py-2 rounded-md font-semibold transition-all">Edit</a>
-                @endif
-                <!-- Delete Button: Only visible if the logged-in user is the post owner or an admin -->
-                @if(Auth::id() == $post->user_id || Auth::user()->role == 'admin')
+                @if($post->user_id === Auth::id() || Auth::user()->hasRole('admin'))
+                <a href="{{ route('posts.edit', $post->id) }}" class="inline-block text-lg text-white bg-yellow-500 hover:bg-yellow-700 hover:scale-105 duration-200 px-6 py-2 rounded-md font-semibold transition-all">Edit</a>
+
                     <form method="POST" action="{{ route('posts.destroy', $post->id) }}" class="inline-block">
                         @csrf
                         @method('DELETE')

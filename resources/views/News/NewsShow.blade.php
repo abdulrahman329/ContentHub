@@ -66,7 +66,7 @@
                     <p class="text-gray-300">{{ $comment->content }}</p>
 
                     <!-- Edit and Delete buttons for the comment if it's the logged-in user or an admin -->
-                    @if($comment->user_id === Auth::id() || Auth::user()->role == 'admin')
+                    @if($comment->user_id === Auth::id() || Auth::user()->hasRole('admin'))
                         <div class="flex justify-end space-x-4 mt-4">
                             <!-- Link to edit the comment -->
                             <a href="{{ route('news_comments.edit', $comment->id) }}" class="text-yellow-500 hover:text-yellow-700">Edit</a>
@@ -75,7 +75,7 @@
                             <form action="{{ route('news.destroyComment', ['news' => $News->id, 'comment' => $comment->id]) }}" method="POST" class="ml-4">
                                 @csrf
                                 @method('DELETE') <!-- Method Spoofing for DELETE -->
-                                <button type="submit" class="text-red-600 hover:text-red-800 " onclick="return confirm('Are you sure you want to delete this Post?')">Delete</button>
+                                <button type="submit" class="text-red-600 hover:text-red-800 " onclick="return confirm('Are you sure you want to delete this comment?')">Delete</button>
                             </form>
                         </div>
                     @endif
@@ -96,12 +96,10 @@
 
             <div class="space-x-6">
                 <!-- Edit Button: Only show if the current user is the owner or an admin -->
-                @if(Auth::id() == $News->user_id || Auth::user()->role == 'admin')
-                    <a href="{{ route('News.edit', $News->id) }}" class="inline-block text-lg text-white bg-yellow-500 hover:bg-yellow-700 hover:scale-105 duration-200 px-6 py-2 rounded-md font-semibold transition-all">Edit</a>
-                @endif
-                <!-- Delete Button: Only show if the current user is the owner or an admin -->
-                @if(Auth::id() == $News->user_id || Auth::user()->role == 'admin')
-                    <form method="POST" action="{{ route('News.destroy', $News->id) }}" class="inline-block">
+                @if($News->user_id === Auth::id() || Auth::user()->hasRole('admin'))
+                <a href="{{ route('News.edit', $News->id) }}" class="inline-block text-lg text-white bg-yellow-500 hover:bg-yellow-700 hover:scale-105 duration-200 px-6 py-2 rounded-md font-semibold transition-all">Edit</a>
+
+                <form method="POST" action="{{ route('News.destroy', $News->id) }}" class="inline-block">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="text-lg text-white bg-red-500 hover:bg-red-800 hover:scale-105 duration-200 px-6 py-2 rounded-md font-semibold transition-all" onclick="return confirm('Are you sure you want to delete this News?')">Delete</button>

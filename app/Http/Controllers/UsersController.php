@@ -4,16 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User; 
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
+
 {
     // Show the User creation form
     public function create()
     {
-        // Define roles as a simple array
-        $roles = ['Admin', 'writer', 'User']; 
+        $roles = Role::all(); // Retrieve all roles from the database
         $Users = User::all();  // Fetch all users
 
         // Return the view with users and roles to show the user creation form
@@ -32,12 +33,14 @@ class UsersController extends Controller
         ]);
 
         // Create the new User with the hashed password
-        User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password), // Hash the password before saving
-            'role' => $request->role,
         ]);
+
+        // Assign the role to the user
+        $user->assignRole($request->role);  // Assign the role using Spatie's method
 
         // Redirect to the User creation page with a success message
         return redirect()->route('User.create')->with('success', 'User created successfully!');
@@ -46,8 +49,8 @@ class UsersController extends Controller
     // Show the form to edit a User
     public function edit(User $User)
     {
-        // Define roles as a simple array
-        $roles = ['Admin', 'writer', 'User']; 
+        // Retrieve all roles
+        $roles = Role::all(); 
         return view('User.UserEdit', compact('User', 'roles')); // Return edit form for a specific user
     }
 
@@ -66,9 +69,11 @@ class UsersController extends Controller
         $User->update([
             'name' => $request->name,
             'email' => $request->email,
-            'role' => $request->role,
             'password' => $request->filled('password') ? Hash::make($request->password) : $User->password, // Only update password if it's provided
         ]);
+
+        // Reassign the role (if it's changed)
+        $User->syncRoles($request->role);  // Sync roles to ensure that the user's role is updated
 
         // Redirect with a success message
         return redirect()->route('User.create')->with('success', 'User updated successfully!');

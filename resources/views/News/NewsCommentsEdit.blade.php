@@ -6,6 +6,13 @@
         </h2>
     </x-slot>
 
+    <!-- Main container that holds the entire form -->
+    <div class="container mx-auto px-4 py-12">
+        <!-- Page Title: This is the main title displayed at the top of the form -->
+        <h1 class="text-3xl font-bold my-6 text-center text-white">Edit comment</h1>
+
+    @if(Auth::id() === $comment->user_id || Auth::user()->hasRole('admin'))
+
     <!-- Main content container with padding -->
     <div class="container mx-auto px-8 py-12">
         <!-- A box to hold the form, styled with a dark background, padding, rounded corners, and a shadow -->
@@ -43,6 +50,9 @@
                     - The `w-full` class ensures the button spans the full width of the parent container.
                 -->
             </form>
+            @else
+        <p class='text-white text-2xl font-bold my-6 text-center'>You don't have the authority, you have to be an admin or the Owner </p>
+        @endif
         </div>
     </div>
 </x-app-layout>

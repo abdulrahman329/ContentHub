@@ -105,9 +105,9 @@ Route::put('/posts_comments/{comment}', [PostsCommentController::class, 'update'
 // Routes for authenticated users
 Route::middleware(['auth'])->group(function () {
     
-    Route::resource('News', NewsController::class); // Editors can manage news
+    Route::resource('News', NewsController::class)->only(['index']);;
 
-    Route::resource('posts', PostController::class); // Editors can manage posts
+    Route::resource('posts', PostController::class)->only(['index']);
 
 // Comment-related routes for news articles
 Route::post('/news/{news}/comments', [CommentController::class, 'store'])->name('news.storeComment');

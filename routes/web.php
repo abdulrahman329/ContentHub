@@ -11,124 +11,116 @@ use App\Http\Controllers\JsonController;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Role;
 
+// Public Routes
 
-// Home route
+// Home page route (guest accessible)
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Dashboard route (authenticated users only)
+// Dashboard route (authenticated and verified users only)
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// Auth routes (for managing user profile)
+// Authenticated Profile Routes
+
 Route::middleware('auth')->group(function () {
+    // Edit user profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    
+    // Update user profile
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    
+    // Delete user account
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Auth routes
+// Laravel Breeze or Fortify Auth routes
 require __DIR__.'/auth.php';
 
+// ==========================
+// Admin-only Routes
+// ==========================
 
-// Routes for authenticated admin
 Route::middleware(['auth', 'role:admin'])->group(function () {
+    
+    // ------- Category Management -------
+    Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
+    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+    Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
+    Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
+    Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 
-// Resource routes for managing posts
-Route::resource('posts', PostController::class);
-
-
-// Resource routes for managing news articles
-Route::resource('News', NewsController::class); 
-
-
-// Routes for category management
-Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
-Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
-
-// Display the form to edit a category
-Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
-
-// Update the category
-Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
-
-// Delete the category
-Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
-
-
-// User management routes
-Route::get('/User/create', [UsersController::class, 'create'])->name('User.create');
-Route::post('/Users', [UsersController::class, 'store'])->name('User.store');
-
-// Display the form to edit a User
-Route::get('/Users/{User}/edit', [UsersController::class, 'edit'])->name('User.edit');
-
-// Update the User
-Route::put('/Users/{User}', [UsersController::class, 'update'])->name('User.update');
-
-// Delete the User
-Route::delete('/Users/{User}', [UsersController::class, 'destroy'])->name('User.destroy');
-
+    // ------- User Management -------
+    Route::get('/User/create', [UsersController::class, 'create'])->name('User.create');
+    Route::post('/Users', [UsersController::class, 'store'])->name('User.store');
+    Route::get('/Users/{User}/edit', [UsersController::class, 'edit'])->name('User.edit');
+    Route::put('/Users/{User}', [UsersController::class, 'update'])->name('User.update');
+    Route::delete('/Users/{User}', [UsersController::class, 'destroy'])->name('User.destroy');
 });
 
+// ==========================
+// Writer and Admin Routes
+// ==========================
 
-// Routes for authenticated writer
+Route::middleware(['auth', 'role:admin|writer'])->group(function () {
+
+    // ------- News Management -------
+    Route::get('/News/create', [NewsController::class, 'create'])->name('News.create');
+    Route::post('/News', [NewsController::class, 'store'])->name('News.store');
+    Route::get('/News/{news}/edit', [NewsController::class, 'edit'])->name('News.edit');
+    Route::put('/News/{news}', [NewsController::class, 'update'])->name('News.update');
+    Route::delete('/News/{news}', [NewsController::class, 'destroy'])->name('News.destroy');
+
+    // ------- Post Management -------
+    Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
+    Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+    Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
+    Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
+    Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
+});
+
+// ==========================
+// Writer-Only Routes
+// ==========================
+
 Route::middleware(['auth', 'role:writer'])->group(function () {
-    Route::resource('News', NewsController::class); // Editors can manage news
 
-    Route::resource('posts', PostController::class); // Editors can manage posts
-    
-// Comment-related routes for news articles
-Route::post('/news/{news}/comments', [CommentController::class, 'store'])->name('news.storeComment');
-Route::delete('news/{news}/comment/{comment}', [CommentController::class, 'destroy'])->name('news.destroyComment');
+    // ------- News Comments -------
+    Route::post('/news/{news}/comments', [CommentController::class, 'store'])->name('news.storeComment');
+    Route::delete('news/{news}/comment/{comment}', [CommentController::class, 'destroy'])->name('news.destroyComment');
+    Route::get('/news_comments/{comment}/edit', [CommentController::class, 'edit'])->name('news_comments.edit');
+    Route::put('/news_comments/{comment}', [CommentController::class, 'update'])->name('news_comments.update');
 
-// Route to edit a comment for news
-Route::get('/news_comments/{comment}/edit', [CommentController::class, 'edit'])->name('news_comments.edit');
-
-// Route to update a comment after editing for news
-Route::put('/news_comments/{comment}', [CommentController::class, 'update'])->name('news_comments.update');
-
-// Comment-related routes for posts
-Route::post('/posts/{post}/comments', [PostsCommentController::class, 'store'])->name('posts.storeComment');
-Route::delete('posts/{post}/comment/{comment}', [PostsCommentController::class, 'destroy'])->name('posts.destroyComment');
-
-// Route to edit a comment for posts
-Route::get('/posts_comments/{comment}/edit', [PostsCommentController::class, 'edit'])->name('posts_comments.edit');
-
-// Route to update a comment after editing for posts
-Route::put('/posts_comments/{comment}', [PostsCommentController::class, 'update'])->name('posts_comments.update');
+    // ------- Post Comments -------
+    Route::post('/posts/{post}/comments', [PostsCommentController::class, 'store'])->name('posts.storeComment');
+    Route::delete('posts/{post}/comment/{comment}', [PostsCommentController::class, 'destroy'])->name('posts.destroyComment');
+    Route::get('/posts_comments/{comment}/edit', [PostsCommentController::class, 'edit'])->name('posts_comments.edit');
+    Route::put('/posts_comments/{comment}', [PostsCommentController::class, 'update'])->name('posts_comments.update');
 });
 
+// ==========================
+// General Authenticated User Routes
+// ==========================
 
-// Routes for authenticated users
 Route::middleware(['auth'])->group(function () {
-    
-    Route::resource('News', NewsController::class)->only(['index']);;
 
-    Route::resource('posts', PostController::class)->only(['index']);
+    // ------- Public Viewable News -------
+    Route::resource('News', NewsController::class)->only(['index', 'show']);
 
-// Comment-related routes for news articles
-Route::post('/news/{news}/comments', [CommentController::class, 'store'])->name('news.storeComment');
-Route::delete('news/{news}/comment/{comment}', [CommentController::class, 'destroy'])->name('news.destroyComment');
+    // ------- Public Viewable Posts -------
+    Route::resource('posts', PostController::class)->only(['index', 'show']);
 
+    // ------- News Comments -------
+    Route::post('/news/{news}/comments', [CommentController::class, 'store'])->name('news.storeComment');
+    Route::delete('news/{news}/comment/{comment}', [CommentController::class, 'destroy'])->name('news.destroyComment');
+    Route::get('/news_comments/{comment}/edit', [CommentController::class, 'edit'])->name('news_comments.edit');
+    Route::put('/news_comments/{comment}', [CommentController::class, 'update'])->name('news_comments.update');
 
-// Route to edit a comment for news
-Route::get('/news_comments/{comment}/edit', [CommentController::class, 'edit'])->name('news_comments.edit');
-
-// Route to update a comment after editing for news
-Route::put('/news_comments/{comment}', [CommentController::class, 'update'])->name('news_comments.update');
-
-
-// Comment-related routes for posts
-Route::post('/posts/{post}/comments', [PostsCommentController::class, 'store'])->name('posts.storeComment');
-Route::delete('posts/{post}/comment/{comment}', [PostsCommentController::class, 'destroy'])->name('posts.destroyComment');
-
-// Route to edit a comment for posts
-Route::get('/posts_comments/{comment}/edit', [PostsCommentController::class, 'edit'])->name('posts_comments.edit');
-
-// Route to update a comment after editing for posts
-Route::put('/posts_comments/{comment}', [PostsCommentController::class, 'update'])->name('posts_comments.update');
-
+    // ------- Post Comments -------
+    Route::post('/posts/{post}/comments', [PostsCommentController::class, 'store'])->name('posts.storeComment');
+    Route::delete('posts/{post}/comment/{comment}', [PostsCommentController::class, 'destroy'])->name('posts.destroyComment');
+    Route::get('/posts_comments/{comment}/edit', [PostsCommentController::class, 'edit'])->name('posts_comments.edit');
+    Route::put('/posts_comments/{comment}', [PostsCommentController::class, 'update'])->name('posts_comments.update');
 });

@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -35,6 +38,31 @@ class ProfileController extends Controller
         $request->user()->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
+    }
+
+
+    public function updateimage(Request $request): RedirectResponse
+    {
+        $user = $request->user(); // Get the authenticated user
+    
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+    
+        // Check if the user already has an image and delete it if exists
+        if ($user->image && Storage::exists('public/' . $user->image)) {
+            Storage::delete('public/' . $user->image);
+        }
+    
+        // Store the new image in the public storage
+        $imagePath = $request->file('image')->store('images', 'public');
+    
+        // Update the user's image path
+        $user->image = $imagePath;
+        $user->save();
+    
+        // Redirect with success status
+        return redirect()->route('profile.edit')->with('status', 'profile-updated');
     }
 
     /**

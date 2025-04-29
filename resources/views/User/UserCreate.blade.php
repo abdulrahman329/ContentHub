@@ -21,7 +21,7 @@
             @if(Auth::user()->hasRole('admin'))
 
             <!-- The form for creating a user -->
-            <form action="{{ route('User.store') }}" method="POST">
+            <form action="{{ route('User.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf <!-- CSRF protection to secure the form -->
                 
                 <!-- Input for user's name -->
@@ -65,6 +65,12 @@
                     </select>
                 </div>
 
+                <!-- Profile Image Upload -->
+                <div class="mb-6">
+                    <label for="image" class="block text-gray-300 text-sm font-semibold ">Profile Image</label>
+                    <input type="file" name="image" id="image" class="w-full p-4 border border-gray-600 text-gray-300  bg-gray-700 rounded-md" accept="image/*">
+                </div>
+
                 <!-- Submit button to create a new user -->
                 <button type="submit" class="bg-indigo-600 text-white py-3 px-6 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600 w-full">Create User</button>
             </form>
@@ -80,6 +86,8 @@
                     <li class="flex justify-between items-center bg-gray-700 p-4 rounded-lg shadow w-full overflow-hidden">
                         <!-- User information -->
                         <div class="flex-1 max-w-[70%]">
+                        <img src="{{ $User->image ? asset('storage/' . $User->image) : asset('storage/images/user_image.png') }}" alt="{{ $User->name }}" class="w-10 h-10 rounded-full object-cover mr-2">
+
                             <div class="flex items-center">
                                 <!-- Display user name -->
                                 <span class="font-medium text-gray-300 mr-2">Name:</span>
@@ -100,6 +108,7 @@
                                 @endforeach
                             </div>
                         </div>
+                        <hr>
 
                         <!-- Edit and Delete Buttons Container -->
                         <div class="flex space-x-4 ml-4 min-w-[120px]">

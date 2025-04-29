@@ -67,7 +67,7 @@ class NewsSeeder extends Seeder
                 'content' => $faker->paragraph,  // Random content
                 'image' => $imageUrl,  // Use external image URL
                 'category_id' => $randomCategoryId,  // Random category ID
-                'user_id' => 2,  // Hardcoded user ID (you can change it)
+                'user_id' => 1,  // Hardcoded user ID (you can change it)
             ]);
         }
 

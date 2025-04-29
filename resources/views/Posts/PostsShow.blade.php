@@ -36,13 +36,20 @@
             </div>
         @endif
 
-        <!-- Post Content Section -->
+        <!-- News Content Section -->
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg mb-8">
-            <!-- Display the category name of the post -->
-            <p class="text-lg text-gray-300 mt-4"><strong>Category Name:</strong> <span class="text-gray-400">{{ $post->category->id }}</span></p>
-            <!-- Post Content Section -->
+            <!-- User information -->
+            <div class="flex items-center mb-4">
+                <img src="{{ $User->image ? asset('storage/' . $User->image) : asset('storage/images/user_image.png') }}" alt="{{ $User->name }}" class="w-10 h-10 rounded-full object-cover mr-2">
+                <div class="flex items-center">
+                    <!-- Display user name -->
+                    <span class="font-medium text-gray-300 mr-2">Name:</span>
+                    <span class="text-white text-2xl">{{ $User->name }}</span>
+                </div>
+            </div>
+            <p class="text-lg text-gray-300 mt-4"><strong>Category Name:</strong> <span class="text-gray-400">{{ $post->category->name }}</span></p>
+            <br>
             <p class="text-lg text-gray-300 leading-relaxed mb-6"><strong>Content:</strong></p>
-            <!-- Display the content of the post -->
             <p class="text-xl text-gray-200">{{ $post->content }}</p>
         </div>
 
@@ -67,9 +74,16 @@
             @forelse($comments as $comment)
                 <div class="bg-gray-700 p-4 rounded-md mb-4">
                     <!-- Display the commenter's name -->
-                    <p class="text-gray-300 font-bold">{{ $comment->user->name }}</p>
-                    <!-- Display the content of the comment -->
-                    <p class="text-gray-300">{{ $comment->content }}</p>
+                    <div class="mt-2 p-4">
+                        <!-- Display the profile image of the user who made the comment -->
+                            <img src="{{ asset('storage/' . $comment->user->image) }}" alt="Profile Image" class="mb-4 mt-4 w-10 h-10 object-cover rounded-full">
+                            <p class="text-gray-300 font-bold">{{ $comment->user->name }}</p>
+                            <!-- Display the comment content -->
+                            <p class="text-gray-300">{{ $comment->content }}</p>
+                            <!-- Display the time when the comment was posted -->
+                            <p class="text-sm text-gray-400 mt-2">Posted {{ $comment->created_at->diffForHumans() }}</p>
+                        </div>
+                        <hr class=" border-gray-600">
 
                     @if($comment->user_id === Auth::id() || Auth::user()->hasRole('admin'))
                     <!-- If the logged-in user is the comment owner or an admin, show edit and delete options -->
@@ -84,8 +98,6 @@
                             </form>
                         </div>
                         @endif
-                    <!-- Display the time when the comment was posted -->
-                    <p class="text-sm text-gray-400 mt-2">Posted {{ $comment->created_at->diffForHumans() }}</p>
                 </div>
             @empty
                 <!-- Display a message if no comments are present -->

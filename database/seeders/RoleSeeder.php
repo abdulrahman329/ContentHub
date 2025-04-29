@@ -82,6 +82,7 @@ $userRole->givePermissionTo([
             $user = User::create([
                 'name' => 'Admin',
                 'email' => 'admin@example.com',
+                'image' => 'images/user_image.png',
                 'password' => bcrypt('12345678') // Don't forget to hash passwords
             ]);
             $user->assignRole('admin');

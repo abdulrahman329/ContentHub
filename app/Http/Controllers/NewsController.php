@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Models\News;
 use App\Models\Category;
 use App\Models\Comment; 
+use App\Models\user; 
 use Illuminate\Support\Facades\Auth;
 
 class NewsController extends Controller
@@ -74,10 +75,13 @@ class NewsController extends Controller
     public function show(News $News)
     {
         // Fetch the comments associated with the specific news article, ordered by the latest
-        $comments = $News->comments()->latest()->get();
+        $comments = $News->comments()->with('user')->latest()->get();
+        // Check if the user is authenticated
         
+            $User = $News->user; // This retrieves the user who posted the news  
+
         // Return the 'Newsshow' view, passing the news article and comments data
-        return view('news.Newsshow', compact('News', 'comments'));
+        return view('news.Newsshow', compact('News', 'comments', 'User'));
     }
 
     // Show the form to edit an existing news article

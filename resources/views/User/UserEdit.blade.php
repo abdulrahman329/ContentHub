@@ -21,7 +21,7 @@
             @if(Auth::user()->hasRole('admin'))
 
             <!-- Form for updating user details -->
-            <form action="{{ route('User.update', $User->id) }}" method="POST">
+            <form action="{{ route('User.update', $User->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')  <!-- Specifies the method as PUT for updating -->
 
@@ -66,16 +66,37 @@
                             </option>
                         @endforeach
                     </select>
-                    <!-- Display error message for 'role' field if validation fails -->
                     @error('role')
                         <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
                     @enderror
                 </div>
 
+                <!-- Input for user's profile image -->
+                <div class="mb-4">
+                    <label for="image" class="block text-gray-300 text-sm font-semibold">Profile Image</label>
+                    <input type="file" name="image" id="image" class=" w-full p-4 border border-gray-600 text-gray-300 bg-gray-700 rounded-md" accept="image/*">
+                    @if($User->image)
+                        <div class="mt-2">
+                            <img src="{{ asset('storage/' . $User->image) }}" alt="Profile Image" class="mb-4 mt-4 w-20 h-20 object-cover rounded-full">
+                        </div>
+                    @endif
+                    @error('image')
+                        <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+                    @enderror
+                    </select>
+                    <!-- Display error message for 'role' field if validation fails -->
+                    @error('role')
+                        <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+                    @enderror
+                
+
                 <!-- Submit button to update user -->
-                <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-800 w-full">Update User</button>
+                <button type="submit" class=" bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-800 w-full">Update User</button>
             </form>
         </div>
+    </div>
+    </div>
+
         @else
         <p class='text-white'>You don't have the authority, you have to be an admin</p>
         @endif

@@ -9,8 +9,8 @@ class News extends Model
 {
     use HasFactory;
 
-    // Define fillable fields
-    protected $fillable = [
+// Define fillable fields
+protected $fillable = [
     'title',
     'content',
     'category_id',

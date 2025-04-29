@@ -31,6 +31,8 @@ Route::middleware('auth')->group(function () {
     
     // Update user profile
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    // Update user profile
+    Route::patch('/profile/image', [ProfileController::class, 'updateimage'])->name('profile.update-image');
     
     // Delete user account
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

@@ -76,8 +76,10 @@ class PostController extends Controller
         // Retrieve the comments associated with the post, ordered by latest
         $comments = $post->comments()->latest()->get();
 
+        $User = $post->user; // This retrieves the user who posted the news  
+
         // Return the view to show the specific post and its comments
-        return view('posts.postsshow', compact('post', 'comments'));
+        return view('posts.postsshow', compact('post', 'comments', 'User'));
     }
     
     // Method to show the form for editing a post

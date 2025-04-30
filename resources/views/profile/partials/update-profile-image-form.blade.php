@@ -1,9 +1,16 @@
 <section>
-    <header>
+
+<header>
+    <p class="mb-2 text-gray-100 text-2xl">{{ $user->name }}</p>
+        @foreach($user->roles as $role)
+            <spm class=" text-gray-100 text-xl">your current role is:</spm>
+            <span class=" ml-2 text-xl text-gray-300">{{ $role->name }}</span>
+        @endforeach
+    <hr class="mt-4 mb-4"> 
         <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
             {{ __('Update Profile Image') }}
         </h2>
-
+        
         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
             {{ __('Upload a new profile picture. Only JPG, PNG, or GIF images under 2MB are allowed.') }}
         </p>

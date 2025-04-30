@@ -11,6 +11,7 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class ProfileController extends Controller
 {
@@ -19,8 +20,14 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $roles = Role::all();
+        $users = User::all();  // Fetch all users
+        
+
         return view('profile.edit', [
             'user' => $request->user(),
+            'roles' => $roles,
+            'users' => $users
         ]);
     }
 

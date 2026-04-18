@@ -21,14 +21,14 @@
             @if(Auth::user()->hasRole('admin'))
 
             <!-- Form for updating user details -->
-            <form action="{{ route('User.update', $User->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('users.update', $user->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')  <!-- Specifies the method as PUT for updating -->
 
                 <!-- Input for user's name -->
                 <div class="mb-4">
                     <label for="name" class="block text-gray-300 text-sm font-semibold">User Name</label>
-                    <input type="text" name="name" id="name" class="w-full p-4 text-gray-300 bg-gray-700 border rounded-md" placeholder="Enter User name" required value="{{ old('name', $User->name) }}">
+                    <input type="text" name="name" id="name" class="w-full p-4 text-gray-300 bg-gray-700 border rounded-md" placeholder="Enter User name" required value="{{ old('name', $user->name) }}">
                     <!-- Display error message for 'name' field if validation fails -->
                     @error('name')
                         <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
@@ -38,7 +38,7 @@
                 <!-- Input for user's email -->
                 <div class="mb-4">
                     <label for="email" class="block text-gray-300 text-sm font-semibold">User email</label>
-                    <input type="text" name="email" id="email" class="w-full p-4 text-gray-300 bg-gray-700 border rounded-md" placeholder="Enter User email" required value="{{ old('email', $User->email) }}">
+                    <input type="text" name="email" id="email" class="w-full p-4 text-gray-300 bg-gray-700 border rounded-md" placeholder="Enter User email" required value="{{ old('email', $user->email) }}">
                     <!-- Display error message for 'email' field if validation fails -->
                     @error('email')
                         <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
@@ -61,8 +61,8 @@
                     <select name="role" id="role" class="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm bg-gray-700 text-gray-300" required>
                         <!-- Loop through roles array and display each role as an option -->
                         @foreach($roles as $role)
-                            <option value="{{ $role->name }}"> {{ (old('role', $User->roles->first()->name) == $role->name) ? 'current role is:' : '' }}
-                                {{ $role->name }}
+                            <option value="{{ $role->name }}"> {{ (old('role', $user->roles->first()->name) == $role->name) ? 'current role is:' : '' }}
+                                {{ $role->name }} 
                             </option>
                         @endforeach
                     </select>
@@ -75,9 +75,9 @@
                 <div class="mb-4">
                     <label for="image" class="block text-gray-300 text-sm font-semibold">Profile Image</label>
                     <input type="file" name="image" id="image" class=" w-full p-4 border border-gray-600 text-gray-300 bg-gray-700 rounded-md" accept="image/*">
-                    @if($User->image)
+                    @if($user->image)
                         <div class="mt-2">
-                            <img src="{{ asset('storage/' . $User->image) }}" alt="Profile Image" class="mb-4 mt-4 w-20 h-20 object-cover rounded-full">
+                            <img src="{{ asset('storage/' . $user->image) }}" alt="Profile Image" class="mb-4 mt-4 w-20 h-20 object-cover rounded-full">
                         </div>
                     @endif
                     @error('image')

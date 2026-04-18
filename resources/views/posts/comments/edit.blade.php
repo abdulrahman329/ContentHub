@@ -12,13 +12,13 @@
         <!-- Page Title: This is the main title displayed at the top of the form -->
         <h1 class="text-3xl font-bold my-6 text-center text-white">Edit comment</h1>
 
-    @if(Auth::id() === $comment->user_id || Auth::user()->hasRole('admin'))
+    @can('update', $comment)
 
     <div class="container mx-auto px-8 py-12">
         <!-- Form container with padding, background color, and rounded corners -->
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg">
             <!-- Start of the form. It uses POST method to submit to the 'posts_comments.update' route with the comment's ID -->
-            <form action="{{ route('posts_comments.update', $comment->id) }}" method="POST" class="space-y-4">
+            <form action="{{ route('posts.comments.update', $comment->id) }}" method="POST" class="space-y-4">
                 <!-- CSRF token for protection against Cross-Site Request Forgery attacks -->
                 @csrf
                 <!-- Method spoofing to simulate a PUT request, as HTML forms only support GET and POST -->
@@ -43,7 +43,7 @@
             </form>
             @else
         <p class='text-white text-2xl font-bold my-6 text-center'>You don't have the authority, you have to be an admin or the Owner </p>
-        @endif
+        @endcan
         </div>
     </div>
 </x-app-layout>

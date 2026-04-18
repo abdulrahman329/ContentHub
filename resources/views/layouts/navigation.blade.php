@@ -19,7 +19,7 @@
                     </x-nav-link>
 
                     <!-- News Link -->
-                    <x-nav-link :href="route('News.index')" :active="request()->routeIs('News.index')">
+                    <x-nav-link :href="route('news.index')" :active="request()->routeIs('news.index')">
                         {{ __('News') }}
                     </x-nav-link>
 
@@ -33,7 +33,7 @@
                     <x-nav-link :href="route('posts.create')" :active="request()->routeIs('posts.create')">
                         {{ __('Post create') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('News.create')" :active="request()->routeIs('News.create')">
+                    <x-nav-link :href="route('news.create')" :active="request()->routeIs('news.create')">
                         {{ __('News create') }}
                     </x-nav-link>
                     @endif
@@ -47,7 +47,7 @@
 
                     <!-- User Management Link (visible only for admin) -->
                     @if(Auth::user()->hasRole('admin'))
-                    <x-nav-link :href="route('User.create')" :active="request()->routeIs('User.create')">
+                    <x-nav-link :href="route('users.create')" :active="request()->routeIs('users.create')">
                         {{ __('User create') }}
                     </x-nav-link>
                     @endif

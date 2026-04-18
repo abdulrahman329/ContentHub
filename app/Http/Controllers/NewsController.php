@@ -1,11 +1,11 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\News;
 use App\Models\Category;
 use App\Models\Comment; 
-use App\Models\user; 
 use Illuminate\Support\Facades\Auth;
 
 class NewsController extends Controller
@@ -25,11 +25,11 @@ class NewsController extends Controller
         $query->where('category_id', $request->category_id);
     }
 
-    $News = $query->paginate(4);
+    $news = $query->paginate(8);
     
 
     // Return the view 'news.Newsindex' with the retrieved news and categories
-    return view('news.Newsindex', compact('News', 'categories'));
+    return view('news.index', compact('news', 'categories'));
 }
 
 
@@ -40,7 +40,7 @@ class NewsController extends Controller
         $categories = Category::all();
         
         // Return the 'Newscreate' view with the categories data, enabling category selection during creation
-        return view('news.Newscreate', compact('categories'));
+        return view('news.create', compact('categories'));
     }
 
     // Store a newly created news article in the database
@@ -68,37 +68,38 @@ class NewsController extends Controller
         News::create($validatedData);
 
         // Redirect the user back to the news index page after saving the new article
-        return redirect()->route('News.index');
+        return redirect()->route('news.index');
     }
 
     // Display a specific news article and its associated comments
-    public function show(News $News)
+    public function show(News $news)
     {
-        // Fetch the comments associated with the specific news article, ordered by the latest
-        $comments = $News->comments()->with('user')->latest()->get();
-        // Check if the user is authenticated
-        
-            $User = $News->user; // This retrieves the user who posted the news  
+        $comments = $news->comments() // Retrieve the comments associated with the news article
+            ->with('user') // Eager load the user relationship to get the user who posted each comment
+            ->latest() // Order the comments by the latest first
+            ->paginate(6); // Retrieve the comments for the news article, including the user who posted each comment, ordered by latest and paginated
 
+
+            $user = $news->user; // This retrieves the user who posted the news article
         // Return the 'Newsshow' view, passing the news article and comments data
-        return view('news.Newsshow', compact('News', 'comments', 'User'));
+        return view('news.show', compact('news', 'comments', 'user'));
     }
 
     // Show the form to edit an existing news article
-    public function edit($id)
+    public function edit(News $news)
     {
         // Retrieve the news article by its ID, or fail if it's not found
-        $News = News::findOrFail($id);
+        // $news = News::findOrFail($id); $id
 
         // Retrieve all categories to provide them as options in the editing form
         $categories = Category::all();
 
         // Return the 'Newsedit' view with the existing news data and categories to facilitate editing
-        return view('news.Newsedit', compact('News', 'categories'));
+        return view('news.edit', compact('news', 'categories'));
     }
 
     // Update a news article with new data
-    public function update(Request $request, News $News)
+    public function update(Request $request, News $news)
     {
         // Validate the incoming request data to ensure it's in the proper format
         $validatedData = $request->validate([
@@ -115,19 +116,19 @@ class NewsController extends Controller
         }
 
         // Update the news article record in the database with the validated data
-        $News->update($validatedData);
+        $news->update($validatedData);
 
         // After updating, redirect back to the news index page
-        return redirect()->route('News.index');
+        return redirect()->route('news.index');
     }
 
     // Delete a news article
-    public function destroy(News $News)
+    public function destroy(News $news)
     {
         // Delete the specific news article from the database
-        $News->delete();
+        $news->delete();
 
         // Redirect the user back to the news index page after deletion
-        return redirect()->route('News.index');
+        return redirect()->route('news.index');
     }
 }

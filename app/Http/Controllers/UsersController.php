@@ -15,10 +15,10 @@ class UsersController extends Controller
     public function create()
     {
         $roles = Role::all(); // Retrieve all roles from the database
-        $Users = User::all();  // Fetch all users
+        $users = User::all();  // Fetch all users
 
         // Return the view with users and roles to show the user creation form
-        return view('User.UserCreate', compact('Users', 'roles'));
+        return view('user.create', compact('users', 'roles'));
     }
 
     // Store the newly created User
@@ -56,71 +56,71 @@ class UsersController extends Controller
         $user->assignRole($request->role);  // Assign the role using Spatie's method
 
         // Redirect to the User creation page with a success message
-        return redirect()->route('User.create')->with('success', 'User created successfully!');
+        return redirect()->route('users.create')->with('success', 'User created successfully!');
     }
 
     // Show the form to edit a User
-    public function edit(User $User)
+    public function edit(User $user)
     {
         // Retrieve all roles
         $roles = Role::all();
-        return view('User.UserEdit', compact('User', 'roles')); // Return edit form for a specific user
+        return view('user.edit', compact('user', 'roles')); // Return edit form for a specific user
     }
 
     // Update the User details
-    public function update(Request $request, User $User)
+    public function update(Request $request, User $user)
     {
         // Validate the updated User data
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $User->id, // Ensure email is unique but ignores the current user
+            'email' => 'required|email|unique:users,email,' . $user->id, // Ensure email is unique but ignores the current user
             'password' => 'nullable|string|min:8', // Password is optional for updates
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',  // Optional image upload with validation
-            'role' => 'required|string',
+            'role' => 'required|exists:roles,name',
         ]);
 
         // Check if an image file was uploaded with the request
         if ($request->hasFile('image')) {
             // Delete the old image if it exists
-            if ($User->image && Storage::exists('public/' . $User->image)) {
-                Storage::delete('public/' . $User->image);
+            if ($user->image && Storage::exists('public/' . $user->image)) {
+                Storage::delete('public/' . $user->image);
             }
 
             // Store the new uploaded image and save its path
             $imagePath = $request->file('image')->store('images', 'public');
         } else {
             // Keep the current image path if no new image is uploaded
-            $imagePath = $User->image;
+            $imagePath = $user->image;
         }
 
         // Update the User details, ensuring password is only updated if provided
-        $User->update([
+        $user->update([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => $request->filled('password') ? Hash::make($request->password) : $User->password, // Only update password if it's provided
+            'password' => $request->filled('password') ? Hash::make($request->password) : $user->password, // Only update password if it's provided
             'image' => $imagePath,
         ]);
 
         // Reassign the role (if it's changed)
-        $User->syncRoles($request->role);  // Sync roles to ensure that the user's role is updated
+        $user->syncRoles($request->role);  // Sync roles to ensure that the user's role is updated
 
         // Redirect with a success message
-        return redirect()->route('User.create')->with('success', 'User updated successfully!');
+        return redirect()->route('users.create')->with('success', 'User updated successfully!');
     }
 
     // Delete the User
-    public function destroy(User $User)
+    public function destroy(User $user)
     {
 
         // Delete the user's image if it exists
-    if ($User->image && Storage::exists('public/' . $User->image)) {
-        Storage::delete('public/' . $User->image);
+    if ($user->image && Storage::exists('public/' . $user->image)) {
+        Storage::delete('public/' . $user->image);
     }
 
         // Delete the user from the database
-        $User->delete();
+        $user->delete();
 
         // Redirect with a success message
-        return redirect()->route('User.create')->with('success', 'User deleted successfully!');
+        return redirect()->route('users.create')->with('success', 'User deleted successfully!');
     }
 }

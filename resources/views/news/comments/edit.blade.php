@@ -11,14 +11,14 @@
         <!-- Page Title: This is the main title displayed at the top of the form -->
         <h1 class="text-3xl font-bold my-6 text-center text-white">Edit comment</h1>
 
-    @if(Auth::id() === $comment->user_id || Auth::user()->hasRole('admin'))
+    @can('update', $comment)
 
     <!-- Main content container with padding -->
     <div class="container mx-auto px-8 py-12">
         <!-- A box to hold the form, styled with a dark background, padding, rounded corners, and a shadow -->
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg">
             <!-- Form for editing the comment -->
-            <form action="{{ route('news_comments.update', $comment->id) }}" method="POST" class="space-y-4">
+            <form action="{{ route('news.comments.update', $comment->id) }}" method="POST" class="space-y-4">
                 <!-- CSRF token to protect the form against cross-site request forgery attacks -->
                 @csrf
                 <!-- The @method('PUT') directive specifies that this form should use the PUT HTTP method for updating an existing resource -->
@@ -52,7 +52,7 @@
             </form>
             @else
         <p class='text-white text-2xl font-bold my-6 text-center'>You don't have the authority, you have to be an admin or the Owner </p>
-        @endif
+        @endcan
         </div>
     </div>
 </x-app-layout>

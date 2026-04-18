@@ -10,7 +10,7 @@
         <!-- Page title "Create a New Post" centered in a large font -->
         <h1 class="text-3xl font-bold my-6 text-center text-white">Create a New Post</h1>
 
-        @if(Auth::user()->hasRole('writer') || Auth::user()->hasRole('admin'))
+        @can('create_Post')
 
         <!-- The form to create a new post -->
         <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data" class="bg-gray-800 p-6 rounded-lg shadow-md">
@@ -61,6 +61,6 @@
         </form>
         @else
         <p class='text-white text-2xl font-bold my-6 text-center'>You don't have the authority, you have to be an admin or writer </p>
-        @endif
+        @endcan
     </div>
 </x-app-layout>

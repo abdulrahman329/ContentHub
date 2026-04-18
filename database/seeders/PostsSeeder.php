@@ -45,7 +45,7 @@ class PostsSeeder extends Seeder
         }
         */
 
-        $faker = Faker::create();  // Create an instance of Faker
+        $faker = Faker::create('en_US');  // Create an instance of Faker
 
         // Fetch all category IDs from the categories table
         $categories = Category::all()->pluck('id')->toArray();
@@ -61,8 +61,8 @@ class PostsSeeder extends Seeder
 
             // Create a random Post record
             Post::create([
-                'title' => $faker->sentence,  // Random title
-                'content' => $faker->paragraph,  // Random content
+                'title' => $faker->realText(50), // generates ~50 characters of English text
+                'content' => $faker->realText(200), // generates ~200 characters of English text
                 'image' => $imageUrl,  // Use external image URL
                 'category_id' => $randomCategoryId,  // Random category ID
                 'user_id' => 1,  // Hardcoded user ID (you can change it)

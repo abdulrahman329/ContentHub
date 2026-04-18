@@ -35,12 +35,12 @@
 
         <!-- Create Post Button (Visible only for users with 'writer' or 'admin' roles) -->
         <div class="text-center mb-6">
-        @if(Auth::user()->hasRole('writer') || Auth::user()->hasRole('admin'))
+        @can('create_Post')
             <!-- Link to the page where users can create a new post -->
             <a href="{{ route('posts.create') }}" class="inline-block bg-blue-600 hover:bg-blue-800 text-white font-bold py-3 px-6 rounded-md shadow-md transform hover:scale-105 transition-all duration-200 ease-in-out">
                 Create Post
             </a>
-        @endif
+        @endcan
         </div>
 
         <!-- Check if no posts are available, and display a message -->
@@ -79,7 +79,7 @@
                                 </p>
 
                                 <!-- Edit and Delete Buttons: Only visible for the post owner or admin -->
-                                @if(Auth::id() === $post->user_id || Auth::user()->hasRole('admin'))
+                                @can('update', $post)
                                     <div class="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                                         <!-- Edit Button: Link to edit the post -->
                                         <p>
@@ -98,7 +98,7 @@
                                             </button>
                                         </form>
                                     </div>
-                                @endif
+                                @endcan
 
                                 <!-- Display Post Category and Comment Count -->
                                 <div class="mt-2 text-gray-400 text-sm">

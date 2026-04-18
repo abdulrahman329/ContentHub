@@ -11,10 +11,10 @@
         <!-- Page Title: This displays the main title of the page -->
         <h1 class="text-3xl font-bold my-6 text-center text-white">Create a New News</h1>
 
-        @if(Auth::user()->hasRole('writer') || Auth::user()->hasRole('admin'))
+        @can('create_News')
 
         <!-- Form for creating a new news article -->
-        <form action="{{ route('News.store') }}" method="POST" enctype="multipart/form-data" class="bg-gray-800 p-6 rounded-lg shadow-md">
+        <form action="{{ route('news.store') }}" method="POST" enctype="multipart/form-data" class="bg-gray-800 p-6 rounded-lg shadow-md">
             @csrf <!-- CSRF token for form security (prevents cross-site request forgery attacks) -->
 
             <!-- Title Input Field -->
@@ -70,6 +70,6 @@
         </form>
         @else
         <p class='text-white text-2xl font-bold my-6 text-center'>You don't have the authority, you have to be an admin or writer </p>
-        @endif
+        @endcan
     </div>
 </x-app-layout>

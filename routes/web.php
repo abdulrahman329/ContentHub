@@ -3,8 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\NewsController;
-use App\Http\Controllers\CommentController;
-use App\Http\Controllers\PostsCommentController;
+use App\Http\Controllers\NewsCommentController;
+use App\Http\Controllers\PostCommentController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\JsonController;
@@ -55,11 +55,11 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 
     // ------- User Management -------
-    Route::get('/User/create', [UsersController::class, 'create'])->name('User.create');
-    Route::post('/Users', [UsersController::class, 'store'])->name('User.store');
-    Route::get('/Users/{User}/edit', [UsersController::class, 'edit'])->name('User.edit');
-    Route::put('/Users/{User}', [UsersController::class, 'update'])->name('User.update');
-    Route::delete('/Users/{User}', [UsersController::class, 'destroy'])->name('User.destroy');
+    Route::get('/users/create', [UsersController::class, 'create'])->name('users.create');
+    Route::post('/users', [UsersController::class, 'store'])->name('users.store');
+    Route::get('/users/{user}/edit', [UsersController::class, 'edit'])->name('users.edit');
+    Route::put('/users/{user}', [UsersController::class, 'update'])->name('users.update');
+    Route::delete('/users/{user}', [UsersController::class, 'destroy'])->name('users.destroy');
 });
 
 // ==========================
@@ -69,11 +69,11 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::middleware(['auth', 'role:admin|writer'])->group(function () {
 
     // ------- News Management -------
-    Route::get('/News/create', [NewsController::class, 'create'])->name('News.create');
-    Route::post('/News', [NewsController::class, 'store'])->name('News.store');
-    Route::get('/News/{news}/edit', [NewsController::class, 'edit'])->name('News.edit');
-    Route::put('/News/{news}', [NewsController::class, 'update'])->name('News.update');
-    Route::delete('/News/{news}', [NewsController::class, 'destroy'])->name('News.destroy');
+    Route::get('/news/create', [NewsController::class, 'create'])->name('news.create');
+    Route::post('/news', [NewsController::class, 'store'])->name('news.store');
+    Route::get('/news/{news}/edit', [NewsController::class, 'edit'])->name('news.edit');
+    Route::put('/news/{news}', [NewsController::class, 'update'])->name('news.update');
+    Route::delete('/news/{news}', [NewsController::class, 'destroy'])->name('news.destroy');
 
     // ------- Post Management -------
     Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
@@ -87,42 +87,32 @@ Route::middleware(['auth', 'role:admin|writer'])->group(function () {
 // Writer-Only Routes
 // ==========================
 
-Route::middleware(['auth', 'role:writer'])->group(function () {
+Route::middleware(['auth', 'role:admin|writer|user'])->group(function () {
 
     // ------- News Comments -------
-    Route::post('/news/{news}/comments', [CommentController::class, 'store'])->name('news.storeComment');
-    Route::delete('news/{news}/comment/{comment}', [CommentController::class, 'destroy'])->name('news.destroyComment');
-    Route::get('/news_comments/{comment}/edit', [CommentController::class, 'edit'])->name('news_comments.edit');
-    Route::put('/news_comments/{comment}', [CommentController::class, 'update'])->name('news_comments.update');
+    Route::post('/news/{news}/comments', [NewsCommentController::class, 'store'])->name('news.comments.store');
+    Route::delete('news/{news}/comment/{comment}', [NewsCommentController::class, 'destroy'])->name('news.comments.destroy');
+    Route::get('/news_comments/{comment}/edit', [NewsCommentController::class, 'edit'])->name('news.comments.edit');
+    Route::put('/news_comments/{comment}', [NewsCommentController::class, 'update'])->name('news.comments.update');
 
     // ------- Post Comments -------
-    Route::post('/posts/{post}/comments', [PostsCommentController::class, 'store'])->name('posts.storeComment');
-    Route::delete('posts/{post}/comment/{comment}', [PostsCommentController::class, 'destroy'])->name('posts.destroyComment');
-    Route::get('/posts_comments/{comment}/edit', [PostsCommentController::class, 'edit'])->name('posts_comments.edit');
-    Route::put('/posts_comments/{comment}', [PostsCommentController::class, 'update'])->name('posts_comments.update');
+    Route::post('/posts/{post}/comments', [PostCommentController::class, 'store'])->name('posts.comments.store');
+    Route::delete('posts/{post}/comment/{comment}', [PostCommentController::class, 'destroy'])->name('posts.comments.destroy');
+    Route::get('/posts_comments/{comment}/edit', [PostCommentController::class, 'edit'])->name('posts.comments.edit');
+    Route::put('/posts_comments/{comment}', [PostCommentController::class, 'update'])->name('posts.comments.update');
 });
 
 // ==========================
 // General Authenticated User Routes
 // ==========================
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'role:admin|writer|user'])->group(function () {
 
     // ------- Public Viewable News -------
-    Route::resource('News', NewsController::class)->only(['index', 'show']);
+    Route::resource('news', NewsController::class)->only(['index', 'show']);
 
     // ------- Public Viewable Posts -------
     Route::resource('posts', PostController::class)->only(['index', 'show']);
 
-    // ------- News Comments -------
-    Route::post('/news/{news}/comments', [CommentController::class, 'store'])->name('news.storeComment');
-    Route::delete('news/{news}/comment/{comment}', [CommentController::class, 'destroy'])->name('news.destroyComment');
-    Route::get('/news_comments/{comment}/edit', [CommentController::class, 'edit'])->name('news_comments.edit');
-    Route::put('/news_comments/{comment}', [CommentController::class, 'update'])->name('news_comments.update');
 
-    // ------- Post Comments -------
-    Route::post('/posts/{post}/comments', [PostsCommentController::class, 'store'])->name('posts.storeComment');
-    Route::delete('posts/{post}/comment/{comment}', [PostsCommentController::class, 'destroy'])->name('posts.destroyComment');
-    Route::get('/posts_comments/{comment}/edit', [PostsCommentController::class, 'edit'])->name('posts_comments.edit');
-    Route::put('/posts_comments/{comment}', [PostsCommentController::class, 'update'])->name('posts_comments.update');
 });

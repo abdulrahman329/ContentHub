@@ -6,13 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
+    
     // Fillable properties to prevent mass assignment vulnerabilities
     protected $fillable = ['name'];
 
     /**
      * Define the relationship with the News model.
-     * A category can have many news items.
-     */
+    * A category can have many news items.
+    */
     public function news()
     {
         return $this->hasMany(News::class);
@@ -20,8 +21,8 @@ class Category extends Model
 
     /**
      * Define the relationship with the Post model.
-     * A category can have many posts.
-     */
+    * A category can have many posts.
+    */
     public function posts()
     {
         return $this->hasMany(Post::class);

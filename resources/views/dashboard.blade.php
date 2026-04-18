@@ -30,7 +30,7 @@
                     <!-- Action buttons grid: Options for the user to interact with -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <!-- News Button -->
-                        <a href="{{ route('News.index') }}" class="flex items-center justify-center bg-blue-600 text-white p-6 rounded-xl shadow-lg hover:bg-blue-800 transform hover:scale-105 transition-all duration-200 ease-in-out">
+                        <a href="{{ route('news.index') }}" class="flex items-center justify-center bg-blue-600 text-white p-6 rounded-xl shadow-lg hover:bg-blue-800 transform hover:scale-105 transition-all duration-200 ease-in-out">
                             <span class="text-xl font-semibold">Go to News Page</span>
                         </a>
 

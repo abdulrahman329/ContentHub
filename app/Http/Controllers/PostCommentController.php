@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Comment;
 use App\Models\Post;
+use App\Models\Comment;
 use Illuminate\Support\Facades\Auth;
 
-class PostsCommentController extends Controller
+class PostCommentController extends Controller
 {
-    
+
     // Store a new comment on a specific post (news article)
     public function store(Request $request, Post $post)
     {
@@ -37,12 +37,12 @@ class PostsCommentController extends Controller
         // Check if the logged-in user is the owner of the comment or has the 'admin' role
 if ($comment->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
     // If not authorized to edit the comment, redirect the user back with an error message
-    return redirect()->route('posts.show', $comment->post_id)
+    return redirect()->route('posts.show', $comment->post->id) //fff
                      ->with('error', 'You are not authorized to edit this comment.');
 }
 
         // Return the edit view allowing the user to edit the specific comment
-        return view('Posts.PostsCommentsEdit', compact('comment'));
+        return view('posts.comments.edit', compact('comment'));
     }
 
 
@@ -56,11 +56,11 @@ if ($comment->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
         ]);
 
         // Check if the logged-in user is the owner of the comment or has the 'admin' role
-if ($comment->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
-    // If not authorized to edit the comment, redirect the user back with an error message
-    return redirect()->route('posts.show', $comment->post_id)
-                     ->with('error', 'You are not authorized to edit this comment.');
-}
+        if ($comment->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
+        // If not authorized to edit the comment, redirect the user back with an error message
+        return redirect()->route('posts.show', $comment->post->id) //fff
+            ->with('error', 'You are not authorized to edit this comment.');
+    }
 
         // Update the comment's content with the new value from the request
         $comment->content = $request->content;
@@ -69,7 +69,7 @@ if ($comment->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
         $comment->save();
 
         // Redirect back to the post page with a success message after the update
-        return redirect()->route('posts.show', $comment->post_id)->with('success', 'Comment updated successfully.');
+        return redirect()->route('posts.show', $comment->post->id)->with('success', 'Comment updated successfully.'); //fff
     }
 
 
@@ -78,11 +78,11 @@ if ($comment->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
     public function destroy(Post $post, Comment $comment)
     {
         // Check if the logged-in user is the owner of the comment or has the 'admin' role
-if ($comment->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
-    // If not authorized to edit the comment, redirect the user back with an error message
-    return redirect()->route('posts.show', $comment->post_id)
-                     ->with('error', 'You are not authorized to edit this comment.');
-}
+        if ($comment->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
+        // If not authorized to edit the comment, redirect the user back with an error message
+        return redirect()->route('posts.show', $comment->post->id) //fff
+            ->with('error', 'You are not authorized to edit this comment.');
+        }
 
         // Delete the comment from the database
         $comment->delete();

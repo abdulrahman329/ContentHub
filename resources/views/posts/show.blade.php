@@ -40,11 +40,11 @@
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg mb-8">
             <!-- User information -->
             <div class="flex items-center mb-4">
-                <img src="{{ $User->image ? asset('storage/' . $User->image) : asset('storage/images/user_image.png') }}" alt="{{ $User->name }}" class="w-10 h-10 rounded-full object-cover mr-2">
+                <img src="{{ $user->image ? asset('storage/' . $user->image) : asset('storage/images/user_image.png') }}" alt="{{ $user->name }}" class="w-10 h-10 rounded-full object-cover mr-2">
                 <div class="flex items-center">
                     <!-- Display user name -->
                     <span class="font-medium text-gray-300 mr-2">Name:</span>
-                    <span class="text-white text-2xl">{{ $User->name }}</span>
+                    <span class="text-white text-2xl">{{ $user->name }}</span>
                 </div>
             </div>
             <p class="text-lg text-gray-300 mt-4"><strong>Category Name:</strong> <span class="text-gray-400">{{ $post->category->name }}</span></p>
@@ -57,7 +57,7 @@
         @auth
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg mb-8">
             <!-- Comment form that sends data to the 'storeComment' route for this post -->
-            <form action="{{ route('posts.storeComment', $post->id) }}" method="POST" class="space-y-4">
+            <form action="{{ route('posts.comments.store', $post->id) }}" method="POST" class="space-y-4">
                 @csrf
                 <!-- Textarea for user to input their comment -->
                 <textarea name="content" class="w-full p-4 text-gray-300 bg-gray-700 border rounded-md" rows="4" placeholder="Write a comment..." required></textarea>
@@ -85,24 +85,25 @@
                         </div>
                         <hr class=" border-gray-600">
 
-                    @if($comment->user_id === Auth::id() || Auth::user()->hasRole('admin'))
+                    @can('update', $comment)
                     <!-- If the logged-in user is the comment owner or an admin, show edit and delete options -->
                         <div class="flex justify-end space-x-4 mt-4">
                             <!-- Edit Button: Link to the edit page for the specific comment -->
-                            <a href="{{ route('posts_comments.edit', $comment->id) }}" class="text-yellow-500 hover:text-yellow-700">Edit</a>
+                            <a href="{{ route('posts.comments.edit', $comment->id) }}" class="text-yellow-500 hover:text-yellow-700">Edit</a>
                             <!-- Delete Button: Form that will delete the comment after confirmation -->
-                            <form action="{{ route('posts.destroyComment', ['post' => $post->id, 'comment' => $comment->id]) }}" method="POST" class="ml-4">
+                            <form action="{{ route('posts.comments.destroy', ['post' => $post->id, 'comment' => $comment->id]) }}" method="POST" class="ml-4">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="text-red-600 hover:text-red-800" onclick="return confirm('Are you sure you want to delete this Comment?')">Delete</button>
                             </form>
                         </div>
-                        @endif
+                        @endcan
                 </div>
             @empty
                 <!-- Display a message if no comments are present -->
                 <p class="text-gray-400">No comments yet. Be the first to comment!</p>
             @endforelse
+                {{$comments->links()}} <!-- Pagination links for comments -->
         </div>
 
         <!-- Action Buttons Section: Includes back to posts and post edit/delete buttons -->
@@ -112,15 +113,15 @@
 
             <div class="space-x-6">
                 <!-- Edit Button: Only visible if the logged-in user is the post owner or an admin -->
-                @if($post->user_id === Auth::id() || Auth::user()->hasRole('admin'))
+                @can('update', $post)
                 <a href="{{ route('posts.edit', $post->id) }}" class="inline-block text-lg text-white bg-yellow-500 hover:bg-yellow-700 hover:scale-105 duration-200 px-6 py-2 rounded-md font-semibold transition-all">Edit</a>
 
                     <form method="POST" action="{{ route('posts.destroy', $post->id) }}" class="inline-block">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="text-lg text-white bg-red-500 hover:bg-red-800 hover:scale-105 duration-200 px-6 py-2 rounded-md font-semibold transition-all">Delete</button>
+                        <button type="submit" class="text-lg text-white bg-red-500 hover:bg-red-800 hover:scale-105 duration-200 px-6 py-2 rounded-md font-semibold transition-all" onclick="return confirm('Are you sure you want to delete this News?')" >Delete</button>
                     </form>
-                @endif
+                @endcan
             </div>
         </div>
     </div>

@@ -11,24 +11,24 @@
         <!-- Page Title: This is the main title displayed at the top of the form -->
         <h1 class="text-3xl font-bold my-6 text-center text-white">Edit News</h1>
 
-    @if(Auth::id() === $News->user_id || Auth::user()->hasRole('admin'))
+    @can('update', $news)
 
         <!-- Form to update the news article -->
-        <form method="POST" action="{{ route('News.update', $News->id) }}" enctype="multipart/form-data" class="bg-gray-800 p-6 rounded-lg shadow-md">
+        <form method="POST" action="{{ route('news.update', $news->id) }}" enctype="multipart/form-data" class="bg-gray-800 p-6 rounded-lg shadow-md">
             @csrf <!-- CSRF token for security to prevent CSRF attacks -->
             @method('PUT') <!-- Method Spoofing to specify the HTTP method as PUT for updating the resource -->
 
             <!-- Title Input Field -->
             <div class="mb-4">
                 <label for="title" class="block text-sm font-medium text-gray-300">Title</label>
-                <input type="text" name="title" id="title" value="{{ old('title', $News->title) }}" class="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm bg-gray-700 text-gray-300" required>
+                <input type="text" name="title" id="title" value="{{ old('title', $news->title) }}" class="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm bg-gray-700 text-gray-300" required>
                 <!-- 'value' is pre-filled with the old input value or the current news title using old() helper or $News->title -->
             </div>
 
             <!-- Content Textarea Field -->
             <div class="mb-4">
                 <label for="content" class="block text-sm font-medium text-gray-300">Content</label>
-                <textarea name="content" id="content" class="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm bg-gray-700 text-gray-300" required>{{ old('content', $News->content) }}</textarea>
+                <textarea name="content" id="content" class="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm bg-gray-700 text-gray-300" required>{{ old('content', $news->content) }}</textarea>
                 <!-- 'old()' retrieves the old content or the current news content, pre-filling the textarea. The content is required to be filled out -->
             </div>
 
@@ -40,7 +40,7 @@
                     @foreach($categories as $category)
                         <option value="{{ $category->id }}">
                             <!-- The category that was previously selected will be marked as selected -->
-                            @if($category->id == old('category_id', $News->category_id)) selected @endif
+                            @if($category->id == old('category_id', $news->category_id)) selected @endif
                             {{ $category->name }} <!-- Display the category name in the dropdown -->
                         </option>
                     @endforeach
@@ -64,6 +64,6 @@
         </form>
         @else
         <p class='text-white text-2xl font-bold my-6 text-center'>You don't have the authority, you have to be an admin or the Owner </p>
-        @endif
+        @endcan
     </div>
 </x-app-layout>

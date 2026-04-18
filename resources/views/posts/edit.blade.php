@@ -10,7 +10,7 @@
         <!-- Page Title: Display "Edit Post" at the center of the page -->  
         <h1 class="text-3xl font-bold my-6 text-center text-white">Edit Post</h1>
 
-        @if(Auth::id() === $post->user_id || Auth::user()->hasRole('admin'))
+        @can('update', $post)
 
         <!-- Form for editing the post -->
         <form method="POST" action="{{ route('posts.update', $post->id) }}" enctype="multipart/form-data" class="bg-gray-800 p-6 rounded-lg shadow-md">
@@ -66,6 +66,6 @@
         </form>
         @else
         <p class='text-white text-2xl font-bold my-6 text-center'>You don't have the authority, you have to be an admin or the Owner </p>
-        @endif
+        @endcan
     </div>
 </x-app-layout>

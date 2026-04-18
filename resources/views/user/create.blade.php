@@ -21,7 +21,7 @@
             @if(Auth::user()->hasRole('admin'))
 
             <!-- The form for creating a user -->
-            <form action="{{ route('User.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('users.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf <!-- CSRF protection to secure the form -->
                 
                 <!-- Input for user's name -->
@@ -82,28 +82,28 @@
 
             <!-- Display a list of existing users -->
             <ul class="space-y-6">
-                @foreach ($Users as $User)
+                @foreach ($users as $user)
                     <li class="flex justify-between items-center bg-gray-700 p-4 rounded-lg shadow w-full overflow-hidden">
                         <!-- User information -->
                         <div class="flex-1 max-w-[70%]">
-                        <img src="{{ $User->image ? asset('storage/' . $User->image) : asset('storage/images/user_image.png') }}" alt="{{ $User->name }}" class="w-10 h-10 rounded-full object-cover mr-2">
+                        <img src="{{ $user->image ? asset('storage/' . $user->image) : asset('storage/images/user_image.png') }}" alt="{{ $user->name }}" class="w-10 h-10 rounded-full object-cover mr-2">
 
                             <div class="flex items-center">
                                 <!-- Display user name -->
                                 <span class="font-medium text-gray-300 mr-2">Name:</span>
-                                <span class="text-white text-2xl">{{ $User->name }}</span>
+                                <span class="text-white text-2xl">{{ $user->name }}</span>
                             </div>
                             
                             <div class="flex items-center mb-2">
                                 <!-- Display user email -->
                                 <span class="font-medium text-gray-300 mr-2">Email:</span>
-                                <span class="text-gray-300 text-xl">{{ $User->email }}</span>
+                                <span class="text-gray-300 text-xl">{{ $user->email }}</span>
                             </div>
                             
                             <div class="flex items-center mb-2">
                                 <!-- Display user role -->
                                 <span class="font-medium text-gray-300 mr-2">Role:</span>
-                                @foreach($User->roles as $role)
+                                @foreach($user->roles as $role)
                                 <span class="text-blue-600 text-xl">{{ $role->name }}</span>
                                 @endforeach
                             </div>
@@ -113,10 +113,10 @@
                         <!-- Edit and Delete Buttons Container -->
                         <div class="flex space-x-4 ml-4 min-w-[120px]">
                             <!-- Edit Button -->
-                            <a href="{{ route('User.edit', $User->id) }}" class="text-yellow-500 hover:text-yellow-700">Edit</a>
+                            <a href="{{ route('users.edit', $user->id) }}" class="text-yellow-500 hover:text-yellow-700">Edit</a>
 
                             <!-- Delete Form (with confirmation prompt) -->
-                            <form action="{{ route('User.destroy', $User->id) }}" method="POST" class="inline-block">
+                            <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="inline-block">
                                 @csrf
                                 @method('DELETE') <!-- Specifies the DELETE HTTP method -->
                                 <!-- Confirm deletion with a confirmation dialog before proceeding -->

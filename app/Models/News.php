@@ -11,12 +11,12 @@ class News extends Model
 
 // Define fillable fields
 protected $fillable = [
-    'title',
-    'content',
-    'category_id',
-    'user_id',
-    'image',
-];
+        'title',
+        'content',
+        'category_id',
+        'user_id',
+        'image',
+    ];
 
     // Define relationships
     public function user()

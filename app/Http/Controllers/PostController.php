@@ -25,10 +25,10 @@ class PostController extends Controller
             $query->where('category_id', $request->category_id);
         }
         //paginate
-        $posts = $query->paginate(4);
+        $posts = $query->paginate(8);
 
         // Return the view with the posts and categories, passing both as data to the view
-        return view('posts.postsindex', compact('posts', 'categories'));
+        return view('posts.index', compact('posts', 'categories'));
     }
 
     // Method to show the form for creating a new post
@@ -38,7 +38,7 @@ class PostController extends Controller
         $categories = Category::all();
         
         // Return the view to create a post, passing the categories to the view
-        return view('posts.postscreate', compact('categories'));
+        return view('posts.create', compact('categories'));
     }
 
     // Method to handle the creation of a new post and save it to the database
@@ -73,26 +73,28 @@ class PostController extends Controller
     // Method to show a specific post with its comments
     public function show(Post $post)
     {
-        // Retrieve the comments associated with the post, ordered by latest
-        $comments = $post->comments()->latest()->get();
+        $comments = $post->comments() // Retrieve the comments associated with the post article
+            ->with('user') // Eager load the user relationship to get the user who posted each comment
+            ->latest() // Order the comments by the latest first
+            ->paginate(6); // Retrieve the comments for the post article, including the user who posted each comment, ordered by latest and paginated
 
-        $User = $post->user; // This retrieves the user who posted the news  
+        $user = $post->user; // This retrieves the user who posted the post article
 
         // Return the view to show the specific post and its comments
-        return view('posts.postsshow', compact('post', 'comments', 'User'));
+        return view('posts.show', compact('post', 'comments', 'user'));
     }
     
     // Method to show the form for editing a post
-    public function edit($id)
+    public function edit(Post $post)
     {
         // Retrieve the post with the specified ID
-        $post = Post::findOrFail($id);
+        // $post = Post::findOrFail($id); $id
 
         // Retrieve all categories for the category selection dropdown
         $categories = Category::all();
 
         // Return the edit view with the post and categories to allow the user to modify the post
-        return view('posts.postsedit', compact('post', 'categories'));
+        return view('posts.edit', compact('post', 'categories'));
     }
 
     // Method to update the post in the database after editing

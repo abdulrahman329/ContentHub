@@ -18,8 +18,7 @@
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg mb-8">
             <h3 class="text-2xl text-white mb-4">Edit User</h3>
 
-            @if(Auth::user()->hasRole('admin'))
-
+            @can('update', $user)
             <!-- Form for updating user details -->
             <form action="{{ route('users.update', $user->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -27,7 +26,7 @@
 
                 <!-- Input for user's name -->
                 <div class="mb-4">
-                    <label for="name" class="block text-gray-300 text-sm font-semibold">User Name</label>
+                    <label for="name" class="mb-1 block text-gray-300 text-sm font-semibold">User Name</label>
                     <input type="text" name="name" id="name" class="w-full p-4 text-gray-300 bg-gray-700 border rounded-md" placeholder="Enter User name" required value="{{ old('name', $user->name) }}">
                     <!-- Display error message for 'name' field if validation fails -->
                     @error('name')
@@ -37,7 +36,7 @@
 
                 <!-- Input for user's email -->
                 <div class="mb-4">
-                    <label for="email" class="block text-gray-300 text-sm font-semibold">User email</label>
+                    <label for="email" class="mb-1 block text-gray-300 text-sm font-semibold">User email</label>
                     <input type="text" name="email" id="email" class="w-full p-4 text-gray-300 bg-gray-700 border rounded-md" placeholder="Enter User email" required value="{{ old('email', $user->email) }}">
                     <!-- Display error message for 'email' field if validation fails -->
                     @error('email')
@@ -47,8 +46,8 @@
 
                 <!-- Input for user's password -->
                 <div class="mb-4">
-                    <label for="password" class="block text-gray-300 text-sm font-semibold">User password</label>
-                    <input type="password" name="password" id="password" class="w-full p-4 text-gray-300 bg-gray-700 border rounded-md" placeholder="Enter new password (leave blank to keep current)" value="{{ old('password') }}">
+                    <label for="password" class="mb-1 block text-gray-300 text-sm font-semibold">User password</label>
+                    <input type="password" name="password" id="password" class="w-full p-4 text-gray-300 bg-gray-700 border rounded-md" placeholder="Enter new password (leave blank to keep current)">
                     <!-- Display error message for 'password' field if validation fails -->
                     @error('password')
                         <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
@@ -60,20 +59,26 @@
                     <label for="role" class="block text-sm font-medium text-gray-300">Role</label>
                     <select name="role" id="role" class="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm bg-gray-700 text-gray-300" required>
                         <!-- Loop through roles array and display each role as an option -->
-                        @foreach($roles as $role)
-                            <option value="{{ $role->name }}"> {{ (old('role', $user->roles->first()->name) == $role->name) ? 'current role is:' : '' }}
-                                {{ $role->name }} 
-                            </option>
-                        @endforeach
+                    @foreach($roles as $role)
+                        <option value="{{ $role->name }}"
+                            {{ old('role', $user->roles->first()?->name) == $role->name ? 'selected' : '' }}>
+                            {{ $role->name }}
+                        </option>
+                    @endforeach
                     </select>
+                <div class="mb-2 text-gray-300">
+                    Current Role:
+                    <span class="text-blue-400 font-bold">
+                        {{ $user->roles->first()?->name ?? 'No role' }}
+                    </span>
+                </div>
                     @error('role')
                         <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
                     @enderror
-                </div>
 
                 <!-- Input for user's profile image -->
-                <div class="mb-4">
-                    <label for="image" class="block text-gray-300 text-sm font-semibold">Profile Image</label>
+                <div class="mt-4 mb-4">
+                    <label for="image" class="mb-1 block text-gray-300 text-sm font-semibold">Profile Image</label>
                     <input type="file" name="image" id="image" class=" w-full p-4 border border-gray-600 text-gray-300 bg-gray-700 rounded-md" accept="image/*">
                     @if($user->image)
                         <div class="mt-2">
@@ -93,12 +98,9 @@
                 <!-- Submit button to update user -->
                 <button type="submit" class=" bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-800 w-full">Update User</button>
             </form>
+        @endcan
         </div>
     </div>
     </div>
-
-        @else
-        <p class='text-white'>You don't have the authority, you have to be an admin</p>
-        @endif
     </div>
 </x-app-layout>

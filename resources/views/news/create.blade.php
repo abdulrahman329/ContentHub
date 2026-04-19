@@ -11,7 +11,7 @@
         <!-- Page Title: This displays the main title of the page -->
         <h1 class="text-3xl font-bold my-6 text-center text-white">Create a New News</h1>
 
-        @can('create_News')
+        @can('news.create')
 
         <!-- Form for creating a new news article -->
         <form action="{{ route('news.store') }}" method="POST" enctype="multipart/form-data" class="bg-gray-800 p-6 rounded-lg shadow-md">

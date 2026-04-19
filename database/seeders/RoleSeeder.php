@@ -15,30 +15,30 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-// Create permissions for News
-Permission::firstOrCreate(['name' => 'create_News']);
-Permission::firstOrCreate(['name' => 'Edit_News']);
-Permission::firstOrCreate(['name' => 'Delete_News']);
+
+Permission::firstOrCreate(['name' => 'news.create']);
+Permission::firstOrCreate(['name' => 'news.edit']);
+Permission::firstOrCreate(['name' => 'news.delete']);
 
 // Create permissions for Post
-Permission::firstOrCreate(['name' => 'create_Post']);
-Permission::firstOrCreate(['name' => 'Edit_Post']);
-Permission::firstOrCreate(['name' => 'Delete_Post']);
+Permission::firstOrCreate(['name' => 'post.create']);
+Permission::firstOrCreate(['name' => 'post.edit']);
+Permission::firstOrCreate(['name' => 'post.delete']);
 
 // Create permissions for Comment
-Permission::firstOrCreate(['name' => 'create_Comment']);
-Permission::firstOrCreate(['name' => 'Edit_Comment']);
-Permission::firstOrCreate(['name' => 'Delete_Comment']);
+Permission::firstOrCreate(['name' => 'comment.create']);
+Permission::firstOrCreate(['name' => 'comment.edit']);
+Permission::firstOrCreate(['name' => 'comment.delete']);
 
 // Create permissions for Category
-Permission::firstOrCreate(['name' => 'create_Category']);
-Permission::firstOrCreate(['name' => 'Edit_Category']);
-Permission::firstOrCreate(['name' => 'Delete_Category']);
+Permission::firstOrCreate(['name' => 'category.create']);
+Permission::firstOrCreate(['name' => 'category.edit']);
+Permission::firstOrCreate(['name' => 'category.delete']);
 
 // Create permissions for User
-Permission::firstOrCreate(['name' => 'create_User']);
-Permission::firstOrCreate(['name' => 'Edit_User']);
-Permission::firstOrCreate(['name' => 'Delete_User']);
+Permission::firstOrCreate(['name' => 'user.create']);
+Permission::firstOrCreate(['name' => 'user.edit']);
+Permission::firstOrCreate(['name' => 'user.delete']);
 
 
 
@@ -51,25 +51,26 @@ $adminRole->givePermissionTo(Permission::all()); // Admin can do everything
 
 $editorRole = Role::firstOrCreate(['name' => 'writer']);
 $editorRole->givePermissionTo([
-    'create_News',
-    'Edit_News',
-    'Delete_News',
 
-    'create_Post',
-    'Edit_Post',
-    'Delete_Post',
+    'news.create',
+    'news.edit',
+    'news.delete',
 
-    'create_Comment',
-    'Edit_Comment',
-    'Delete_Comment'
+    'post.create',
+    'post.edit',
+    'post.delete',
+    
+    'comment.create',
+    'comment.edit',
+    'comment.delete'
 ]);
 
 
 $userRole = Role::firstOrCreate(['name' => 'user']);
 $userRole->givePermissionTo([
-    'create_Comment',
-    'Edit_Comment',
-    'Delete_Comment'
+    'comment.create',
+    'comment.edit',
+    'comment.delete'
 ]);
 
 

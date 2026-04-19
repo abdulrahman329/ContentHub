@@ -13,7 +13,7 @@ class NewsPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,7 +21,7 @@ class NewsPolicy
      */
     public function view(User $user, News $news): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -29,7 +29,7 @@ class NewsPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->hasrole('admin')|| $user->hasrole('writer');
     }
 
     /**

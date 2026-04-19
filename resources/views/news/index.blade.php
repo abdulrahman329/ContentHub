@@ -31,7 +31,7 @@
 
         <!-- Button to Create News -->
         <div class="text-center mb-6">
-            @can('create_News')
+            @can('news.create')
         <a href="{{ route('news.create') }}" class="inline-block bg-blue-600 hover:bg-blue-800 text-white font-bold py-3 px-6 rounded-md shadow-md transform hover:scale-105 transition-all duration-200 ease-in-out">
                 Create News
             </a>

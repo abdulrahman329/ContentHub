@@ -14,11 +14,11 @@
             </div>
         @endif
 
+    <!-- Check if the user has permission to create a new user, and if so, display the form for creating a new user -->
+    @can('create', App\Models\User::class)
         <!-- Form for creating a new user -->
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg mb-8 border border-gray-700 max-w-full overflow-hidden">
             <h3 class="text-3xl text-white mb-6">Create User</h3>
-
-            @if(Auth::user()->hasRole('admin'))
 
             <!-- The form for creating a user -->
             <form action="{{ route('users.store') }}" method="POST" enctype="multipart/form-data">
@@ -75,7 +75,9 @@
                 <button type="submit" class="bg-indigo-600 text-white py-3 px-6 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600 w-full">Create User</button>
             </form>
         </div>
-
+    @endcan
+    <!-- Check if the user has permission to view any users, and if so, display the list of existing users -->
+    @can('viewAny', App\Models\User::class)
         <!-- List of existing users -->
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg border border-gray-700 max-w-full overflow-hidden">
             <h3 class="text-3xl text-white mb-6">Existing Users</h3>
@@ -108,13 +110,14 @@
                                 @endforeach
                             </div>
                         </div>
-                        <hr>
-
-                        <!-- Edit and Delete Buttons Container -->
                         <div class="flex space-x-4 ml-4 min-w-[120px]">
+                        <!-- Check if the user has permission to update the user, and if so, display the edit button -->
+                        @can('update', $user)
                             <!-- Edit Button -->
                             <a href="{{ route('users.edit', $user->id) }}" class="text-yellow-500 hover:text-yellow-700">Edit</a>
-
+                        @endcan
+                        <!-- Check if the user has permission to delete the user, and if so, display the delete button with -->
+                        @can('delete', $user)
                             <!-- Delete Form (with confirmation prompt) -->
                             <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="inline-block">
                                 @csrf
@@ -122,13 +125,15 @@
                                 <!-- Confirm deletion with a confirmation dialog before proceeding -->
                                 <button type="submit" class="text-red-600 hover:text-red-500" onclick="return confirm('Are you sure you want to delete this User?')">Delete</button>
                             </form>
+                        @endcan
                         </div>
                     </li>
-                @endforeach
+                @endforeach 
             </ul>
+        <div class="mt-6">
+        {{ $users->links() }} <!-- Pagination links for navigating through the list of users -->
         </div>
-        @else
-        <p class='text-white'>You don't have the authority, you have to be an admin</p>
-        @endif
+    @endcan
     </div>
+</div>
 </x-app-layout>

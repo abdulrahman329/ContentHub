@@ -12,14 +12,18 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ProfileController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display the user's profile form.
      */
     public function edit(Request $request): View
     {
+        $this->authorize('view', $request->user()); // Authorize that the user can view their own profile
+
         $roles = Role::all();
         $users = User::all();  // Fetch all users
         
@@ -36,6 +40,8 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
+        $this->authorize('update', $request->user()); // Authorize that the user can update their own profile
+
         $request->user()->fill($request->validated());
 
         if ($request->user()->isDirty('email')) {
@@ -50,6 +56,8 @@ class ProfileController extends Controller
 
     public function updateimage(Request $request): RedirectResponse
     {
+        $this->authorize('update', $request->user()); // Authorize that the user can update their own profile
+
         $user = $request->user(); // Get the authenticated user
     
         $request->validate([
@@ -77,6 +85,8 @@ class ProfileController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
+        $this->authorize('delete', $request->user()); // Authorize that the user can delete their own account
+
         $request->validateWithBag('userDeletion', [
             'password' => ['required', 'current_password'],
         ]);

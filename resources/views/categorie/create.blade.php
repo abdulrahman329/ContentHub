@@ -18,8 +18,7 @@
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg mb-8 border border-gray-700 max-w-full">
             <h3 class="text-3xl text-white mb-6">Create Category</h3>
 
-            @if(Auth::user()->hasRole('admin'))
-
+            @can('create', App\Models\Category::class)
             <!-- Form for Creating a New Category -->
             <form action="{{ route('categories.store') }}" method="POST">
                 @csrf <!-- CSRF Token for security -->
@@ -35,16 +34,19 @@
                         <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
                     @enderror
                 </div>
-
                 <!-- Submit Button for Creating the Category -->
                 <button type="submit" class="bg-indigo-600 text-white py-3 px-6 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600 w-full">Create Category</button>
             </form>
         </div>
+            @endcan
 
+            @can('viewAny', App\Models\Category::class)
         <!-- List of Existing Categories -->
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg border border-gray-700 max-w-full">
             <h3 class="text-3xl text-white mb-6">Existing Categories</h3>
-
+            <span class="text-gray-500 italic text-right block">
+                if you Cannot delete the category because this category has related posts or news.
+            </span>            
             <!-- Loop through the categories and display each one -->
             <ul class="space-y-6">
                 @foreach ($categories as $category)
@@ -53,15 +55,18 @@
                             <!-- Display the Category Name -->
                             <div class="flex items-center mb-2">
                                 <span class="font-medium text-gray-300 mr-2">Category Name:</span>
-                                <span class="text-white">{{ $category->name }}</span>
+                                <span class=" text-blue-500 text-lg">{{ $category->name }}</span>
                             </div>
                         </div>
 
+                        @can('update', $category)
                         <!-- Edit and Delete Button Section -->
                         <div class="flex space-x-4 ml-4 min-w-[120px]">
                             <!-- Edit Button: Links to the page where the category can be edited -->
                             <a href="{{ route('categories.edit', $category->id) }}" class="text-yellow-500 hover:text-yellow-700">Edit</a>
+                        @endcan
 
+                        @can('delete', $category)
                             <!-- Delete Form: Allows the category to be deleted -->
                             <form action="{{ route('categories.destroy', $category->id) }}" method="POST" class="inline-block">
                                 @csrf <!-- CSRF Token for security -->
@@ -71,12 +76,19 @@
                                 <button type="submit" class="text-red-600 hover:text-red-500" onclick="return confirm('Are you sure you want to delete this category?')">Delete</button>
                             </form>
                         </div>
+                        @else
+                            <!-- If the user does not have permission to or delete, we can optionally display a message or simply hide the buttons -->
+                            <div class="ml-4 min-w-[120px]">
+                                <span class="text-gray-500 italic">Cannot delete</span>
+                            </div>
+                        @endcan
                     </li>
                 @endforeach
             </ul>
+            <div class="mt-6">
+            {{ $categories->links() }} <!-- Pagination links for categories -->
+            </div>
         </div>
-        @else
-        <p class='text-white'>You don't have the authority, you have to be an admin</p>
-        @endif
+        @endcan
     </div>
 </x-app-layout>

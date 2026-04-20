@@ -19,6 +19,7 @@ class UserController extends Controller
 public function create()
 {
     $this->authorize('create', User::class); // Authorize that the user can create a new User
+    $this->authorize('viewAny', User::class); // Authorize that the user can view any User 
 
     $roles = Role::all(); // Retrieve all roles from the database
     $users = $query = User::with('roles')->latest()->paginate(5); // Retrieve all users with their roles, ordered by latest and paginated

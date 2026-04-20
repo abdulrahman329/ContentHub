@@ -6,13 +6,17 @@ use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\Comment;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class PostCommentController extends Controller
 {
+    use AuthorizesRequests;
 
     // Store a new comment on a specific post (news article)
     public function store(Request $request, Post $post)
     {
+        $this->authorize('create', Comment::class); // Authorize that the user has permission to create a comment
+
         // Validate that the content of the comment is provided and doesn't exceed 1000 characters
         $request->validate([
             'content' => 'required|string|max:1000', // Ensure the content is a string and within 1000 characters
@@ -34,12 +38,7 @@ class PostCommentController extends Controller
     // Show the form to edit a specific comment
     public function edit(Comment $comment)
     {
-        // Check if the logged-in user is the owner of the comment or has the 'admin' role
-if ($comment->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
-    // If not authorized to edit the comment, redirect the user back with an error message
-    return redirect()->route('posts.show', $comment->post->id) //fff
-                     ->with('error', 'You are not authorized to edit this comment.');
-}
+        $this->authorize('update', $comment); // Authorize that the user has permission to update the comment
 
         // Return the edit view allowing the user to edit the specific comment
         return view('posts.comments.edit', compact('comment'));
@@ -50,17 +49,12 @@ if ($comment->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
     // Update the content of a comment
     public function update(Request $request, Comment $comment)
     {
+        $this->authorize('update', $comment); // Authorize that the user can update the comment
+
         // Validate the new content for the comment (ensure it's provided and within the character limit)
         $request->validate([
             'content' => 'required|string|max:1000', // Content must be a string with a max length of 1000 characters
         ]);
-
-        // Check if the logged-in user is the owner of the comment or has the 'admin' role
-        if ($comment->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
-        // If not authorized to edit the comment, redirect the user back with an error message
-        return redirect()->route('posts.show', $comment->post->id) //fff
-            ->with('error', 'You are not authorized to edit this comment.');
-    }
 
         // Update the comment's content with the new value from the request
         $comment->content = $request->content;
@@ -77,12 +71,7 @@ if ($comment->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
     // Delete a specific comment from the post
     public function destroy(Post $post, Comment $comment)
     {
-        // Check if the logged-in user is the owner of the comment or has the 'admin' role
-        if ($comment->user_id !== Auth::id() && !Auth::user()->hasRole('admin')) {
-        // If not authorized to edit the comment, redirect the user back with an error message
-        return redirect()->route('posts.show', $comment->post->id) //fff
-            ->with('error', 'You are not authorized to edit this comment.');
-        }
+        $this->authorize('delete', $comment); // Authorize that the user can delete the comment
 
         // Delete the comment from the database
         $comment->delete();

@@ -106,7 +106,7 @@
                                 <!-- Display user role -->
                                 <span class="font-medium text-gray-300 mr-2">Role:</span>
                                 @foreach($user->roles as $role)
-                                <span class="text-blue-600 text-xl">{{ $role->name }}</span>
+                                <span class="text-blue-500 text-xl">{{ $role->name }}</span>
                                 @endforeach
                             </div>
                         </div>

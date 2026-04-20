@@ -29,8 +29,7 @@ class CommentPolicy
      */
     public function create(User $user): bool
     {
-        return true;
-    }
+        return $user->hasPermissionTo('comment.create') || $user->hasRole('admin');    }
 
     /**
      * Determine whether the user can update the model.

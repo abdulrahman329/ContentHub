@@ -45,9 +45,12 @@ class CategoryPolicy
      */
     public function delete(User $user, Category $category): bool
     {
-        return $user->hasrole('admin');
-    }
+        if ($category->posts()->exists() || $category->news()->exists()) {
+            return false; // Cannot delete category if it has associated posts or news
+        }
 
+        return $user->hasRole('admin');
+    }
     /**
      * Determine whether the user can restore the model.
      */

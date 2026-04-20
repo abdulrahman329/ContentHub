@@ -11,7 +11,7 @@
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg">
             <h3 class="text-2xl text-white mb-4">Edit Category</h3>
 
-            @if(Auth::user()->hasRole('admin'))
+            @can('update', $category)
 
             <!-- Display Success Message if Category is Updated Successfully -->
             @if (session('success'))
@@ -28,7 +28,7 @@
 
                 <!-- Category Name Input Field -->
                 <div class="mb-4">
-                    <label for="name" class="block text-gray-300 text-sm font-semibold">Category Name</label>
+                    <label for="name" class="mb-1 block text-gray-300 text-sm font-semibold">Category Name</label>
                     <!-- Input for the category name. The value is pre-filled with the current category name -->
                     <input type="text" name="name" id="name" class="w-full p-4 text-gray-300 bg-gray-700 border rounded-md" placeholder="Enter category name" value="{{ old('name', $category->name) }}" required>
                     
@@ -41,9 +41,7 @@
                 <!-- Submit Button to Update the Category -->
                 <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-800 w-full">Update Category</button>
             </form>
-        </div>
-        @else
-        <p class='text-white'>You don't have the authority, you have to be an admin</p>
-        @endif
+        @endcan
     </div>
+</div>
 </x-app-layout>

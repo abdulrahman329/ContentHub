@@ -37,8 +37,7 @@ class UserPolicy
     public function update(User $user, User $model): bool
     {
         // admin can update any user, other users can only update their own account if they have the permission
-        return $user->hasRole('admin')
-         || ($user->hasPermissionTo('user.edit') && $user->id === $model->id);
+        return $user->hasRole('admin') || ($user->id === $model->id);
     }
 
     public function changeRole(User $user, User $model): bool
@@ -58,7 +57,7 @@ class UserPolicy
         }
 
     // the user can only delete their own account
-    return $user->hasPermissionTo('user.delete') && $user->id === $model->id;
+    return $user->id === $model->id;
     }
 
     /**

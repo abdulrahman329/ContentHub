@@ -35,7 +35,7 @@
 
         <!-- Create Post Button (Visible only for users with 'writer' or 'admin' roles) -->
         <div class="text-center mb-6">
-        @can('posts.create')
+        @can('post.create')
             <!-- Link to the page where users can create a new post -->
             <a href="{{ route('posts.create') }}" class="inline-block bg-blue-600 hover:bg-blue-800 text-white font-bold py-3 px-6 rounded-md shadow-md transform hover:scale-105 transition-all duration-200 ease-in-out">
                 Create Post

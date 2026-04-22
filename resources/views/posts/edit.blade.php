@@ -40,13 +40,18 @@
                 <select name="category_id" id="category_name" class="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm bg-gray-700 text-gray-300" required>
                     <!-- Loop through categories to create the dropdown options dynamically -->
                     @foreach($categories as $category)
-                        <option value="{{ $category->id }}">
-                            <!-- If the category ID matches the old value or current post's category, set it as selected -->
-                            @if($category->id == old('category_id', $post->category_id)) selected @endif
-                            {{ $category->name }}
-                        </option>
+                    <option value="{{ $category->id }}"
+                        {{ old('category_id', $post->category_id) == $category->id ? 'selected' : '' }}>
+                        {{ $category->name }}
+                    </option>
                     @endforeach
                 </select>
+                <div class="mb-2 text-gray-300">
+                    Current category:
+                    <span class="text-blue-400 font-bold">
+                        {{ $post->category->name }}
+                    </span>
+                </div>
             </div>
 
             <!-- Image Upload Field -->

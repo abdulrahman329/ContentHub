@@ -25,9 +25,7 @@ class NewsController extends Controller
     $query = News::withCount('comments')->latest();
     
     // Check if a 'category_id' filter is provided in the request
-    if ($request->has('category_id') && $request->category_id != ''){
-        
-        // Filter the news articles by the provided category_id 
+    if ($request->filled('category_id')) {
         $query->where('category_id', $request->category_id);
     }
 

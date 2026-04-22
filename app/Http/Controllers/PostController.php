@@ -27,8 +27,7 @@ class PostController extends Controller
         $query = Post::withCount('comments')->latest(); // Orders the posts by the latest (created/updated)
 
         // Check if a category filter is applied via the request (category_id)
-        if ($request->has('category_id') && $request->category_id != '') {
-            // Filter the posts by the selected category_id
+        if ($request->filled('category_id')) {
             $query->where('category_id', $request->category_id);
         }
         //paginate

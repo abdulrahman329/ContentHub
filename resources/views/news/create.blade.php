@@ -54,12 +54,6 @@
                 <input type="file" name="image" id="image" class="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm bg-gray-700 text-gray-300">
                 <!-- This field allows the user to upload an image related to the news article -->
             </div>
-
-            <!-- Hidden field to pass the user ID automatically -->
-            <input type="hidden" name="user_id" value="{{ auth()->id() }}">
-            <!-- This hidden input field automatically sends the ID of the currently authenticated user -->
-            <!-- This ensures that the news article is associated with the correct user when stored in the database -->
-
             <!-- Submit Button to create the news article -->
             <div class="text-center">
                 <button type="submit" class="bg-blue-600 hover:bg-blue-800 hover:scale-105 duration-200 text-white font-bold py-2 px-4 rounded">
@@ -68,6 +62,8 @@
                 <!-- Button to submit the form and create the news article -->
             </div>
         </form>
-    @endcan
+        @else
+    <p class='text-white text-2xl font-bold my-6 text-center'>You don't have the authority, you have to be an admin or writer </p>
+@endcan
 </div>
 </x-app-layout>

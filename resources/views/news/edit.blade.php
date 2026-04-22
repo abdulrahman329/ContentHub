@@ -38,13 +38,18 @@
                 <select name="category_id" id="category_name" class="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md shadow-sm bg-gray-700 text-gray-300" required>
                     <!-- Loop through the categories to dynamically create the dropdown options -->
                     @foreach($categories as $category)
-                        <option value="{{ $category->id }}">
-                            <!-- The category that was previously selected will be marked as selected -->
-                            @if($category->id == old('category_id', $news->category_id)) selected @endif
-                            {{ $category->name }} <!-- Display the category name in the dropdown -->
-                        </option>
+                    <option value="{{ $category->id }}"
+                        {{ old('category_id', $news->category_id) == $category->id ? 'selected' : '' }}>
+                        {{ $category->name }}
+                    </option>
                     @endforeach
                 </select>
+                <div class="mb-2 text-gray-300">
+                    Current category:
+                    <span class="text-blue-400 font-bold">
+                        {{ $news->category->name }}
+                    </span>
+                </div>
             </div>
 
             <!-- Image Upload Field: This allows the user to upload a new image if they want to change the image for the news article -->
@@ -62,6 +67,8 @@
                 <!-- The button submits the form and updates the news article with the new values -->
             </div>
         </form>
-    @endcan
-</div>
+        @else
+        <p class='text-white text-2xl font-bold my-6 text-center'>You don't have the authority, you have to be an admin or the Owner </p>
+        @endcan
+    </div>
 </x-app-layout>

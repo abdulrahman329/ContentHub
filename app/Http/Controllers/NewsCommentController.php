@@ -73,7 +73,7 @@ public function destroy(News $news, Comment $comment)
 {
     $this->authorize('delete', $comment); // Authorize that the user can delete the comment
 
-    // Delete the comment from the database test
+    // Delete the comment from the database
     $comment->delete();
 
     // Redirect to the news article page with a success message

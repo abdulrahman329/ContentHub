@@ -53,6 +53,7 @@
             <p class="text-xl text-gray-200">{{ $post->content }}</p>
         </div>
 
+        @can('create' , App\Models\Comment::class)
         <!-- Comment Form: Only visible to authenticated users -->
         @auth
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg mb-8">
@@ -66,6 +67,7 @@
             </form>
         </div>
         @endauth
+        @endcan
 
         <!-- Displaying Comments Section -->
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg">
@@ -85,19 +87,21 @@
                         </div>
                         <hr class=" border-gray-600">
 
-                    @can('update', $comment)
                     <!-- If the logged-in user is the comment owner or an admin, show edit and delete options -->
                         <div class="flex justify-end space-x-4 mt-4">
+                        @can('update', $comment)
                             <!-- Edit Button: Link to the edit page for the specific comment -->
                             <a href="{{ route('posts.comments.edit', $comment->id) }}" class="text-yellow-500 hover:text-yellow-700">Edit</a>
+                        @endcan
+                        @can('delete', $comment)
                             <!-- Delete Button: Form that will delete the comment after confirmation -->
                             <form action="{{ route('posts.comments.destroy', ['post' => $post->id, 'comment' => $comment->id]) }}" method="POST" class="ml-4">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="text-red-600 hover:text-red-800" onclick="return confirm('Are you sure you want to delete this Comment?')">Delete</button>
                             </form>
+                            @endcan
                         </div>
-                        @endcan
                 </div>
             @empty
                 <!-- Display a message if no comments are present -->
@@ -115,7 +119,8 @@
                 <!-- Edit Button: Only visible if the logged-in user is the post owner or an admin -->
                 @can('update', $post)
                 <a href="{{ route('posts.edit', $post->id) }}" class="inline-block text-lg text-white bg-yellow-500 hover:bg-yellow-700 hover:scale-105 duration-200 px-6 py-2 rounded-md font-semibold transition-all">Edit</a>
-
+                @endcan
+                @can('delete', $post)
                     <form method="POST" action="{{ route('posts.destroy', $post->id) }}" class="inline-block">
                         @csrf
                         @method('DELETE')

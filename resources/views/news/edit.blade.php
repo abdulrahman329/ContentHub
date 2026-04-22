@@ -62,8 +62,6 @@
                 <!-- The button submits the form and updates the news article with the new values -->
             </div>
         </form>
-        @else
-        <p class='text-white text-2xl font-bold my-6 text-center'>You don't have the authority, you have to be an admin or the Owner </p>
-        @endcan
-    </div>
+    @endcan
+</div>
 </x-app-layout>

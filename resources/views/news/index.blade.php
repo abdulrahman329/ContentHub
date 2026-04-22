@@ -31,13 +31,13 @@
 
         <!-- Button to Create News -->
         <div class="text-center mb-6">
-            @can('news.create')
-        <a href="{{ route('news.create') }}" class="inline-block bg-blue-600 hover:bg-blue-800 text-white font-bold py-3 px-6 rounded-md shadow-md transform hover:scale-105 transition-all duration-200 ease-in-out">
+        @can('create', App\Models\News::class)
+            <a href="{{ route('news.create') }}" class="inline-block bg-blue-600 hover:bg-blue-800 text-white font-bold py-3 px-6 rounded-md shadow-md transform hover:scale-105 transition-all duration-200 ease-in-out">
                 Create News
             </a>
-            @endcan
+         @endcan
+         
         </div>
-
         <!-- Check if there is any news available -->
         @if($news->isEmpty())
             <!-- If no news available, display this message -->
@@ -77,9 +77,8 @@
                                 </p>
 
                                 <!-- Conditional Edit/Delete Buttons (only if the logged-in user is the author or admin) -->
-                                @can('update', $newsItem)
                                 <div class="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-
+                                @can('update', $newsItem)
                                     <!-- Edit Button: Redirects to the edit form for the news -->
                                     <p>
                                     <a href="{{ route('news.edit', $newsItem->id) }}" 
@@ -87,7 +86,9 @@
                                     Edit
                                     </a>
                                     </p>
-
+                                @endcan
+                                
+                                @can('delete', $newsItem)
                                     <!-- Delete Button: Allows the user to delete the news article -->
                                     <form action="{{ route('news.destroy', $newsItem->id) }}" method="POST" class="inline-block w-full">
                                         @csrf
@@ -96,9 +97,8 @@
                                             Delete
                                         </button>
                                     </form>
-                                </div>
                                 @endcan
-
+                                </div>
                                 <!-- Show the number of comments on the news article -->
                                 <div class="mt-2 text-gray-400 text-sm">
                                 <p class="text-lg text-gray-300 mt-4 line-clamp-2"><strong>Category Name:</strong> 

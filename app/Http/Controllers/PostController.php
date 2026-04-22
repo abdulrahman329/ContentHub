@@ -7,12 +7,19 @@ use App\Models\Post;
 use App\Models\Category;
 use App\Models\Comment;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
-    // Method to display a list of posts, optionally filtered by category
+    use AuthorizesRequests;
+
+/*         $this->authorizeResource(Post::class, 'post'); // Apply authorization to all resource methods for the Post model
+ */    // Method to display a list of posts, optionally filtered by category
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Post::class); // Authorize that the user can view any posts
+        
         // Retrieve all categories from the Category model
         $categories = Category::all();
 
@@ -34,6 +41,8 @@ class PostController extends Controller
     // Method to show the form for creating a new post
     public function create()
     {
+        $this->authorize('create', Post::class); // Authorize that the user can create a post 
+
         // Retrieve all categories to allow the user to select a category for the post
         $categories = Category::all();
         
@@ -44,6 +53,8 @@ class PostController extends Controller
     // Method to handle the creation of a new post and save it to the database
     public function store(Request $request)
     {
+        $this->authorize('create', Post::class); // Authorize that the user can create a post
+
         // Validate the incoming request to ensure necessary data is provided
         $validatedData = $request->validate([
             'title' => 'required',  // Ensure a title is provided
@@ -73,6 +84,8 @@ class PostController extends Controller
     // Method to show a specific post with its comments
     public function show(Post $post)
     {
+        $this->authorize('view', $post); // Authorize that the user can view this specific post
+
         $comments = $post->comments() // Retrieve the comments associated with the post article
             ->with('user') // Eager load the user relationship to get the user who posted each comment
             ->latest() // Order the comments by the latest first
@@ -87,8 +100,7 @@ class PostController extends Controller
     // Method to show the form for editing a post
     public function edit(Post $post)
     {
-        // Retrieve the post with the specified ID
-        // $post = Post::findOrFail($id); $id
+        $this->authorize('update', $post); // Authorize that the user can update this specific post
 
         // Retrieve all categories for the category selection dropdown
         $categories = Category::all();
@@ -100,6 +112,8 @@ class PostController extends Controller
     // Method to update the post in the database after editing
     public function update(Request $request, Post $post)
     {
+        $this->authorize('update', $post); // Authorize that the user can update this specific post
+
         // Validate the incoming request to ensure necessary data is provided
         $validatedData = $request->validate([
             'title' => 'required',  // Ensure a title is provided
@@ -110,12 +124,15 @@ class PostController extends Controller
 
         // Check if an image file was uploaded with the request
         if ($request->hasFile('image')) {
-            // Store the uploaded image and save its path
+            // Delete the old image from storage if it exists before storing the new one
+            if ($post->image && Storage::disk('public')->exists($post->image)) {
+                Storage::disk('public')->delete($post->image);
+            }
+            // Store the new uploaded image and save its path
             $imagePath = $request->file('image')->store('images', 'public');
-            // Add the image path to the validated data
             $validatedData['image'] = $imagePath;
         }
-
+    
         // Update the post with the validated data
         $post->update($validatedData);
 
@@ -126,6 +143,12 @@ class PostController extends Controller
     // Method to delete a specific post
     public function destroy(Post $post)
     {
+        $this->authorize('delete', $post); // Authorize that the user can delete this specific post
+
+        if ($post->image && Storage::disk('public')->exists($post->image)) {
+            Storage::disk('public')->delete($post->image);
+        }
+
         // Delete the specified post from the database
         $post->delete();
 

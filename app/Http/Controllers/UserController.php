@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+
 class UserController extends Controller
 {
 
@@ -95,8 +96,8 @@ public function update(Request $request, User $user)
     // Check if an image file was uploaded with the request
     if ($request->hasFile('image')) {
         // Delete the old image if it exists
-        if ($user->image && Storage::exists('public/' . $user->image)) {
-            Storage::delete('public/' . $user->image);
+        if ($user->image && Storage::disk('public')->exists($user->image)) {
+            Storage::disk('public')->delete($user->image);
         }
 
         // Store the new uploaded image and save its path
@@ -127,11 +128,10 @@ public function destroy(User $user)
 {
     $this->authorize('delete', $user); // Authorize that the user can delete this User
 
-    // Delete the user's image if it exists
-if ($user->image && Storage::exists('public/' . $user->image)) {
-    Storage::delete('public/' . $user->image);
-}
 
+if ($user->image && Storage::disk('public')->exists($user->image)) {
+    Storage::disk('public')->delete($user->image);
+}
     // Delete the user from the database
     $user->delete();
 

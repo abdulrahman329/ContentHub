@@ -35,7 +35,7 @@
 
         <!-- Create Post Button (Visible only for users with 'writer' or 'admin' roles) -->
         <div class="text-center mb-6">
-        @can('post.create')
+        @can('create', App\Models\Post::class)
             <!-- Link to the page where users can create a new post -->
             <a href="{{ route('posts.create') }}" class="inline-block bg-blue-600 hover:bg-blue-800 text-white font-bold py-3 px-6 rounded-md shadow-md transform hover:scale-105 transition-all duration-200 ease-in-out">
                 Create Post
@@ -79,15 +79,17 @@
                                 </p>
 
                                 <!-- Edit and Delete Buttons: Only visible for the post owner or admin -->
-                                @can('update', $post)
                                     <div class="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                                    @can('update', $post)
                                         <!-- Edit Button: Link to edit the post -->
                                         <p>
                                             <a href="{{ route('posts.edit', $post->id) }}" class="inline-block bg-yellow-500 text-black py-2 px-4 rounded-lg hover:bg-yellow-700 transform transition-all duration-200 ease-in-out w-full mt-2 text-center">
                                                 Edit
                                             </a>
                                         </p>
+                                    @endcan
 
+                                    @can('delete', $post)
                                         <!-- Delete Button: Form to delete the post -->
                                         <form action="{{ route('posts.destroy', $post->id) }}" method="POST" class="inline-block w-full">
                                             @csrf
@@ -96,9 +98,9 @@
                                             <button type="submit" class="bg-red-600 text-black py-2 px-4 rounded-lg hover:bg-red-800 transform transition-all duration-200 ease-in-out w-full mt-2 text-center" onclick="return confirm('Are you sure you want to delete this Post?')">
                                                 Delete
                                             </button>
-                                        </form>
+                                        </form>                                
+                                    @endcan
                                     </div>
-                                @endcan
 
                                 <!-- Display Post Category and Comment Count -->
                                 <div class="mt-2 text-gray-400 text-sm">

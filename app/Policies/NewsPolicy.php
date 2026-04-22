@@ -29,7 +29,7 @@ class NewsPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasrole('admin')|| $user->hasrole('writer');
+        return $user->hasRole('admin')|| $user->hasRole('writer');
     }
 
     /**

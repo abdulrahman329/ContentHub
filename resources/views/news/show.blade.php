@@ -22,6 +22,7 @@
         </h2>
     </x-slot>
 
+    @can('view', $news)
     <div class="container mx-auto px-8 py-12">
         <!-- News Title -->
         <h1 class="text-5xl font-extrabold text-white text-center mb-6">{{ $news->title }}</h1>
@@ -51,7 +52,9 @@
             <p class="text-lg text-gray-300 leading-relaxed mb-6"><strong>Content:</strong></p>
             <p class="text-xl text-gray-200">{{ $news->content }}</p>
         </div>
+        @endcan
 
+        @can('create' , App\Models\Comment::class)
         <!-- Form Section for submitting a new comment -->
         @auth
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg mb-8">
@@ -63,7 +66,9 @@
             </form>
         </div>
         @endauth
+        @endcan
         
+        @can('viewAny', App\Models\Comment::class)
         <!-- Display Comments Section -->
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg">
             <h3 class="text-2xl text-white mb-4">Comments</h3>
@@ -83,19 +88,22 @@
                         <hr class=" border-gray-600">
 
                     <!-- Edit and Delete buttons for the comment if it's the logged-in user or an admin -->
-                    @can('update', $comment)
                         <div class="flex justify-end space-x-4 mt-4">
-                            <!-- Link to edit the comment -->
-                            <a href="{{ route('news.comments.edit', $comment->id) }}" class="text-yellow-500 hover:text-yellow-700">Edit</a>
+                        <!-- Link to edit the comment -->                    
+                        @can('update', $comment)
 
+                            <a href="{{ route('news.comments.edit', $comment->id) }}" class="text-yellow-500 hover:text-yellow-700">Edit</a>
+                        @endcan
+
+                        @can('delete', $comment)
                             <!-- Form to ٍdelete the comment -->
                             <form action="{{ route('news.comments.destroy', ['news' => $news->id, 'comment' => $comment->id]) }}" method="POST" class="ml-4">
                                 @csrf
                                 @method('DELETE') <!-- Method Spoofing for DELETE -->
                                 <button type="submit" class="text-red-600 hover:text-red-800"onclick="return confirm('Are you sure you want to delete this comment?')">Delete</button>
-                            </form>
+                            </form>                    
+                        @endcan
                         </div>
-                    @endcan
                 </div>
             @empty  
                 <!-- If there are no comments, display a message -->
@@ -103,6 +111,8 @@
             @endforelse
                 {{ $comments->links() }}<!-- Pagination links for the comments, allowing users to navigate through multiple pages of comments if there are many -->   
         </div>
+        @endcan
+
         
 
         <!-- Action Buttons (Back to News and Edit/Delete if owned by the user or an admin) -->
@@ -114,14 +124,16 @@
                 <!-- Edit Button: Only show if the current user is the owner or an admin -->
                 @can('update', $news)
                 <a href="{{ route('news.edit', $news->id) }}" class="inline-block text-lg text-white bg-yellow-500 hover:bg-yellow-700 hover:scale-105 duration-200 px-6 py-2 rounded-md font-semibold transition-all">Edit</a>
-
+                @endcan
+                @can('delete', $news)
                 <form method="POST" action="{{ route('news.destroy', $news->id) }}" class="inline-block">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="text-lg text-white bg-red-500 hover:bg-red-800 hover:scale-105 duration-200 px-6 py-2 rounded-md font-semibold transition-all" onclick="return confirm('Are you sure you want to delete this News?')">Delete</button>
-                    </form>
+                    </form>            
                 @endcan
-            </div>
+            </div>               
+
          </div>
     </div>
 </x-app-layout>

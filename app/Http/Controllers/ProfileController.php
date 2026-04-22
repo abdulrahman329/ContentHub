@@ -65,9 +65,10 @@ class ProfileController extends Controller
         ]);
     
         // Check if the user already has an image and delete it if exists
-        if ($user->image && Storage::exists('public/' . $user->image)) {
-            Storage::delete('public/' . $user->image);
+        if ($user->image && Storage::disk('public')->exists($user->image)) {
+            Storage::disk('public')->delete($user->image);
         }
+    
     
         // Store the new image in the public storage
         $imagePath = $request->file('image')->store('images', 'public');
@@ -92,6 +93,10 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
+
+        if ($user->image && Storage::disk('public')->exists($user->image)) {
+            Storage::disk('public')->delete($user->image);
+        }    
 
         Auth::logout();
 

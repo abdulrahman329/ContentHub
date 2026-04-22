@@ -7,12 +7,18 @@ use App\Models\News;
 use App\Models\Category;
 use App\Models\Comment; 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Storage;
 
 class NewsController extends Controller
 {
+    use AuthorizesRequests;
+
     // Display the list of news articles with the count of their comments
     public function index(Request $request)
 {
+    $this->authorize('viewAny', News::class); // Authorize that the user can view any news articles
+
     $categories = Category::all();
 
     // If category filter is applied, filter posts by category
@@ -36,6 +42,8 @@ class NewsController extends Controller
     // Show the form to create a new news article
     public function create()
     {
+        $this->authorize('create', News::class); // Authorize that the user can create a news article
+
         // Retrieve all categories to display them as options in the news creation form
         $categories = Category::all();
         
@@ -46,6 +54,8 @@ class NewsController extends Controller
     // Store a newly created news article in the database
     public function store(Request $request)
     {
+        $this->authorize('create', News::class); // Authorize that the user can create a news article
+
         // Validate incoming request data for creating a news article
         $validatedData = $request->validate([
             'title' => 'required',         // Title is required for every news article
@@ -74,6 +84,8 @@ class NewsController extends Controller
     // Display a specific news article and its associated comments
     public function show(News $news)
     {
+        $this->authorize('view', $news); // Authorize that the user can view this specific news article
+
         $comments = $news->comments() // Retrieve the comments associated with the news article
             ->with('user') // Eager load the user relationship to get the user who posted each comment
             ->latest() // Order the comments by the latest first
@@ -88,19 +100,20 @@ class NewsController extends Controller
     // Show the form to edit an existing news article
     public function edit(News $news)
     {
-        // Retrieve the news article by its ID, or fail if it's not found
-        // $news = News::findOrFail($id); $id
+        $this->authorize('update', $news); // Authorize that the user can update this specific news article
 
         // Retrieve all categories to provide them as options in the editing form
         $categories = Category::all();
 
         // Return the 'Newsedit' view with the existing news data and categories to facilitate editing
-        return view('news.edit', compact('news', 'categories'));
+        return view('news.edit', compact('news','categories'));
     }
 
     // Update a news article with new data
     public function update(Request $request, News $news)
     {
+        $this->authorize('update', $news); // Authorize that the user can update this specific news article
+
         // Validate the incoming request data to ensure it's in the proper format
         $validatedData = $request->validate([
             'title' => 'required',         // Title is mandatory
@@ -111,9 +124,15 @@ class NewsController extends Controller
 
         // If a new image is uploaded, store it and add the path to the validated data
         if ($request->hasFile('image')) {
+            // If the news article already has an image, delete the old image from storage before saving the new one
+            if ($news->image && Storage::disk('public')->exists($news->image)) {
+                Storage::disk('public')->delete($news->image);
+            }
+            // Store the new uploaded image and save its path
             $imagePath = $request->file('image')->store('images', 'public');
-            $validatedData['image'] = $imagePath;  // Save the image path to the validated data
+            $validatedData['image'] = $imagePath;
         }
+    
 
         // Update the news article record in the database with the validated data
         $news->update($validatedData);
@@ -125,6 +144,12 @@ class NewsController extends Controller
     // Delete a news article
     public function destroy(News $news)
     {
+        $this->authorize('delete', $news); // Authorize that the user can delete this specific news article
+
+        if ($news->image && Storage::disk('public')->exists($news->image)) {
+            Storage::disk('public')->delete($news->image);
+        }
+
         // Delete the specific news article from the database
         $news->delete();
 

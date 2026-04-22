@@ -72,7 +72,7 @@ public function destroy(Category $category)
 {
     $this->authorize('delete', $category);
 
-    // Delete the category
+    // Delete the category test
     $category->delete();
 
     // Redirect with success message

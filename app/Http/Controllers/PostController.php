@@ -14,26 +14,25 @@ class PostController extends Controller
 {
     use AuthorizesRequests;
 
-/*         $this->authorizeResource(Post::class, 'post'); // Apply authorization to all resource methods for the Post model
- */    // Method to display a list of posts, optionally filtered by category
     public function index(Request $request)
     {
-        $this->authorize('viewAny', Post::class); // Authorize that the user can view any posts
-        
-        // Retrieve all categories from the Category model
+        $this->authorize('viewAny', Post::class);
+    
         $categories = Category::all();
-
-        // Initialize the query to retrieve posts, including a count of comments for each post
-        $query = Post::withCount('comments')->latest(); // Orders the posts by the latest (created/updated)
-
-        // Check if a category filter is applied via the request (category_id)
+    
+        // Build a query to retrieve posts along with their associated category and the count of comments, ordered by the latest
+        $query = Post::with(['category'])
+            ->withCount('comments')
+            ->latest();
+    
+        // If the request contains a 'category_id' parameter, filter the posts to only include those that belong to the specified category
         if ($request->filled('category_id')) {
             $query->where('category_id', $request->category_id);
         }
-        //paginate
+    
+        // Paginate the results to show 8 posts per page, including the category and comment count for each post
         $posts = $query->paginate(8);
-
-        // Return the view with the posts and categories, passing both as data to the view
+    
         return view('posts.index', compact('posts', 'categories'));
     }
 

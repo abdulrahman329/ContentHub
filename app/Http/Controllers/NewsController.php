@@ -16,25 +16,26 @@ class NewsController extends Controller
 
     // Display the list of news articles with the count of their comments
     public function index(Request $request)
-{
-    $this->authorize('viewAny', News::class); // Authorize that the user can view any news articles
-
-    $categories = Category::all();
-
-    // If category filter is applied, filter posts by category
-    $query = News::withCount('comments')->latest();
+    {
+        $this->authorize('viewAny', News::class);
     
-    // Check if a 'category_id' filter is provided in the request
-    if ($request->filled('category_id')) {
-        $query->where('category_id', $request->category_id);
+        $categories = Category::all();
+    
+        // Build a query to retrieve news articles along with their associated category and the count of comments, ordered by the latest
+        $query = News::with(['category'])
+            ->withCount('comments')
+            ->latest();
+
+        // If the request contains a 'category_id' parameter, filter the news articles to only include those that belong to the specified category
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+        
+        // Paginate the results to show 8 news articles per page, including the category and comment count for each article
+        $news = $query->paginate(8);
+    
+        return view('news.index', compact('news', 'categories'));
     }
-
-    $news = $query->paginate(8);
-    
-
-    // Return the view 'news.Newsindex' with the retrieved news and categories
-    return view('news.index', compact('news', 'categories'));
-}
 
 
     // Show the form to create a new news article

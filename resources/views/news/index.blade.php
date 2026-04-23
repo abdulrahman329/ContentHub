@@ -46,68 +46,7 @@
             <!-- Display News Articles -->
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                 @foreach($news as $newsItem)
-                    <!-- Card for each News Article -->
-                    <div class="bg-gray-800 text-white rounded-lg shadow-lg overflow-hidden flex flex-col">
-                        
-                        <!-- News Image -->
-                        @if($newsItem->image)
-                            <a href="{{ route('news.show', $newsItem->id) }}">
-                                <!-- Display the image if it exists -->
-                                <img src="{{ filter_var($newsItem->image, FILTER_VALIDATE_URL) ? $newsItem->image : asset('storage/'.$newsItem->image) }}" alt="{{ $newsItem->title }}" class="w-full h-56 object-cover rounded-t-lg">
-                            </a>
-                        @endif
-
-                        <!-- News Content Section -->
-                        <div class="px-6 py-4 flex-grow">
-                            <div class="font-bold text-xl mb-2 line-clamp-2">{{ $newsItem->title }}</div>
-                            <p class="text-gray-300 text-sm line-clamp-2">
-                                <!-- Limit content preview to 100 characters -->
-                                {{ Str::limit($newsItem->content, 100, '...') }}
-                            </p>
-                        </div>
-
-                        <!-- Action Buttons at the Bottom of the Card -->
-                        <div class="px-6 pb-4 mt-auto">
-                            <div class="space-y-2">
-                                <p>
-                                <!-- View Button: Takes the user to the full news page -->
-                                <a href="{{ route('news.show', $newsItem->id) }}" class="inline-block bg-blue-600 text-black py-2 px-4 rounded-lg hover:bg-blue-800 transform transition-all duration-200 ease-in-out w-full text-center">
-                                    View
-                                </a>
-                                </p>
-
-                                <!-- Conditional Edit/Delete Buttons (only if the logged-in user is the author or admin) -->
-                                <div class="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                                @can('update', $newsItem)
-                                    <!-- Edit Button: Redirects to the edit form for the news -->
-                                    <p>
-                                    <a href="{{ route('news.edit', $newsItem->id) }}" 
-                                    class="inline-block bg-yellow-500 text-black py-2 px-4 rounded-lg hover:bg-yellow-700 transform transition-all duration-200 ease-in-out w-full mt-2 text-center">
-                                    Edit
-                                    </a>
-                                    </p>
-                                @endcan
-                                
-                                @can('delete', $newsItem)
-                                    <!-- Delete Button: Allows the user to delete the news article -->
-                                    <form action="{{ route('news.destroy', $newsItem->id) }}" method="POST" class="inline-block w-full">
-                                        @csrf
-                                        @method('DELETE') <!-- Spoofing the DELETE method -->
-                                        <button type="submit" class="bg-red-600 text-black py-2 px-4 rounded-lg hover:bg-red-800 transform transition-all duration-200 ease-in-out w-full mt-2 text-center" onclick="return confirm('Are you sure you want to delete this News?')">
-                                            Delete
-                                        </button>
-                                    </form>
-                                @endcan
-                                </div>
-                                <!-- Show the number of comments on the news article -->
-                                <div class="mt-2 text-gray-400 text-sm">
-                                <p class="text-lg text-gray-300 mt-4 line-clamp-2"><strong>Category Name:</strong> 
-                                <span class="text-gray-400">{{ $newsItem->category->name }}</span></p>
-                                    <strong>Comments:</strong> {{ $newsItem->comments_count }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <x-content-card :item="$newsItem" type="news" />
                 @endforeach
             </div>
         @endif

@@ -50,67 +50,7 @@
             <!-- Display the posts in a grid layout -->
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                 @foreach($posts as $post)
-                    <div class="bg-gray-800 text-white rounded-lg shadow-lg overflow-hidden flex flex-col">
-                        
-                        <!-- Display Post Image -->
-                        @if($post->image)
-                            <a href="{{ route('posts.show', $post->id) }}">
-                                <!-- Show the image of the post -->
-                                <img src="{{ filter_var($post->image, FILTER_VALIDATE_URL) ? $post->image : asset('storage/'.$post->image) }}" alt="{{ $post->title }}" class="w-full h-56 object-cover rounded-t-lg">
-                            </a>
-                        @endif
-
-                        <!-- Post Content Section -->
-                        <div class="px-6 py-4 flex-grow">
-                            <div class="font-bold text-xl mb-2">{{ $post->title }}</div> <!-- Display the post title -->
-                            <p class="text-gray-300 text-sm">
-                            {{ Str::limit($post->content, 100, '...') }} <!-- Display a preview of the content (first 100 characters) -->
-                            </p>
-                        </div>
-
-                        <!-- Action Buttons Section (View, Edit, Delete) -->
-                        <div class="px-6 pb-4 mt-auto">
-                            <div class="space-y-2">
-                                <!-- View Button: Links to the detailed view of the post -->
-                                <p>
-                                    <a href="{{ route('posts.show', $post->id) }}" class="inline-block bg-blue-600 text-black py-2 px-4 rounded-lg hover:bg-blue-800 transform transition-all duration-200 ease-in-out w-full text-center">
-                                        View
-                                    </a>
-                                </p>
-
-                                <!-- Edit and Delete Buttons: Only visible for the post owner or admin -->
-                                    <div class="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                                    @can('update', $post)
-                                        <!-- Edit Button: Link to edit the post -->
-                                        <p>
-                                            <a href="{{ route('posts.edit', $post->id) }}" class="inline-block bg-yellow-500 text-black py-2 px-4 rounded-lg hover:bg-yellow-700 transform transition-all duration-200 ease-in-out w-full mt-2 text-center">
-                                                Edit
-                                            </a>
-                                        </p>
-                                    @endcan
-
-                                    @can('delete', $post)
-                                        <!-- Delete Button: Form to delete the post -->
-                                        <form action="{{ route('posts.destroy', $post->id) }}" method="POST" class="inline-block w-full">
-                                            @csrf
-                                            @method('DELETE')
-                                            <!-- Submit button for deleting the post -->
-                                            <button type="submit" class="bg-red-600 text-black py-2 px-4 rounded-lg hover:bg-red-800 transform transition-all duration-200 ease-in-out w-full mt-2 text-center" onclick="return confirm('Are you sure you want to delete this Post?')">
-                                                Delete
-                                            </button>
-                                        </form>                                
-                                    @endcan
-                                    </div>
-
-                                <!-- Display Post Category and Comment Count -->
-                                <div class="mt-2 text-gray-400 text-sm">
-                                    <p class="text-lg text-gray-300 mt-4 line-clamp-2"><strong>Category Name:</strong>
-                                     <span class="text-gray-400">{{ $post->category->name }}</span></p> <!-- Show the category name -->
-                                    <strong>Comments:</strong> {{ $post->comments_count }} <!-- Show the number of comments on the post -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <x-content-card :item="$post" type="posts" />
                 @endforeach
             </div>
         @endif

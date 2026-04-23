@@ -57,14 +57,7 @@
         <!-- Comment Form: Only visible to authenticated users -->
         @auth
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg mb-8">
-            <!-- Comment form that sends data to the 'storeComment' route for this post -->
-            <form action="{{ route('posts.comments.store', $post->id) }}" method="POST" class="space-y-4">
-                @csrf
-                <!-- Textarea for user to input their comment -->
-                <textarea name="content" class="w-full p-4 text-gray-300 bg-gray-700 border rounded-md" rows="4" placeholder="Write a comment..." required></textarea>
-                <!-- Submit button: On click, it calls the handleClick function to disable the button and submit the form -->
-                <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-800 w-full" onclick="handleClick(event, this)">Submit Comment</button>
-            </form>
+        <x-comment.form parentType="post" :parentId="$post->id" />
         </div>
         @endauth
         @endcan

@@ -58,12 +58,7 @@
         <!-- Form Section for submitting a new comment -->
         @auth
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg mb-8">
-            <!-- Form to submit a new comment -->
-            <form action="{{ route('news.comments.store', $news->id) }}" method="POST" class="space-y-4">
-                @csrf <!-- CSRF protection for the form -->
-                <textarea name="content" class="w-full p-4 text-gray-300 bg-gray-700 border rounded-md" rows="4" placeholder="Write a comment..." required></textarea>
-                <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-800 w-full" onclick="handleClick(event, this)">Submit Comment</button>
-            </form>
+        <x-comment.form parentType="news" :parentId="$news->id" />
         </div>
         @endauth
         @endcan

@@ -21,7 +21,7 @@ class CategoryController extends Controller
         $categories = Category::paginate(6);
 
         
-        return view('categorie.create', compact('categories')); 
+        return view('category.create', compact('categories')); 
     }
 
     // Store the newly created category
@@ -47,7 +47,7 @@ class CategoryController extends Controller
     {
         $this->authorize('update', $category);
 
-        return view('categorie.edit', compact('category'));
+        return view('category.edit', compact('category'));
     }
 
     public function update(Request $request, Category $category)

@@ -20,25 +20,9 @@
 
             @can('create', App\Models\Category::class)
             <!-- Form for Creating a New Category -->
-            <form action="{{ route('categories.store') }}" method="POST">
-                @csrf <!-- CSRF Token for security -->
-                
-                <!-- Category Name Input Field -->
-                <div class="mb-6">
-                    <label for="name" class="block text-gray-300 text-sm font-medium">Category Name</label>
-                    <!-- Input field for category name, it is required -->
-                    <input type="text" name="name" id="name" class="w-full p-3 mt-2 border border-gray-600 rounded-md focus:ring-2 focus:ring-indigo-600 bg-gray-700 text-white" placeholder="Enter category name" required value="{{ old('name') }}">
-                    
-                    <!-- Error Message for Category Name -->
-                    @error('name')
-                        <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
-                    @enderror
-                </div>
-                <!-- Submit Button for Creating the Category -->
-                <button type="submit" class="bg-indigo-600 text-white py-3 px-6 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600 w-full">Create Category</button>
-            </form>
-        </div>
+            <x-category.form/>
             @endcan
+        </div>
 
             @can('viewAny', App\Models\Category::class)
         <!-- List of Existing Categories -->

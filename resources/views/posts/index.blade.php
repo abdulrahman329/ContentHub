@@ -50,7 +50,7 @@
             <!-- Display the posts in a grid layout -->
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                 @foreach($posts as $post)
-                <x-content-card :item="$post" type="posts" />
+                <x-article.content-card :item="$post" type="posts" />
                 @endforeach
             </div>
         @endif

@@ -46,7 +46,7 @@
             <!-- Display News Articles -->
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                 @foreach($news as $newsItem)
-                <x-content-card :item="$newsItem" type="news" />
+                <x-article.content-card :item="$newsItem" type="news" />
                 @endforeach
             </div>
         @endif

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\View\Components;
+namespace App\View\Components\article;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class content-card extends Component
+class ContentCard extends Component
 {
     /**
      * Create a new component instance.
@@ -21,6 +21,6 @@ class content-card extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.content-card');
+        return view('components.article.content-card');
     }
 }

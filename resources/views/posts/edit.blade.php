@@ -11,7 +11,7 @@
         <h1 class="text-3xl font-bold my-6 text-center text-white">Edit Post</h1>
 
         @can('update', $post)
-        <x-post.form :post="$post" :categories="$categories" />
+        <x-article.form type="posts" :model="$post" :categories="$categories" />
         @else
         <p class='text-white text-2xl font-bold my-6 text-center'>You don't have the authority, you have to be an admin or the Owner </p>
         @endcan

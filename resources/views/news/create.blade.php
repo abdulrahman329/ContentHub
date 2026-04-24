@@ -12,7 +12,7 @@
         <h1 class="text-3xl font-bold my-6 text-center text-white">Create a New News</h1>
 
         @can('create', App\Models\News::class)
-        <x-news.form :categories="$categories" />
+        <x-article.form type="news" :categories="$categories" />
         @else
     <p class='text-white text-2xl font-bold my-6 text-center'>You don't have the authority, you have to be an admin or writer </p>
 @endcan

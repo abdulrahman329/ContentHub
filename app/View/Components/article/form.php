@@ -1,12 +1,12 @@
 <?php
 
-namespace App\View\Components\News;
+namespace App\View\Components\article;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Form extends Component
+class form extends Component
 {
     /**
      * Create a new component instance.
@@ -21,6 +21,6 @@ class Form extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.news.form');
+        return view('components.article.form');
     }
 }

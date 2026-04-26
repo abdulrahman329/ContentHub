@@ -12,8 +12,8 @@ class Comment extends Model
     protected $fillable = [
         'content',
         'user_id',
-        'post_id',
-        'news_id',
+        'commentable_id',
+        'commentable_type',
     ];
 
     // Define relationships
@@ -22,14 +22,9 @@ class Comment extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function post()
+    public function commentable()
     {
-        return $this->belongsTo(Post::class);
-    }
-
-    public function news()
-    {
-        return $this->belongsTo(News::class);
+        return $this->morphTo();
     }
 }
 

@@ -3,8 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\NewsController;
-use App\Http\Controllers\NewsCommentController;
-use App\Http\Controllers\PostCommentController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\JsonController;
@@ -89,19 +88,13 @@ Route::middleware(['auth', 'role:admin|writer'])->group(function () {
 
 Route::middleware(['auth', 'role:admin|writer|user'])->group(function () {
 
-    // ------- News Comments -------
-    Route::post('/news/{news}/comments', [NewsCommentController::class, 'store'])->name('news.comments.store');
-    Route::delete('news/{news}/comment/{comment}', [NewsCommentController::class, 'destroy'])->name('news.comments.destroy');
-    Route::get('/news_comments/{comment}/edit', [NewsCommentController::class, 'edit'])->name('news.comments.edit');
-    Route::put('/news_comments/{comment}', [NewsCommentController::class, 'update'])->name('news.comments.update');
+    // ------- Comment Management -------
+    Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::get('/comments/{comment}/edit', [CommentController::class, 'edit'])->name('comments.edit');
+    Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');    
+    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
 
-    // ------- Post Comments -------
-    Route::post('/posts/{post}/comments', [PostCommentController::class, 'store'])->name('posts.comments.store');
-    Route::delete('posts/{post}/comment/{comment}', [PostCommentController::class, 'destroy'])->name('posts.comments.destroy');
-    Route::get('/posts_comments/{comment}/edit', [PostCommentController::class, 'edit'])->name('posts.comments.edit');
-    Route::put('/posts_comments/{comment}', [PostCommentController::class, 'update'])->name('posts.comments.update');
 });
-
 // ==========================
 // General Authenticated User Routes
 // ==========================

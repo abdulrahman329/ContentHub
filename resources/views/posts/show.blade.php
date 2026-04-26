@@ -84,11 +84,11 @@
                         <div class="flex justify-end space-x-4 mt-4">
                         @can('update', $comment)
                             <!-- Edit Button: Link to the edit page for the specific comment -->
-                            <a href="{{ route('posts.comments.edit', $comment->id) }}" class="text-yellow-500 hover:text-yellow-700">Edit</a>
+                            <a href="{{ route('comments.edit', $comment->id) }}" class="text-yellow-500 hover:text-yellow-700">Edit</a>
                         @endcan
                         @can('delete', $comment)
                             <!-- Delete Button: Form that will delete the comment after confirmation -->
-                            <form action="{{ route('posts.comments.destroy', ['post' => $post->id, 'comment' => $comment->id]) }}" method="POST" class="ml-4">
+                            <form action="{{ route('comments.destroy', ['post' => $post->id, 'comment' => $comment->id]) }}" method="POST" class="ml-4">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="text-red-600 hover:text-red-800" onclick="return confirm('Are you sure you want to delete this Comment?')">Delete</button>

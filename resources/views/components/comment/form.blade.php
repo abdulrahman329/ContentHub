@@ -1,26 +1,28 @@
-<div>
 @props([
-    'comment' => null,   // إذا موجود = edit
-    'parentType',        // post OR news
-    'parentId'           // id حق post أو news
+    'comment' => null,
+    'parentType',
+    'parentId'
 ])
 
+@php
+    $modelClass = $parentType === 'news'
+        ? \App\Models\News::class
+        : \App\Models\Post::class;
+@endphp
+
 <form method="POST"
-      action="{{ $comment
-            ? ($parentType === 'news'
-                ? route('news.comments.update', $comment->id)
-                : route('posts.comments.update', $comment->id))
-            : ($parentType === 'news'
-                ? route('news.comments.store', $parentId)
-                : route('posts.comments.store', $parentId)) }}"
+      action="{{ $comment ? route('comments.update', $comment->id) : route('comments.store') }}"
       class="space-y-4">
 
     @csrf
 
-    {{-- Edit only --}}
     @if($comment)
         @method('PUT')
     @endif
+
+    {{-- hidden polymorphic --}}
+    <input type="hidden" name="commentable_id" value="{{ $parentId }}">
+    <input type="hidden" name="commentable_type" value="{{ $modelClass }}">
 
     <!-- Content -->
     <textarea name="content"
@@ -38,5 +40,5 @@
         class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-800 w-full">
         {{ $comment ? 'Update Comment' : 'Submit Comment' }}
     </button>
+
 </form>
-</div>

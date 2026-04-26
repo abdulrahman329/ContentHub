@@ -64,11 +64,12 @@ class ProfileController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
     
-        // Check if the user already has an image and delete it if exists
-        if ($user->image && Storage::disk('public')->exists($user->image)) {
+        // Check if the user has an image and delete it from storage if it exists and is not the default image
+        if ($user->image && $user->image !== 'images/user_image.png' &&
+            Storage::disk('public')->exists($user->image)
+        ) {
             Storage::disk('public')->delete($user->image);
-        }
-    
+        } 
     
         // Store the new image in the public storage
         $imagePath = $request->file('image')->store('images', 'public');
@@ -94,9 +95,12 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
-        if ($user->image && Storage::disk('public')->exists($user->image)) {
+        // Check if the user has an image and delete it from storage if it exists and is not the default image
+        if ($user->image && $user->image !== 'images/user_image.png' &&
+            Storage::disk('public')->exists($user->image)
+        ) {
             Storage::disk('public')->delete($user->image);
-        }    
+        } 
 
         Auth::logout();
 

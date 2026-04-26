@@ -94,11 +94,13 @@ public function update(Request $request, User $user)
 
     // Check if an image file was uploaded with the request
     if ($request->hasFile('image')) {
-        // Delete the old image if it exists
-        if ($user->image && Storage::disk('public')->exists($user->image)) {
+        // Check if the user has an image and delete it from storage if it exists and is not the default image
+        if ($user->image && $user->image !== 'images/user_image.png' &&
+            Storage::disk('public')->exists($user->image)
+        ) {
             Storage::disk('public')->delete($user->image);
-        }
-
+        } 
+        
         // Store the new uploaded image and save its path
         $imagePath = $request->file('image')->store('images', 'public');
     } else {
@@ -127,10 +129,13 @@ public function destroy(User $user)
 {
     $this->authorize('delete', $user); // Authorize that the user can delete this User
 
+    // Check if the user has an image and delete it from storage if it exists and is not the default image
+    if ($user->image && $user->image !== 'images/user_image.png' &&
+        Storage::disk('public')->exists($user->image)
+    ) {
+        Storage::disk('public')->delete($user->image);
+    }
 
-if ($user->image && Storage::disk('public')->exists($user->image)) {
-    Storage::disk('public')->delete($user->image);
-}
     // Delete the user from the database
     $user->delete();
 

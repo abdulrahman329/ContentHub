@@ -66,6 +66,7 @@ class PostsSeeder extends Seeder
                 'image' => $imageUrl,  // Use external image URL
                 'category_id' => $randomCategoryId,  // Random category ID
                 'user_id' => 1,  // Hardcoded user ID (you can change it)
+                'type' => 'post',  // Set type to 'post'
             ]);
         }
 

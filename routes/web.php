@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
-use App\Http\Controllers\NewsController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
@@ -67,13 +66,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 Route::middleware(['auth', 'role:admin|writer'])->group(function () {
 
-    // ------- News Management -------
-    Route::get('/news/create', [NewsController::class, 'create'])->name('news.create');
-    Route::post('/news', [NewsController::class, 'store'])->name('news.store');
-    Route::get('/news/{news}/edit', [NewsController::class, 'edit'])->name('news.edit');
-    Route::put('/news/{news}', [NewsController::class, 'update'])->name('news.update');
-    Route::delete('/news/{news}', [NewsController::class, 'destroy'])->name('news.destroy');
-
     // ------- Post Management -------
     Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
@@ -100,9 +92,6 @@ Route::middleware(['auth', 'role:admin|writer|user'])->group(function () {
 // ==========================
 
 Route::middleware(['auth', 'role:admin|writer|user'])->group(function () {
-
-    // ------- Public Viewable News -------
-    Route::resource('news', NewsController::class)->only(['index', 'show']);
 
     // ------- Public Viewable Posts -------
     Route::resource('posts', PostController::class)->only(['index', 'show']);

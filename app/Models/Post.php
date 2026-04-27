@@ -15,6 +15,7 @@ class Post extends Model
     'category_id',
     'user_id',
     'image',
+    'type',
 ];
 
     // Define relationships

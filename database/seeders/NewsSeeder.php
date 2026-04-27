@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\News;  
 use Illuminate\Support\Facades\File;  
+use app\Models\Post;
 use App\Models\Category; 
 use Faker\Factory as Faker;
 
@@ -62,12 +62,13 @@ class NewsSeeder extends Seeder
 
 
             // Create a random news record
-            News::create([
+            Post::create([
                 'title' => $faker->realText(50), // generates ~50 characters of English text
                 'content' => $faker->realText(200), // generates ~200 characters of English text
                 'image' => $imageUrl,  // Use external image URL
                 'category_id' => $randomCategoryId,  // Random category ID
                 'user_id' => 1,  // Hardcoded user ID (you can change it)
+                'type' => 'news',  // Set the type to 'news'
             ]);
         }
 

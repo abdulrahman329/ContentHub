@@ -18,11 +18,6 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
-                    <!-- News Link -->
-                    <x-nav-link :href="route('news.index')" :active="request()->routeIs('news.index')">
-                        {{ __('News') }}
-                    </x-nav-link>
-
                     <!-- Posts Link -->
                     <x-nav-link :href="route('posts.index')" :active="request()->routeIs('posts.index')">
                         {{ __('Posts') }}
@@ -32,9 +27,6 @@
                     @if(Auth::user()->hasRole('writer') || Auth::user()->hasRole('admin'))
                     <x-nav-link :href="route('posts.create')" :active="request()->routeIs('posts.create')">
                         {{ __('Post create') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('news.create')" :active="request()->routeIs('news.create')">
-                        {{ __('News create') }}
                     </x-nav-link>
                     @endif
 

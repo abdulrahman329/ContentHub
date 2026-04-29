@@ -42,9 +42,14 @@ class UserPolicy
 
     public function changeRole(User $user, User $model): bool
     {
-        // admin can update any user's role, other users cannot update roles
-        return $user->hasRole('admin');
+
+        if (!$user->hasRole('admin')) {
+            return false;
+        }
+
+        return !($user->id === $model->id && User::role('admin')->count() === 1);
     }
+    
 
     /**
      * Determine whether the user can delete the model.

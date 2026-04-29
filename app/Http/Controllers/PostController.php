@@ -87,8 +87,8 @@ class PostController extends Controller
     {
         $this->authorize('view', $post); // Authorize that the user can view this specific post
 
-        $post->load(['user', 'category', 'comments.user']);
-        
+        $post->load(['user', 'category']);
+                
         $comments = $post->comments() 
             ->with('user')
             ->latest() 

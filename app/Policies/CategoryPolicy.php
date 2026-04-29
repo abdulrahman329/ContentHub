@@ -45,7 +45,7 @@ class CategoryPolicy
      */
     public function delete(User $user, Category $category): bool
     {
-        if ($category->posts()->exists() || $category->news()->exists()) {
+        if ($category->posts()->exists()) {
             return false; // Cannot delete category if it has associated posts or news
         }
 

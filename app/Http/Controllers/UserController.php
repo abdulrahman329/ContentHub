@@ -22,7 +22,7 @@ public function create()
     $this->authorize('create', User::class); // Authorize that the user can create a new User
 
     $roles = Role::all(); // Retrieve all roles from the database
-    $users = $query = User::with('roles')->latest()->paginate(5); // Retrieve all users with their roles, ordered by latest and paginated
+    $users = User::with('roles')->latest()->paginate(5);
 
     // Return the view with users and roles to show the user creation form
     return view('user.create', compact('users', 'roles'));
@@ -39,7 +39,7 @@ public function store(Request $request)
         'email' => 'required|email|unique:users,email', // Ensure email is unique
         'password' => 'required|string|min:8', // Ensure password has at least 8 characters
         'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',  // Optional image upload with validation
-        'role' => 'required|string', // Validate the role
+        'role' => 'required|exists:roles,name', // Validate the role
     ]);
 
     

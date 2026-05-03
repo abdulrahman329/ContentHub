@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Post;  
 use Illuminate\Support\Facades\File;  
 use App\Models\Category;  
+use App\Models\User;
 use Faker\Factory as Faker;
 
 
@@ -65,7 +66,7 @@ class PostsSeeder extends Seeder
                 'content' => $faker->realText(200), // generates ~200 characters of English text
                 'image' => $imageUrl,  // Use external image URL
                 'category_id' => $randomCategoryId,  // Random category ID
-                'user_id' => 1,  // Hardcoded user ID (you can change it)
+                'user_id' => \App\Models\User::role('super_admin')->value('id'),                
                 'type' => 'post',  // Set type to 'post'
             ]);
         }

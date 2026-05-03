@@ -59,7 +59,7 @@ class PostController extends Controller
         $validatedData = $request->validate([
             'title' => 'required',  // Ensure a title is provided
             'content' => 'required',  // Ensure content is provided
-            'category_id' => 'required',  // Ensure a category is selected
+            'category_id' => 'required|exists:categories,id', // Ensure a category is selected
             'type' => 'required|in:post,news',  // Ensure the type is either 'post' or 'news'
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',  // Optional image upload with validation
         ]);
@@ -118,16 +118,15 @@ class PostController extends Controller
         $validatedData = $request->validate([
             'title' => 'required',
             'content' => 'required',
-            'category_id' => 'required',
+            'category_id' => 'required|exists:categories,id',
             'type' => 'required|in:post,news',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
+        // 
         if ($request->hasFile('image')) {
 
-            if ($post->image && Storage::disk('public')->exists($post->image)) {
-                Storage::disk('public')->delete($post->image);
-            }
+            deleteImage($post->image);
 
             $validatedData['image'] = $request->file('image')->store('images', 'public');
         }
@@ -142,9 +141,7 @@ class PostController extends Controller
     {
         $this->authorize('delete', $post); // Authorize that the user can delete this specific post
 
-        if ($post->image && Storage::disk('public')->exists($post->image)) {
-            Storage::disk('public')->delete($post->image);
-        }
+        deleteImage($post->image);
 
         // Delete the specified post from the database
         $post->delete();

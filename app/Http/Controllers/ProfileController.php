@@ -24,14 +24,9 @@ class ProfileController extends Controller
     {
         $this->authorize('view', $request->user()); // Authorize that the user can view their own profile
 
-        $roles = Role::all();
-        $users = User::all();  // Fetch all users
-        
-
         return view('profile.edit', [
             'user' => $request->user(),
-            'roles' => $roles,
-            'users' => $users
+            'roles' => Auth::user()->roles->pluck('name')
         ]);
     }
 
@@ -64,12 +59,7 @@ class ProfileController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
     
-        // Check if the user has an image and delete it from storage if it exists and is not the default image
-        if ($user->image && $user->image !== 'images/user_image.png' &&
-            Storage::disk('public')->exists($user->image)
-        ) {
-            Storage::disk('public')->delete($user->image);
-        } 
+        deleteImage($user->image);
     
         // Store the new image in the public storage
         $imagePath = $request->file('image')->store('images', 'public');
@@ -89,18 +79,17 @@ class ProfileController extends Controller
     {
         $this->authorize('delete', $request->user()); // Authorize that the user can delete their own account
 
+        $user = $request->user(); 
+
+        if ($user->hasRole('super_admin')) {
+            abort(403, 'Super Admin cannot delete themselves.');
+        }
+
         $request->validateWithBag('userDeletion', [
             'password' => ['required', 'current_password'],
         ]);
 
-        $user = $request->user();
-
-        // Check if the user has an image and delete it from storage if it exists and is not the default image
-        if ($user->image && $user->image !== 'images/user_image.png' &&
-            Storage::disk('public')->exists($user->image)
-        ) {
-            Storage::disk('public')->delete($user->image);
-        } 
+        deleteImage($user->image);
 
         Auth::logout();
 

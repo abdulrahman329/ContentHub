@@ -36,33 +36,31 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
-        // admin can update any user, other users can only update their own account if they have the permission
-        return $user->hasRole('admin') || ($user->id === $model->id);
+        return (
+            $user->id === $model->id
+        ) || (
+            $user->hasRole('admin') && !$model->hasRole('super_admin')
+        );
     }
 
     public function changeRole(User $user, User $model): bool
     {
-
-        if (!$user->hasRole('admin')) {
-            return false;
-        }
-
-        return !($user->id === $model->id && User::role('admin')->count() === 1);
+        return $user->hasRole('admin') && !$model->hasRole('super_admin');
     }
     
-
     /**
      * Determine whether the user can delete the model.
      */
     public function delete(User $user, User $model): bool
     {
-        // admin can delete any user except themselves if they are the only admin
-        if ($user->hasRole('admin')) {
-            return !($user->id === $model->id && User::role('admin')->count() === 1);
-        }
 
-    // the user can only delete their own account
-    return $user->id === $model->id;
+    // super_admin cannot be deleted
+    if ($model->hasRole('super_admin')) {
+        return false;
+    }
+
+    // admin can delete any user except super_admin, other users can only delete their own account
+    return $user->hasRole('admin') || $user->id === $model->id;
     }
 
     /**

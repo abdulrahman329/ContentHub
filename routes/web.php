@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\JsonController;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Role;
+use App\Models\User;
 
 // Public Routes
 
@@ -43,7 +44,7 @@ require __DIR__.'/auth.php';
 // Admin-only Routes
 // ==========================
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
+Route::middleware(['auth', 'role:super_admin|admin'])->group(function () {
     
     // ------- Category Management -------
     Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
@@ -64,7 +65,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 // Writer and Admin Routes
 // ==========================
 
-Route::middleware(['auth', 'role:admin|writer'])->group(function () {
+Route::middleware(['auth', 'role:super_admin|admin|writer'])->group(function () {
 
     // ------- Post Management -------
     Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
@@ -78,23 +79,15 @@ Route::middleware(['auth', 'role:admin|writer'])->group(function () {
 // Writer-Only Routes
 // ==========================
 
-Route::middleware(['auth', 'role:admin|writer|user'])->group(function () {
+Route::middleware(['auth', 'role:super_admin|admin|writer|user'])->group(function () {
 
     // ------- Comment Management -------
     Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::get('/comments/{comment}/edit', [CommentController::class, 'edit'])->name('comments.edit');
     Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');    
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
-
-});
-// ==========================
-// General Authenticated User Routes
-// ==========================
-
-Route::middleware(['auth', 'role:admin|writer|user'])->group(function () {
-
+    
     // ------- Public Viewable Posts -------
     Route::resource('posts', PostController::class)->only(['index', 'show']);
-
 
 });

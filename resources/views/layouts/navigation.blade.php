@@ -24,25 +24,25 @@
                     </x-nav-link>
 
                     <!-- Create Post and News Links (visible only for writers or admins) -->
-                    @if(Auth::user()->hasRole('writer') || Auth::user()->hasRole('admin'))
+                    @can('create', App\Models\Post::class)
                     <x-nav-link :href="route('posts.create')" :active="request()->routeIs('posts.create')">
                         {{ __('Post create') }}
                     </x-nav-link>
-                    @endif
+                    @endcan
 
                     <!-- Category Creation Link (visible only for admin) -->
-                    @if(Auth::user()->hasRole('admin'))
+                    @can('create', App\Models\Category::class)
                     <x-nav-link :href="route('categories.create')" :active="request()->routeIs('categories.create')">
                         {{ __('Category create') }}
                     </x-nav-link>
-                    @endif
+                    @endcan
 
                     <!-- User Management Link (visible only for admin) -->
-                    @if(Auth::user()->hasRole('admin'))
+                    @can('create', App\Models\User::class)
                     <x-nav-link :href="route('users.create')" :active="request()->routeIs('users.create')">
                         {{ __('User create') }}
                     </x-nav-link>
-                    @endif
+                    @endcan
 
                 </div>
             </div>

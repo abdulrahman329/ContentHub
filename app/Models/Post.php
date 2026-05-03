@@ -21,6 +21,13 @@ class Post extends Model
     'type',
 ];
 
+    protected static function booted()
+    {
+        static::deleting(function ($post) {
+            $post->comments()->delete();
+        });
+    }
+
     // Define relationships
     public function user()
     {

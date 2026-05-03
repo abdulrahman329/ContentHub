@@ -7,6 +7,7 @@ use App\Models\Comment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use App\Models\Post;
 
 class CommentController extends Controller
 
@@ -24,15 +25,13 @@ class CommentController extends Controller
             'commentable_type' => 'required|string',
         ]);
 
-        $modelClass = $validated['commentable_type'];
+        $type = $validated['commentable_type'];
 
-        if (!class_exists($modelClass)) {
-            abort(403, 'Invalid comment type');
-        }
+        $post = Post::where('id', $validated['commentable_id'])
+            ->where('type', $type)
+            ->firstOrFail();
 
-        $model = $modelClass::findOrFail($validated['commentable_id']);
-
-        $model->comments()->create([
+        $post->comments()->create([
             'content' => $validated['content'],
             'user_id' => Auth::id(),
         ]);
@@ -63,10 +62,7 @@ class CommentController extends Controller
         $parent = $comment->commentable;
 
         // Redirect back to the parent post/news page after updating the comment
-        return redirect()->route(
-            $parent instanceof \App\Models\News ? 'news.show' : 'posts.show',
-            $parent->id
-        )->with('success', 'Comment updated successfully.');
+        return redirect()->route('posts.show', $parent->id)->with('success', 'Comment updated!');
     }
 
     // DELETE the comment

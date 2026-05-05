@@ -60,7 +60,7 @@ class UserPolicy
     }
 
     // admin can delete any user except super_admin, other users can only delete their own account
-    return $user->hasRole('admin') || $user->id === $model->id;
+    return $user->hasRole('admin');
     }
 
     /**
@@ -68,7 +68,7 @@ class UserPolicy
      */
     public function restore(User $user, User $model): bool
     {
-        return false;
+        return $user->hasRole('admin');
     }
 
     /**
@@ -76,6 +76,11 @@ class UserPolicy
      */
     public function forceDelete(User $user, User $model): bool
     {
-        return false;
+        return $user->hasRole('admin');
+    }
+
+    public function viewTrash(User $user): bool
+    {
+        return $user->hasRole('admin');
     }
 }

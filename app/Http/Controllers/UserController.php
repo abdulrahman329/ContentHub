@@ -23,9 +23,10 @@ public function create()
 
     $roles = Role::where('name', '!=', 'super_admin')->get();
     $users = User::with('roles')->latest()->paginate(5);
+    $trashedCount = User::onlyTrashed()->count();
 
     // Return the view with users and roles to show the user creation form
-    return view('user.create', compact('users', 'roles'));
+    return view('user.create', compact('users', 'roles', 'trashedCount'));
 }
 
 // Store the newly created User
@@ -140,4 +141,36 @@ public function destroy(User $user)
     // Redirect with a success message
     return redirect()->route('users.create')->with('success', 'User deleted successfully!');
 }
+
+    public function trash()
+    {
+        $this->authorize('viewTrash', User::class);
+
+        $users = User::onlyTrashed()->latest()->paginate(10);
+
+        return view('user.trash', compact('users'));
+    }
+
+    public function restore($id)
+    {
+        $user = User::withTrashed()->findOrFail($id);
+
+        $this->authorize('restore', $user);
+
+        $user->restore();
+
+        return back()->with('success', 'User restored!');
+    }
+
+    public function forceDelete($id)
+    {
+        $user = User::withTrashed()->findOrFail($id);
+
+        $this->authorize('forceDelete', $user);
+
+        deleteImage($user->image);
+        $user->forceDelete();
+
+        return back()->with('success', 'User permanently deleted!');
+    }
 }

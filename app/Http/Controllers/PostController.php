@@ -9,6 +9,7 @@ use App\Models\Comment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class PostController extends Controller
 {
@@ -20,10 +21,13 @@ class PostController extends Controller
         $this->authorize('viewAny', Post::class);
 
         $categories = Category::all();
+        $trashedCount = Post::onlyTrashed()->count();
 
-        $query = Post::with('category')
-            ->withCount('comments')
-            ->latest();
+
+        $query = Post::with(['category', 'user'])
+        ->withCount('comments')
+        ->latest()
+        ->withoutTrashed();
 
         if ($request->filled('type')) {
             $query->where('type', $request->type);
@@ -35,7 +39,7 @@ class PostController extends Controller
 
         $posts = $query->paginate(8);
 
-        return view('posts.index', compact('posts', 'categories'));
+        return view('posts.index', compact('posts', 'categories', 'trashedCount'));
     }
 
     // Method to show the form for creating a new post
@@ -60,7 +64,7 @@ class PostController extends Controller
             'title' => 'required',  // Ensure a title is provided
             'content' => 'required',  // Ensure content is provided
             'category_id' => 'required|exists:categories,id', // Ensure a category is selected
-            'type' => 'required|in:post,news',  // Ensure the type is either 'post' or 'news'
+            'type' => ['required', Rule::in(Post::types())], // Ensure the type is one of the allowed values defined in the Post model
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',  // Optional image upload with validation
         ]);
 
@@ -87,15 +91,19 @@ class PostController extends Controller
     {
         $this->authorize('view', $post); // Authorize that the user can view this specific post
 
-        $post->load(['user', 'category']);
-                
-        $comments = $post->comments() 
-            ->with('user')
-            ->latest() 
-            ->paginate(6); 
-
-        // Return the view to show the specific post and its comments
-        return view('posts.show', compact('post', 'comments'));
+        $post->load(['user' => function ($q) {
+            $q->withTrashed();
+        }, 'category']);
+                     
+        $comments = $post->comments()
+        ->with(['user' => function ($q) {
+            $q->withTrashed();
+        }])
+        ->latest()
+        ->paginate(6);
+    
+    return view('posts.show', compact('post', 'comments'));
+    
     }
     
     // Method to show the form for editing a post
@@ -119,7 +127,7 @@ class PostController extends Controller
             'title' => 'required',
             'content' => 'required',
             'category_id' => 'required|exists:categories,id',
-            'type' => 'required|in:post,news',
+            'type' => ['required', Rule::in(Post::types())],
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -148,4 +156,42 @@ class PostController extends Controller
 
         return redirect()->route('posts.index', ['type' => $post->type]);
     }   
+
+
+    // Method to display the list of soft-deleted posts (trash)
+    public function trash()
+    {
+        $this->authorize('viewTrash', Post::class);
+
+        $posts = Post::onlyTrashed()->latest()->paginate(10);
+
+        return view('posts.trash', compact('posts'));
+    }
+
+
+    // Method to restore a soft-deleted post
+    public function restore($id)
+    {
+        $this->authorize('restore', Post::class);
+
+        $post = Post::withTrashed()->findOrFail($id);
+
+
+        $post->restore();
+
+        return back()->with('success', 'Post restored!');
+    }
+
+
+    // Method to permanently delete a soft-deleted post
+    public function forceDelete($id)
+    {
+        $this->authorize('forceDelete', Post::class);
+        $post = Post::withTrashed()->findOrFail($id);
+
+        $post->forceDelete();
+
+        return back()->with('success', 'Post deleted permanently!');
+    }
+
 }

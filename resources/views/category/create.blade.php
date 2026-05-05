@@ -27,10 +27,7 @@
             @can('viewAny', App\Models\Category::class)
         <!-- List of Existing Categories -->
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg border border-gray-700 max-w-full">
-            <h3 class="text-3xl text-white mb-6">Existing Categories</h3>
-            <span class="text-gray-500 italic text-right block">
-                if you Cannot delete the category because this category has related posts or news.
-            </span>            
+            <h3 class="text-3xl text-white mb-6">Existing Categories</h3>          
             <!-- Loop through the categories and display each one -->
             <ul class="space-y-6">
                 @foreach ($categories as $category)
@@ -60,11 +57,6 @@
                                 <button type="submit" class="text-red-600 hover:text-red-500" onclick="return confirm('Are you sure you want to delete this category?')">Delete</button>
                             </form>
                         </div>
-                        @else
-                            <!-- If the user does not have permission to or delete, we can optionally display a message or simply hide the buttons -->
-                            <div class="ml-4 min-w-[120px]">
-                                <span class="text-gray-500 italic">Cannot delete</span>
-                            </div>
                         @endcan
                     </li>
                 @endforeach

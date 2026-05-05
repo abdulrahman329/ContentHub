@@ -68,6 +68,11 @@
                 </a>
             @endcan
 
+            {{-- Trash Button --}}
+            <a href="{{ route('posts.trash') }}"
+                class="bg-gray-600 ml-6 hover:bg-gray-700 text-white font-bold px-6 py-2 rounded-md shadow-md transition">
+                🗑 Recycle Bin ({{ $trashedCount }})
+            </a>
         </div>
 
     </div>

@@ -14,10 +14,11 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('content');
-            $table->enum('type', ['post', 'news'])->default('post');
-            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('type')->index()->default('post');
+            $table->foreignId('category_id')->nullable()->constrained('categories')->nullOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();            
             $table->string('image')->nullable();
+            $table->softDeletes()->index();
             $table->timestamps();
         });
     }

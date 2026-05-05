@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Post;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Category extends Model
 {
+    use HasFactory;
     
     // Fillable properties to prevent mass assignment vulnerabilities
     protected $fillable = ['name'];

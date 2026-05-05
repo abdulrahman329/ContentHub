@@ -61,7 +61,7 @@
 
             @if($item->category)
                 <p>
-                    <strong>Category:</strong> {{ $item->category->name }}
+                    <strong>Category:</strong>{{ $item->category?->name ?? 'Uncategorized' }}
                 </p>
             @endif
 

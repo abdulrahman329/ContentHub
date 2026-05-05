@@ -47,20 +47,20 @@
 
             <div class="flex items-center mb-4">
                 <img 
-                    src="{{ $post->user->image 
+                    src="{{ $post->user?->image 
                         ? asset('storage/'.$post->user->image) 
                         : asset('storage/images/user_image.png') }}"
                     class="w-10 h-10 rounded-full object-cover mr-2"
                 >
 
                 <span class="text-white text-2xl">
-                    {{ $post->user->name }}
+                    {{ $comment->user?->name ?? 'Unknown Author' }}                
                 </span>
             </div>
 
             <p class="text-gray-300">
                 <strong>Category:</strong>
-                {{ $post->category?->name }}
+                {{ $post->category?->name ?? 'Uncategorized' }}
             </p>
 
             <p class="text-gray-200 mt-4 text-lg">
@@ -88,7 +88,7 @@
 
                     <div class="flex items-center mb-2">
                         <img 
-                            src="{{ $comment->user->image 
+                            src="{{ $comment->user?->image 
                                 ? asset('storage/'.$comment->user->image)
                                 : asset('storage/images/user_image.png') }}"
                             class="w-10 h-10 rounded-full mr-2"

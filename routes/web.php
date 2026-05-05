@@ -73,6 +73,18 @@ Route::middleware(['auth', 'role:super_admin|admin|writer'])->group(function () 
     Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
     Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
     Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
+
+    // Posts trash
+    Route::get('/posts/trash', [PostController::class, 'trash'])->name('posts.trash');
+    Route::post('/posts/{id}/restore', [PostController::class, 'restore'])->name('posts.restore');
+    Route::delete('/posts/{id}/force-delete', [PostController::class, 'forceDelete'])->name('posts.forceDelete');
+
+
+    // Users trash
+    Route::get('/users/trash', [UserController::class, 'trash'])->name('users.trash');
+    Route::post('/users/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
+    Route::delete('/users/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.forceDelete');
+
 });
 
 // ==========================

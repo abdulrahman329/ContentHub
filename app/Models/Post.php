@@ -16,14 +16,13 @@ class Post extends Model
     const TYPE_NEWS = 'news';
 
     public static function types()
-{
-    return [
-        self::TYPE_POST,
-        self::TYPE_NEWS,
-    ];
-}
+    {
+        return [
+            self::TYPE_POST,
+            self::TYPE_NEWS,
+        ];
+    }
 
-    
     // Define fillable fields
     protected $fillable = [
     'title',

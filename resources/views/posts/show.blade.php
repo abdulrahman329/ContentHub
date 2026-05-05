@@ -83,6 +83,19 @@
 
             <h3 class="text-2xl text-white mb-4">Comments</h3>
 
+            @can('viewTrash', App\Models\Comment::class)
+                <div class="mb-4 flex justify-end">
+                    <a href="{{ route('comments.trash') }}"
+                    class="text-sm text-white bg-gray-600 hover:bg-gray-800 px-4 py-2 rounded-md transition-all">
+                        View Deleted Comments
+                    <span class="ml-2 bg-red-600 text-white text-xs px-2 py-1 rounded-full">
+                        {{ $trashedCommentsCount }}
+                    </span>
+                    </a>
+                    
+                </div>
+            @endcan
+            
             @forelse($comments as $comment)
                 <div class="bg-gray-700 p-4 rounded-md mb-4">
 

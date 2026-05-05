@@ -53,7 +53,7 @@ class CommentPolicy
      */
     public function restore(User $user, Comment $comment): bool
     {
-        return false;
+        return $user->id === $comment->user_id || $user->hasRole('admin');
     }
 
     /**
@@ -61,6 +61,12 @@ class CommentPolicy
      */
     public function forceDelete(User $user, Comment $comment): bool
     {
-        return false;
+        return $user->id === $comment->user_id || $user->hasRole('admin');
     }
+
+     public function viewTrash(User $user, Comment $comment): bool
+    {
+        return $user->id === $comment->user_id || $user->hasRole('admin');
+    }
+    
 }

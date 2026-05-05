@@ -25,7 +25,11 @@ class PostController extends Controller
 
 
         $query = Post::with(['category', 'user'])
-        ->withCount('comments')
+        ->withCount([
+            'comments as comments_count' => function ($q) {
+                $q->whereNull('deleted_at');
+            }
+        ])
         ->latest()
         ->withoutTrashed();
 
@@ -91,6 +95,8 @@ class PostController extends Controller
     {
         $this->authorize('view', $post); // Authorize that the user can view this specific post
 
+        $trashedCommentsCount = Comment::onlyTrashed()->count();
+
         $post->load(['user' => function ($q) {
             $q->withTrashed();
         }, 'category']);
@@ -102,7 +108,7 @@ class PostController extends Controller
         ->latest()
         ->paginate(6);
     
-    return view('posts.show', compact('post', 'comments'));
+    return view('posts.show', compact('post', 'comments', 'trashedCommentsCount'));
     
     }
     

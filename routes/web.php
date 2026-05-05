@@ -98,6 +98,9 @@ Route::middleware(['auth', 'role:super_admin|admin|writer|user'])->group(functio
     Route::get('/comments/{comment}/edit', [CommentController::class, 'edit'])->name('comments.edit');
     Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');    
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+    Route::get('/comments/trash', [CommentController::class, 'trash'])->name('comments.trash');
+    Route::post('/comments/{id}/restore', [CommentController::class, 'restore'])->name('comments.restore');
+    Route::delete('/comments/{id}/force-delete', [CommentController::class, 'forceDelete'])->name('comments.forceDelete');
     
     // ------- Public Viewable Posts -------
     Route::resource('posts', PostController::class)->only(['index', 'show']);

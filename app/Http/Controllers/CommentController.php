@@ -31,6 +31,10 @@ class CommentController extends Controller
             ->where('type', $type)
             ->firstOrFail();
 
+            // $commentableType = Relation::getMorphedModel($validated['commentable_type']);
+
+            // $commentable = $commentableType::findOrFail($validated['commentable_id']);
+
         $post->comments()->create([
             'content' => $validated['content'],
             'user_id' => Auth::id(),
@@ -73,5 +77,46 @@ class CommentController extends Controller
         $comment->delete();
 
         return back()->with('success', 'Comment deleted successfully.');
+    }
+
+
+    public function trash()
+    {
+        $this->authorize('viewTrash', Comment::class);
+
+        $comments = Comment::onlyTrashed()
+        ->with(['user'])
+        ->latest()
+        ->paginate(10);
+        
+        return view('comments.trash', compact('comments'));
+    }
+
+    public function restore($id)
+    {
+        $comment = Comment::withTrashed()
+            ->with('commentable')
+            ->findOrFail($id);
+    
+        $this->authorize('restore', $comment);
+    
+        $comment->restore();
+    
+        return redirect()->route('posts.show', $comment->commentable_id)->with('success', 'Comment restored!');
+    }
+
+    public function forceDelete($id)
+    {
+        $comment = Comment::withTrashed()
+            ->with('commentable')
+            ->findOrFail($id);
+
+        $this->authorize('forceDelete', $comment);
+
+        $postId = $comment->commentable_id;
+
+        $comment->forceDelete();
+
+        return redirect()->route('posts.show', $postId)->with('success', 'Comment permanently deleted!');
     }
 }

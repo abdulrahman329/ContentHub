@@ -92,25 +92,32 @@ class PostController extends Controller
 
     // Method to show a specific post with its comments
     public function show(Post $post)
-    {
-        $this->authorize('view', $post); // Authorize that the user can view this specific post
+{
+    $this->authorize('view', $post);
 
-        $trashedCommentsCount = Comment::onlyTrashed()->count();
+    $trashedCommentsCount = $post->comments()
+    ->onlyTrashed()
+    ->when(!auth()->user()->hasRole('admin'), function ($q) {
+        $q->where('user_id', auth()->id());
+    })
+    ->count();
 
-        $post->load(['user' => function ($q) {
+    $post->load([
+        'user' => function ($q) {
             $q->withTrashed();
-        }, 'category']);
-                     
-        $comments = $post->comments()
+        },
+        'category'
+    ]);
+
+    $comments = $post->comments()
         ->with(['user' => function ($q) {
             $q->withTrashed();
         }])
         ->latest()
         ->paginate(6);
-    
+
     return view('posts.show', compact('post', 'comments', 'trashedCommentsCount'));
-    
-    }
+}
     
     // Method to show the form for editing a post
     public function edit(Post $post)
@@ -155,8 +162,6 @@ class PostController extends Controller
     {
         $this->authorize('delete', $post); // Authorize that the user can delete this specific post
 
-        deleteImage($post->image);
-
         // Delete the specified post from the database
         $post->delete();
 
@@ -178,9 +183,9 @@ class PostController extends Controller
     // Method to restore a soft-deleted post
     public function restore($id)
     {
-        $this->authorize('restore', Post::class);
-
         $post = Post::withTrashed()->findOrFail($id);
+        
+        $this->authorize('restore', $post);
 
 
         $post->restore();
@@ -192,9 +197,11 @@ class PostController extends Controller
     // Method to permanently delete a soft-deleted post
     public function forceDelete($id)
     {
-        $this->authorize('forceDelete', Post::class);
         $post = Post::withTrashed()->findOrFail($id);
 
+        $this->authorize('forceDelete', $post);
+
+        deleteImage($post->image);
         $post->forceDelete();
 
         return back()->with('success', 'Post deleted permanently!');

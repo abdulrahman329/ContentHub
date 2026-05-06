@@ -81,17 +81,20 @@ class CommentController extends Controller
 
 
     public function trash()
-    {
-        $this->authorize('viewTrash', Comment::class);
+{
+    $this->authorize('viewTrash', Comment::class);
 
-        $comments = Comment::onlyTrashed()
-        ->with(['user'])
+    $comments = Comment::query()
+        ->onlyTrashed()
+        ->when(!auth()->user()->hasRole('admin'), function ($q) {
+            $q->where('user_id', auth()->id());
+        })
+        ->with('user')
         ->latest()
         ->paginate(10);
-        
-        return view('comments.trash', compact('comments'));
-    }
 
+    return view('comments.trash', compact('comments'));
+}
     public function restore($id)
     {
         $comment = Comment::withTrashed()

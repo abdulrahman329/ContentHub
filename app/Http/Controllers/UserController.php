@@ -132,9 +132,6 @@ public function destroy(User $user)
         abort(403, 'Super Admin cannot delete themselves.');
     }
 
-    // Delete the user's image from storage if it exists and is not the default image
-    deleteImage($user->image);
-
     // Delete the user from the database
     $user->delete();
 

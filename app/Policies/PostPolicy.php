@@ -64,8 +64,8 @@ class PostPolicy
         return $user->id === $post->user_id || $user->hasRole('admin');
     }
     
-    public function viewTrash(User $user, Post $post): bool
+    public function viewTrash(User $user): bool
     {
-        return $user->id === $post->user_id || $user->hasRole('admin');
+        return $user->hasRole('admin') || $user->hasRole('writer');
     }
 }

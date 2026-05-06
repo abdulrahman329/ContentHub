@@ -54,7 +54,7 @@
                 >
 
                 <span class="text-white text-2xl">
-                    {{ $comment->user?->name ?? 'Unknown Author' }}                
+                    {{ $post->user?->name ?? 'Unknown Author' }}                
                 </span>
             </div>
 
@@ -92,7 +92,6 @@
                         {{ $trashedCommentsCount }}
                     </span>
                     </a>
-                    
                 </div>
             @endcan
             

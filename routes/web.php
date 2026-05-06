@@ -59,6 +59,12 @@ Route::middleware(['auth', 'role:super_admin|admin'])->group(function () {
     Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+
+    // ------- Users trash -------
+    Route::get('/users/trash', [UserController::class, 'trash'])->name('users.trash');
+    Route::post('/users/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
+    Route::delete('/users/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.forceDelete');
+    
 });
 
 // ==========================
@@ -74,16 +80,10 @@ Route::middleware(['auth', 'role:super_admin|admin|writer'])->group(function () 
     Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
     Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
 
-    // Posts trash
+    // ------- Posts trash -------
     Route::get('/posts/trash', [PostController::class, 'trash'])->name('posts.trash');
     Route::post('/posts/{id}/restore', [PostController::class, 'restore'])->name('posts.restore');
     Route::delete('/posts/{id}/force-delete', [PostController::class, 'forceDelete'])->name('posts.forceDelete');
-
-
-    // Users trash
-    Route::get('/users/trash', [UserController::class, 'trash'])->name('users.trash');
-    Route::post('/users/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
-    Route::delete('/users/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.forceDelete');
 
 });
 
@@ -98,6 +98,8 @@ Route::middleware(['auth', 'role:super_admin|admin|writer|user'])->group(functio
     Route::get('/comments/{comment}/edit', [CommentController::class, 'edit'])->name('comments.edit');
     Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');    
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+
+    // ------- Comments trash -------
     Route::get('/comments/trash', [CommentController::class, 'trash'])->name('comments.trash');
     Route::post('/comments/{id}/restore', [CommentController::class, 'restore'])->name('comments.restore');
     Route::delete('/comments/{id}/force-delete', [CommentController::class, 'forceDelete'])->name('comments.forceDelete');

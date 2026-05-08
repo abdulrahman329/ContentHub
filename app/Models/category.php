@@ -13,6 +13,14 @@ class Category extends Model
     // Fillable properties to prevent mass assignment vulnerabilities
     protected $fillable = ['name'];
 
+
+    // Scope to order categories by name
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('name');
+    }
+
+
     /**
      * Define the relationship with the Post model.
     * A category can have many posts.

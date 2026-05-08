@@ -29,7 +29,8 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-        "app/helpers/ImageHelper.php"
+        "app/helpers/DeleteImage.php",
+        "app/helpers/StoreImage.php"
     ]
     },
     "autoload-dev": {

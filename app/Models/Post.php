@@ -33,11 +33,42 @@ class Post extends Model
     'type',
 ];
 
+
+    // Scope to include comment count
+    public function scopeWithCommentCount($query)
+    {
+        // Count only non-deleted comments
+        return $query->withCount([
+            'comments as comments_count' => function ($q) {
+                $q->whereNull('deleted_at');
+            }
+        ]);
+    }
+
+    // Scope to filter posts by type
+    public function scopeType($query, $type)
+    {
+        return $query->where('type', $type);
+    }
+
+    // Scope to filter posts by category
+    public function scopecategory($query, $category_id)
+    {
+        return $query->where('category_id', $category_id);
+    }
+
+
+
+    // Method to count trashed posts
+    public static function trashedCount()
+    {
+        return self::onlyTrashed()->count();
+    }
+
     // Define relationships
     public function user()
     {
         return $this->belongsTo(User::class)->withTrashed();
-        ;
     }
 
     public function category()

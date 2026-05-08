@@ -5,11 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\Category;
-use App\Models\Comment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
+use App\Http\Requests\Post\StorePostRequest;
+use App\Http\Requests\Post\UpdatePostRequest;
 
 class PostController extends Controller
 {
@@ -20,25 +19,19 @@ class PostController extends Controller
     {
         $this->authorize('viewAny', Post::class);
 
-        $categories = Category::all();
-        $trashedCount = Post::onlyTrashed()->count();
-
+        $categories = Category::ordered()->get();        
+        $trashedCount = Post::trashedCount();
 
         $query = Post::with(['category', 'user'])
-        ->withCount([
-            'comments as comments_count' => function ($q) {
-                $q->whereNull('deleted_at');
-            }
-        ])
-        ->latest()
-        ->withoutTrashed();
+        ->withCommentCount()
+        ->latest();
 
         if ($request->filled('type')) {
-            $query->where('type', $request->type);
+            $query->type($request->type);
         }
-
+        
         if ($request->filled('category_id')) {
-            $query->where('category_id', $request->category_id);
+            $query->category($request->category_id);
         }
 
         $posts = $query->paginate(8);
@@ -59,25 +52,14 @@ class PostController extends Controller
     }
 
     // Method to handle the creation of a new post and save it to the database
-    public function store(Request $request)
+    public function store(StorePostRequest $request)
     {
-        $this->authorize('create', Post::class); // Authorize that the user can create a post
+        // Validate the incoming request data using the StorePostRequest form request class
+        $validatedData = $request->validated();
 
-        // Validate the incoming request to ensure necessary data is provided
-        $validatedData = $request->validate([
-            'title' => 'required',  // Ensure a title is provided
-            'content' => 'required',  // Ensure content is provided
-            'category_id' => 'required|exists:categories,id', // Ensure a category is selected
-            'type' => ['required', Rule::in(Post::types())], // Ensure the type is one of the allowed values defined in the Post model
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',  // Optional image upload with validation
-        ]);
-
-        // Check if an image file was uploaded with the request
+        // Check if an image file was uploaded with the request and store it, adding the path to the validated data
         if ($request->hasFile('image')) {
-            // Store the uploaded image and save its path
-            $imagePath = $request->file('image')->store('images', 'public');
-            // Add the image path to the validated data
-            $validatedData['image'] = $imagePath;
+            $validatedData['image'] = storeImage($request->file('image'));
         }
 
         // Add the user_id to the validated data to associate the post with the current user
@@ -101,12 +83,10 @@ class PostController extends Controller
         $q->where('user_id', auth()->id());
     })
     ->count();
-
+    
     $post->load([
-        'user' => function ($q) {
-            $q->withTrashed();
-        },
-        'category'
+        'user' => fn ($q) => $q->withTrashed(),
+        'category',
     ]);
 
     $comments = $post->comments()
@@ -132,24 +112,14 @@ class PostController extends Controller
     }
 
     // Method to update the post in the database after editing
-    public function update(Request $request, Post $post)
+    public function update(UpdatePostRequest $request, Post $post)
     {
-        $this->authorize('update', $post);
 
-        $validatedData = $request->validate([
-            'title' => 'required',
-            'content' => 'required',
-            'category_id' => 'required|exists:categories,id',
-            'type' => ['required', Rule::in(Post::types())],
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-
-        // 
+        $validatedData = $request->validated(); // Get the validated data from the request
+         
+        // Check if an image file was uploaded with the request and store it, adding the path to the validated data
         if ($request->hasFile('image')) {
-
-            deleteImage($post->image);
-
-            $validatedData['image'] = $request->file('image')->store('images', 'public');
+            $validatedData['image'] = storeImage($request->file('image'));
         }
 
         $post->update($validatedData);

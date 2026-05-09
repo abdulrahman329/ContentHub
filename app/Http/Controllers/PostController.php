@@ -74,30 +74,25 @@ class PostController extends Controller
 
     // Method to show a specific post with its comments
     public function show(Post $post)
-{
-    $this->authorize('view', $post);
+    {
+        $this->authorize('view', $post);
 
-    $trashedCommentsCount = $post->comments()
-    ->onlyTrashed()
-    ->when(!auth()->user()->hasRole('admin'), function ($q) {
-        $q->where('user_id', auth()->id());
-    })
-    ->count();
-    
-    $post->load([
-        'user' => fn ($q) => $q->withTrashed(),
-        'category',
-    ]);
+        $trashedCommentsCount = $post->comments()
+        ->onlyTrashedVisibleToUser()
+        ->count();
+        
+        $post->load([
+            'user' => fn ($q) => $q->withTrashed(),
+            'category',
+        ]);
 
-    $comments = $post->comments()
-        ->with(['user' => function ($q) {
-            $q->withTrashed();
-        }])
+        $comments = $post->comments()
+        ->with(['user' => fn ($q) => $q->withTrashed()])
         ->latest()
         ->paginate(6);
 
-    return view('posts.show', compact('post', 'comments', 'trashedCommentsCount'));
-}
+        return view('posts.show', compact('post', 'comments', 'trashedCommentsCount'));
+    }
     
     // Method to show the form for editing a post
     public function edit(Post $post)

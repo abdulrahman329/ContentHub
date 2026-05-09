@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use App\Models\Post;
+use App\Http\Requests\Comment\StoreCommentRequest;
+use App\Http\Requests\Comment\UpdateCommentRequest;
 
 class CommentController extends Controller
 
@@ -15,25 +17,11 @@ class CommentController extends Controller
     use AuthorizesRequests;
 
     // STORE a new comment
-    public function store(Request $request)
+    public function store(StoreCommentRequest $request)
     {
-        $this->authorize('create', Comment::class);
+        $validated = $request->validated();
 
-        $validated = $request->validate([
-            'content' => 'required|string|max:1000',
-            'commentable_id' => 'required|integer',
-            'commentable_type' => 'required|string',
-        ]);
-
-        $type = $validated['commentable_type'];
-
-        $post = Post::where('id', $validated['commentable_id'])
-            ->where('type', $type)
-            ->firstOrFail();
-
-            // $commentableType = Relation::getMorphedModel($validated['commentable_type']);
-
-            // $commentable = $commentableType::findOrFail($validated['commentable_id']);
+        $post = Post::findOrFail($validated['commentable_id']);
 
         $post->comments()->create([
             'content' => $validated['content'],
@@ -52,21 +40,12 @@ class CommentController extends Controller
     }
 
     // UPDATE the comment
-    public function update(Request $request, Comment $comment)
+    public function update(UpdateCommentRequest $request, Comment $comment)
     {
-        $this->authorize('update', $comment);
-
-        $validated = $request->validate([
-            'content' => 'required|string|max:1000',
-        ]);
-
-        $comment->update($validated);
-
-        // commentable_type is the alias (post/news), we need to get the actual model class
-        $parent = $comment->commentable;
+        $comment->update($request->validated());
 
         // Redirect back to the parent post/news page after updating the comment
-        return redirect()->route('posts.show', $parent->id)->with('success', 'Comment updated!');
+        return redirect()->route('posts.show', $comment->commentable_id)->with('success', 'Comment updated!');
     }
 
     // DELETE the comment
@@ -84,11 +63,7 @@ class CommentController extends Controller
 {
     $this->authorize('viewTrash', Comment::class);
 
-    $comments = Comment::query()
-        ->onlyTrashed()
-        ->when(!auth()->user()->hasRole('admin'), function ($q) {
-            $q->where('user_id', auth()->id());
-        })
+    $comments = Comment::onlyTrashedVisibleToUser()
         ->with('user')
         ->latest()
         ->paginate(10);
@@ -98,7 +73,6 @@ class CommentController extends Controller
     public function restore($id)
     {
         $comment = Comment::withTrashed()
-            ->with('commentable')
             ->findOrFail($id);
     
         $this->authorize('restore', $comment);
@@ -111,7 +85,6 @@ class CommentController extends Controller
     public function forceDelete($id)
     {
         $comment = Comment::withTrashed()
-            ->with('commentable')
             ->findOrFail($id);
 
         $this->authorize('forceDelete', $comment);

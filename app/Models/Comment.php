@@ -18,6 +18,17 @@ class Comment extends Model
         'commentable_type',
     ];
 
+    // Scope to filter only trashed comments visible to the user
+    public function scopeOnlyTrashedVisibleToUser($query)
+    {
+        return $query->onlyTrashed()
+            ->when(
+                !auth()->user()->hasRole('admin'),
+                fn ($q) => $q->where('user_id', auth()->id())
+            );
+    }
+
+
     // Define relationships
     public function user()
     {

@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Http\Requests\User\StoreUserRequest;
+use App\Http\Requests\User\UpdateUserRequest;
 
 
 class UserController extends Controller
@@ -30,38 +32,19 @@ public function create()
 }
 
 // Store the newly created User
-public function store(Request $request)
+public function store(StoreUserRequest $request)
 {
-    $this->authorize('create', User::class); // Authorize that the user can create a new User
+    $validated = $request->validated();
 
-    // Validate the incoming request data
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email', // Ensure email is unique
-        'password' => 'required|string|min:8', // Ensure password has at least 8 characters
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',  // Optional image upload with validation
-        'role' => 'required|exists:roles,name|not_in:super_admin',
-    ]);
-
-    // Check if an image file was uploaded with the request
-    if ($request->hasFile('image')) {
-        // Store the uploaded image and save its path
-        $imagePath = $request->file('image')->store('images', 'public');
-    } else {
-        // If no image is uploaded, set a default image path
-        $imagePath = 'images/user_image.png'; // Ensure you have a default image stored in public/images
-    }
+    $validated['image'] = $request->hasFile('image')
+        ? storeImage($request->file('image'))
+        : null;
 
     // Create the new User with the hashed password
-    $user = User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => Hash::make($request->password), // Hash the password before saving
-        'image' => $imagePath,
-    ]);
+    $user = User::create($validated);
 
     // Assign the role to the user
-    $user->assignRole($request->role);  // Assign the role using Spatie's method
+    $user->syncRoles([$validated['role']]);
 
     // Redirect to the User creation page with a success message
     return redirect()->route('users.create')->with('success', 'User created successfully!');
@@ -71,6 +54,7 @@ public function store(Request $request)
 public function edit(User $user)
 {
     $this->authorize('update', $user); // Authorize that the user can update this User
+
     // Retrieve all roles
     $roles = Role::where('name', '!=', 'super_admin')->get();
 
@@ -78,46 +62,31 @@ public function edit(User $user)
 }
 
 // Update the User details
-public function update(Request $request, User $user)
+public function update(UpdateUserRequest $request, User $user)
 {
-    $this->authorize('update', $user); // Authorize that the user can update this User
 
-    // Validate the updated User data
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email,' . $user->id, // Ensure email is unique but ignores the current user
-        'password' => 'nullable|string|min:8', // Password is optional for updates
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',  // Optional image upload with validation
-        'role' => 'required|exists:roles,name|not_in:super_admin',
-    ]);
+    $validated = $request->validated();
 
-    if ($user->hasRole('super_admin') && $request->role !== 'super_admin') {
+    if ($user->hasRole('super_admin') && $validated['role'] !== 'super_admin') {
         abort(403, 'Super Admin role cannot be changed.');
     }
 
-    // Check if an image file was uploaded with the request
     if ($request->hasFile('image')) {
-
         deleteImage($user->image);
+        $validated['image'] = storeImage($request->file('image'));
+    }
 
-        // Store the new uploaded image and save its path
-        $imagePath = $request->file('image')->store('images', 'public');
-    } else {
-        // Keep the current image path if no new image is uploaded
-        $imagePath = $user->image;
+    
+    if (empty($validated['password'])) {
+        unset($validated['password']);
     }
 
     $this->authorize('changeRole', $user);
 
-    // Update the User details, ensuring password is only updated if provided
-    $user->update([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => $request->filled('password') ? Hash::make($request->password) : $user->password, // Only update password if it's provided
-        'image' => $imagePath,
-    ]);
+    $user->update($validated);
+    
+    $user->syncRoles([$validated['role']]);
 
-    $user->syncRoles($request->role);  // Sync roles to ensure that the user's role is updated
 
     // Redirect with a success message
     return redirect()->route('users.create')->with('success', 'User updated successfully!');

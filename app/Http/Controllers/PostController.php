@@ -111,10 +111,18 @@ class PostController extends Controller
     {
 
         $validatedData = $request->validated(); // Get the validated data from the request
-         
-        // Check if an image file was uploaded with the request and store it, adding the path to the validated data
+
+        // Check if a new image file was uploaded with the request and handle the image update 
         if ($request->hasFile('image')) {
+
+            // Store the new image and get the path
+            $oldImage = $post->image;
+        
+            // Store the new image and update the validated data with the new image path
             $validatedData['image'] = storeImage($request->file('image'));
+        
+            // Delete the old image from storage if it exists
+            deleteImage($oldImage);
         }
 
         $post->update($validatedData);

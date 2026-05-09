@@ -25,10 +25,14 @@ class StorePostRequest extends FormRequest
     {
         return [
             'title' => ['required', 'max:255'], // Ensure a title is provided and does not exceed 255 characters
-            'content' => 'required',  // Ensure content is provided
-            'category_id' => 'required|exists:categories,id', // Ensure a category is selected
+
+            'content' => ['required'],  // Ensure content is provided
+
+            'category_id' => ['required', 'exists:categories,id'], // Ensure a category is selected
+
             'type' => ['required', Rule::in(Post::types())], // Ensure the type is one of the allowed values defined in the Post model
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',  // Optional image upload with validation
+            
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],  // Optional image upload with validation
         ];
     }
 }

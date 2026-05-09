@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Http\Requests\Category\StoreCategoryRequest;
+use App\Http\Requests\Category\UpdateCategoryRequest;
 
 
 class CategoryController extends Controller
@@ -17,27 +19,18 @@ class CategoryController extends Controller
     {
         $this->authorize('create', Category::class);
 
-
         $categories = Category::paginate(6);
-
         
         return view('category.create', compact('categories')); 
     }
 
     // Store the newly created category
-    public function store(Request $request)
+    public function store(StoreCategoryRequest $request)
     {
-        $this->authorize('create', Category::class);
+        $validatedData = $request->validated();
 
-        // Validate the incoming request
-        $request->validate([
-            'name' => 'required|string|max:255|unique:categories,name',
-        ]);
-
-        // Create the category
-        Category::create([
-            'name' => $request->name,
-        ]);
+        // Create the new category using the validated data
+        Category::create($validatedData);
 
         // Redirect to a page 
         return redirect()->route('categories.create')->with('success', 'Category created successfully!');
@@ -50,23 +43,16 @@ class CategoryController extends Controller
         return view('category.edit', compact('category'));
     }
 
-    public function update(Request $request, Category $category)
-{
-    $this->authorize('update', $category);
+    public function update(UpdateCategoryRequest $request, Category $category)
+    {
+        $validatedData = $request->validated();
 
-    // Validate the updated category name
-    $request->validate([
-        'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
-    ]);
+        // Update the category
+        $category->update($validatedData);
 
-    // Update the category
-    $category->update([
-        'name' => $request->name,
-    ]);
-
-    // Redirect with success message
-    return redirect()->route('categories.create')->with('success', 'Category updated successfully!');
-}
+        // Redirect with success message
+        return redirect()->route('categories.create')->with('success', 'Category updated successfully!');
+    }
 
 public function destroy(Category $category)
 {

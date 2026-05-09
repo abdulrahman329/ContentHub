@@ -1,9 +1,14 @@
 <?php
 
-// This helper function stores an uploaded image file in the specified folder within the public disk and returns the path to the stored image.
+use Illuminate\Http\UploadedFile;
+
 if (! function_exists('storeImage')) {
-    function storeImage($file, $folder = 'images'): string
+    function storeImage(?UploadedFile $file, string $folder = 'images', string $disk = 'public'): ?string
     {
-        return $file->store($folder, 'public');
+        if (!$file) {
+            return null;
+        }
+
+        return $file->store($folder, $disk);
     }
 }

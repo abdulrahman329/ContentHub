@@ -12,7 +12,7 @@ class UserPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasRole('admin');
+        return $user->isAdmin() || $user->isSuperAdmin();
     }
 
     /**
@@ -20,7 +20,7 @@ class UserPolicy
      */
     public function view(User $user, User $model): bool
     {
-        return $user->id === $model->id || $user->hasRole('admin');
+        return $user->isSelf($model) || $user->isAdmin() || $user->isSuperAdmin();
     }
 
     /**
@@ -28,7 +28,7 @@ class UserPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasPermissionTo('user.create') || $user->hasRole('admin');
+        return $user->hasPermissionTo('user.create') || $user->isAdmin();
     }
 
     /**
@@ -36,16 +36,65 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
-        return (
-            $user->id === $model->id
-        ) || (
-            $user->hasRole('admin') && !$model->hasRole('super_admin')
-        );
+        /*
+        |--------------------------------------------------------------------------
+        | Hard blocks
+        |--------------------------------------------------------------------------
+        */
+
+        // Nobody can modify super_admin
+        if ($model->isSuperAdmin()) {
+
+            // except another super_admin
+            return $user->isSuperAdmin()
+                && !$user->isSelf($model);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Admin permissions
+        |--------------------------------------------------------------------------
+        */
+
+        if ($user->isAdmin() || $user->isSuperAdmin()) {
+            return true;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Self update
+        |--------------------------------------------------------------------------
+        */
+
+        return $user->isSelf($model);
     }
+
 
     public function changeRole(User $user, User $model): bool
     {
-        return $user->hasRole('admin') && !$model->hasRole('super_admin');
+        /*
+        |--------------------------------------------------------------------------
+        | Hard blocks
+        |--------------------------------------------------------------------------
+        */
+
+        // Nobody changes super_admin role
+        if ($model->isSuperAdmin()) {
+            return false;
+        }
+
+        // super_admin cannot change own role
+        if ($user->isSuperAdmin() && $user->isSelf($model)) {
+            return false;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Admin permissions
+        |--------------------------------------------------------------------------
+        */
+
+        return $user->isAdmin() || $user->isSuperAdmin();
     }
     
     /**
@@ -53,14 +102,37 @@ class UserPolicy
      */
     public function delete(User $user, User $model): bool
     {
+        /*
+        |--------------------------------------------------------------------------
+        | Hard blocks
+        |--------------------------------------------------------------------------
+        */
 
-    // super_admin cannot be deleted
-    if ($model->hasRole('super_admin')) {
-        return false;
-    }
+        // Nobody deletes super_admin
+        if ($model->isSuperAdmin()) {
 
-    // admin can delete any user except super_admin, other users can only delete their own account
-    return $user->hasRole('admin');
+            // except another super_admin
+            return $user->isSuperAdmin()
+                && !$user->isSelf($model);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Admin permissions
+        |--------------------------------------------------------------------------
+        */
+
+        if ($user->isAdmin() || $user->isSuperAdmin()) {
+            return true;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Self delete
+        |--------------------------------------------------------------------------
+        */
+
+        return $user->isSelf($model);
     }
 
     /**
@@ -68,7 +140,7 @@ class UserPolicy
      */
     public function restore(User $user, User $model): bool
     {
-        return $user->hasRole('admin');
+        return $user->isAdmin() || $user->isSuperAdmin();
     }
 
     /**
@@ -76,11 +148,15 @@ class UserPolicy
      */
     public function forceDelete(User $user, User $model): bool
     {
-        return $user->hasRole('admin');
+        return $user->isAdmin() || $user->isSuperAdmin();
     }
 
+    /**
+     * Determine whether the user can view the trash.
+     */
     public function viewTrash(User $user): bool
     {
-        return $user->hasRole('admin');
+        return $user->isAdmin() || $user->isSuperAdmin();
     }
+
 }

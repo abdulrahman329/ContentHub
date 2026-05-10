@@ -67,10 +67,6 @@ public function update(UpdateUserRequest $request, User $user)
 
     $validated = $request->validated();
 
-    if ($user->hasRole('super_admin') && $validated['role'] !== 'super_admin') {
-        abort(403, 'Super Admin role cannot be changed.');
-    }
-
     if ($request->hasFile('image')) {
         deleteImage($user->image);
         $validated['image'] = storeImage($request->file('image'));
@@ -96,10 +92,6 @@ public function update(UpdateUserRequest $request, User $user)
 public function destroy(User $user)
 {
     $this->authorize('delete', $user); // Authorize that the user can delete this User
-
-    if (auth()->id() === $user->id && $user->hasRole('super_admin')) {
-        abort(403, 'Super Admin cannot delete themselves.');
-    }
 
     // Delete the user from the database
     $user->delete();

@@ -29,7 +29,7 @@ class PostPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasRole('admin')|| $user->hasRole('writer');
+        return $user->hasRole('admin')|| $user->hasRole('writer') || $user->hasRole('super_admin');
     }
 
     /**
@@ -37,7 +37,7 @@ class PostPolicy
      */
     public function update(User $user, Post $post): bool
     {
-        return $user->id === $post->user_id || $user->hasRole('admin');
+        return $user->id === $post->user_id || $user->hasRole('admin') || $user->hasRole('super_admin');
     }
 
     /**
@@ -45,7 +45,7 @@ class PostPolicy
      */
     public function delete(User $user, Post $post): bool
     {
-        return $user->id === $post->user_id || $user->hasRole('admin');
+        return $user->id === $post->user_id || $user->hasRole('admin') || $user->hasRole('super_admin');
     }
 
     /**
@@ -53,7 +53,7 @@ class PostPolicy
      */
     public function restore(User $user, Post $post): bool
     {
-        return $user->id === $post->user_id || $user->hasRole('admin');
+        return $user->id === $post->user_id || $user->hasRole('admin') || $user->hasRole('super_admin');
     }
 
     /**
@@ -61,11 +61,11 @@ class PostPolicy
      */
     public function forceDelete(User $user, Post $post): bool
     {
-        return $user->id === $post->user_id || $user->hasRole('admin');
+        return $user->id === $post->user_id || $user->hasRole('admin') || $user->hasRole('super_admin');
     }
     
     public function viewTrash(User $user): bool
     {
-        return $user->hasRole('admin') || $user->hasRole('writer');
+        return $user->hasRole('admin') || $user->hasRole('writer') || $user->hasRole('super_admin');
     }
 }

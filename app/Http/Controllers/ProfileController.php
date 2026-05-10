@@ -59,8 +59,8 @@ class ProfileController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
     
-        deleteImage($user->image);
-    
+        deleteImage($user->getRawOriginal('image'));
+
         // Store the new image in the public storage
         $imagePath = $request->file('image')->store('images', 'public');
     
@@ -88,8 +88,6 @@ class ProfileController extends Controller
         $request->validateWithBag('userDeletion', [
             'password' => ['required', 'current_password'],
         ]);
-
-        deleteImage($user->image);
 
         Auth::logout();
 

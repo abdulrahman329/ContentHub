@@ -116,7 +116,7 @@ class PostController extends Controller
         if ($request->hasFile('image')) {
 
             // Store the new image and get the path
-            $oldImage = $post->image;
+            $oldImage = $post->getRawOriginal('image');
         
             // Store the new image and update the validated data with the new image path
             $validatedData['image'] = storeImage($request->file('image'));
@@ -174,7 +174,7 @@ class PostController extends Controller
 
         $this->authorize('forceDelete', $post);
 
-        deleteImage($post->image);
+        deleteImage($post->getRawOriginal('image'));
         $post->forceDelete();
 
         return back()->with('success', 'Post deleted permanently!');

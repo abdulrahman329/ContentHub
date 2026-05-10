@@ -23,8 +23,13 @@ public function create()
 {
     $this->authorize('create', User::class); // Authorize that the user can create a new User
 
+    // Retrieve all roles except 'super_admin' to assign to the new user
     $roles = Role::where('name', '!=', 'super_admin')->get();
+
+    // Get the latest users with their roles, paginated to show 5 users per page
     $users = User::with('roles')->latest()->paginate(5);
+
+    // Get the count of soft-deleted users to display in the view
     $trashedCount = User::onlyTrashed()->count();
 
     // Return the view with users and roles to show the user creation form
@@ -55,7 +60,7 @@ public function edit(User $user)
 {
     $this->authorize('update', $user); // Authorize that the user can update this User
 
-    // Retrieve all roles
+    // Retrieve all roles except 'super_admin' to assign to the user
     $roles = Role::where('name', '!=', 'super_admin')->get();
 
     return view('user.edit', compact('user', 'roles')); // Return edit form for a specific user
@@ -67,12 +72,14 @@ public function update(UpdateUserRequest $request, User $user)
 
     $validated = $request->validated();
 
-    if ($request->hasFile('image')) {
-        deleteImage($user->image);
-        $validated['image'] = storeImage($request->file('image'));
+    // Handle image upload and deletion of old image if a new one is uploaded
+    if ($image = $request->file('image')) {
+        deleteImage($user->getRawOriginal('image'));
+    
+        $validated['image'] = storeImage($image);
     }
 
-    
+    // If the password field is empty, remove it from the validated data to prevent overwriting the existing password with null
     if (empty($validated['password'])) {
         unset($validated['password']);
     }
@@ -126,7 +133,8 @@ public function destroy(User $user)
 
         $this->authorize('forceDelete', $user);
 
-        deleteImage($user->image);
+        deleteImage($user->getRawOriginal('image'));
+
         $user->forceDelete();
 
         return back()->with('success', 'User permanently deleted!');

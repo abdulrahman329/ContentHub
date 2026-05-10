@@ -31,7 +31,7 @@ class PostController extends Controller
         }
         
         if ($request->filled('category_id')) {
-            $query->category($request->category_id);
+            $query->Category($request->category_id);
         }
 
         $posts = $query->paginate(8);

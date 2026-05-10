@@ -48,24 +48,38 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function getImageAttribute($value)
-    {
-        return $value ?: self::DEFAULT_IMAGE;
-    }
-
     public function getImageUrlAttribute(): string
     {
         return $this->image
             ? asset('storage/' . $this->image)
-            : asset($this->DEFAULT_IMAGE);
+            : asset('storage/' . self::DEFAULT_IMAGE);
     }
 
     public function setPasswordAttribute($value): void
     {
+        // Only hash the password if it's not empty to avoid overwriting with null or empty string
         if (!empty($value)) {
             $this->attributes['password'] = Hash::make($value);
         }
     }
+
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->hasRole('super_admin');
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->hasRole('admin');
+    }
+
+    public function isSelf(User $user): bool
+    {
+        return $this->id === $user->id;
+    }
+
+    
     // Relationships can be defined here if needed
     public function posts()
     {

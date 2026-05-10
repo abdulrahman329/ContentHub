@@ -52,7 +52,7 @@ class Post extends Model
     }
 
     // Scope to filter posts by category
-    public function scopecategory($query, $category_id)
+    public function scopeCategory($query, $category_id)
     {
         return $query->where('category_id', $category_id);
     }

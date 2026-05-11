@@ -41,7 +41,10 @@
                         <!-- Edit and Delete Button Section -->
                         <div class="flex space-x-4 ml-4 min-w-[120px]">
                             <!-- Edit Button: Links to the page where the category can be edited -->
-                            <a href="{{ route('categories.edit', $category->id) }}" class="text-yellow-500 hover:text-yellow-700">Edit</a>
+                            <x-ui.buttons.edit 
+                                href="{{ route('categories.edit', $category->id) }}">
+                                Edit
+                            </x-ui.buttons.edit>
                         @endcan
 
                         @can('delete', $category)

@@ -47,9 +47,7 @@
 
                                 {{-- Image --}}
                                 <img
-                                    src="{{ $user->image 
-                                        ? asset('storage/' . $user->image) 
-                                        : asset('storage/images/user_image.png') }}"
+                                    src="{{ $user->image_url }}"
                                     class="w-14 h-14 rounded-full object-cover border border-gray-600"
                                     alt="{{ $user->name }}"
                                 >
@@ -78,8 +76,8 @@
                             <div class="flex items-center gap-5 ml-4 text-lg">
 
                                 @can('update', $user)
-                                    <a href="{{ route('users.edit', $user->id) }}"
-                                       class="text-yellow-400 hover:text-yellow-300 font-semibold">
+                                    <x-ui.buttons.edit 
+                                    href="{{ route('users.edit', $user->id) }}">
                                         Edit
                                     </a>
                                 @endcan

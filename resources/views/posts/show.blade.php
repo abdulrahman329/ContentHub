@@ -114,10 +114,10 @@
                     <div class="flex justify-end space-x-4 mt-4">
 
                         @can('update', $comment)
-                            <a href="{{ route('comments.edit', $comment->id) }}"
-                               class="text-yellow-400 hover:text-yellow-600">
-                                Edit
-                            </a>
+                        <x-ui.buttons.edit 
+                            href="{{ route('comments.edit', $comment->id) }}">
+                            Edit
+                        </x-ui.buttons.edit>
                         @endcan
 
                         @can('delete', $comment)
@@ -159,8 +159,8 @@
             <div class="space-x-4">
 
                 @can('update', $post)
-                    <a href="{{ route('posts.edit', $post->id) }}"
-                    class="inline-block text-lg text-white bg-yellow-500 hover:bg-yellow-700 hover:scale-105 duration-200 px-6 py-2 rounded-md font-semibold transition-all">                        
+                <a href="{{ route('posts.edit', $post->id) }}"
+                    class="inline-block text-lg text-white bg-yellow-500 hover:bg-yellow-700 hover:scale-105 duration-200 px-6 py-2 rounded-md font-semibold transition-all"> 
                     Edit
                     </a>
                 @endcan

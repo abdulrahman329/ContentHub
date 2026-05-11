@@ -12,28 +12,21 @@
         @endif
 
         {{-- Create User --}}
-        @can('create', App\Models\User::class)
             <div class="bg-gray-800 p-8 rounded-lg shadow-lg mb-8 border border-gray-700">
                 <h3 class="text-3xl text-white mb-6">Create User</h3>
                 <x-user.form :roles="$roles" />
             </div>
-        @endcan
-
 
         {{-- Existing Users --}}
-        @can('viewAny', App\Models\User::class)
             <div class="bg-gray-800 p-8 rounded-lg shadow-lg border border-gray-700">
 
                 {{-- Header + Trash Button --}}
                 <div class="flex justify-between items-center mb-6">
                     <h3 class="text-3xl text-white">Existing Users</h3>
-
-                    @can('viewTrash', App\Models\User::class)
                         <a href="{{ route('users.trash') }}"
                            class="bg-gray-600 hover:bg-gray-800 text-white font-bold px-5 py-2 rounded-md shadow transition">
                             🗑 Recycle Bin ({{ $trashedCount }})
                         </a>
-                    @endcan
                 </div>
 
                 {{-- Users List --}}
@@ -79,7 +72,7 @@
                                     <x-ui.buttons.edit 
                                     href="{{ route('users.edit', $user->id) }}">
                                         Edit
-                                    </a>
+                                    </x-ui.buttons.edit>
                                 @endcan
 
                                 @can('delete', $user)
@@ -102,14 +95,10 @@
 
                     @endforeach
                 </ul>
-
-                {{-- Pagination --}}
-                <div class="mt-6">
-                    {{ $users->links() }}
-                </div>
-
+                
+            {{-- Pagination --}}
+            <div class="mt-6">
+                {{ $users->links() }}
             </div>
-        @endcan
-
-    </div>
+        </div>
 </x-app-layout>

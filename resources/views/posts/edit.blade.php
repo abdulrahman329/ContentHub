@@ -15,7 +15,5 @@
 
         @can('update', $post)
         <x-article.form :model="$post" :categories="$categories" />
-        @else
-        <p class='text-white text-2xl font-bold my-6 text-center'>You don't have the authority, you have to be an admin or the Owner </p>
         @endcan
 </x-app-layout>

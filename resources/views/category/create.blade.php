@@ -14,14 +14,11 @@
         <!-- Create Category Form -->
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg mb-8 border border-gray-700 max-w-full">
             <h3 class="text-3xl text-white mb-6">Create Category</h3>
-
-            @can('create', App\Models\Category::class)
             <!-- Form for Creating a New Category -->
             <x-category.form/>
-            @endcan
+
         </div>
 
-            @can('viewAny', App\Models\Category::class)
         <!-- List of Existing Categories -->
         <div class="bg-gray-800 p-8 rounded-lg shadow-lg border border-gray-700 max-w-full">
             <h3 class="text-3xl text-white mb-6">Existing Categories</h3>          
@@ -37,9 +34,9 @@
                             </div>
                         </div>
 
-                        @can('update', $category)
                         <!-- Edit and Delete Button Section -->
                         <div class="flex space-x-4 ml-4 min-w-[120px]">
+                        @can('update', $category)
                             <!-- Edit Button: Links to the page where the category can be edited -->
                             <x-ui.buttons.edit 
                                 href="{{ route('categories.edit', $category->id) }}">
@@ -56,17 +53,16 @@
                                 <!-- Delete Button with confirmation prompt -->
                                 <button type="submit" class="text-red-600 hover:text-red-500" onclick="return confirm('Are you sure you want to delete this category?')">Delete</button>
                             </form>
-                        </div>
                         @endcan
+                        </div>
                     </li>
                     @empty
                     <x-ui.empty-state message="No categories found."/>
 
                 @endforelse
             </ul>
-            <div class="mt-6">
+        <div class="mt-6">
             {{ $categories->links() }} <!-- Pagination links for categories -->
         </div>
-        @endcan
     </div>
 </x-app-layout>

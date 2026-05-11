@@ -64,7 +64,7 @@
         @can('create', App\Models\Comment::class)
             @auth
                 <div class="bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
-                    <x-comment.form parentType="post" :parentId="$post->id" />
+                    <x-comment.form :parentId="$post->id" />
                 </div>
             @endauth
         @endcan
@@ -162,7 +162,8 @@
                 <a href="{{ route('posts.edit', $post->id) }}"
                     class="inline-block text-lg text-white bg-yellow-500 hover:bg-yellow-700 hover:scale-105 duration-200 px-6 py-2 rounded-md font-semibold transition-all"> 
                     Edit
-                    </a>
+                </a>
+
                 @endcan
 
                 @can('delete', $post)

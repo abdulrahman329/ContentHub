@@ -4,6 +4,12 @@
         {{ __('Create Post') }}
     </x-slot>
 
+    @if(session('success'))
+            <x-ui.alert>
+                {{ session('success') }}
+            </x-ui.alert>
+        @endif
+
         <!-- Page title "Create a New Post" centered in a large font -->
         <h1 class="text-3xl font-bold my-6 text-center text-white">Create a New Post</h1>
 

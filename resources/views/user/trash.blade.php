@@ -4,11 +4,11 @@
 </x-slot>
 
     {{-- Success Message --}}
-    @if (session('success'))
-        <div class="bg-green-600 text-white px-6 py-4 mb-8 rounded-lg shadow-lg text-lg">
-            {{ session('success') }}
-        </div>
-    @endif
+    @if(session('success'))
+            <x-ui.alert>
+                {{ session('success') }}
+            </x-ui.alert>
+        @endif
 
     {{-- Title --}}
     <div class="flex justify-between items-center mb-10">

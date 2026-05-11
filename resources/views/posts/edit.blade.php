@@ -4,6 +4,12 @@
         {{ __('Edit Post') }}
     </x-slot>
 
+    @if(session('success'))
+            <x-ui.alert>
+                {{ session('success') }}
+            </x-ui.alert>
+        @endif
+
         <!-- Page Title: Display "Edit Post" at the center of the page -->  
         <h1 class="text-3xl font-bold my-6 text-center text-white">Edit Post</h1>
 

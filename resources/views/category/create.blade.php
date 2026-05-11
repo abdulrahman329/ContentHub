@@ -5,10 +5,10 @@
     </x-slot>
 
         <!-- Success Message: This will display a success message when a category is created successfully -->
-        @if (session('success'))
-            <div class="bg-green-600 text-white p-4 mb-6 rounded-lg shadow-lg">
+        @if(session('success'))
+            <x-ui.alert>
                 {{ session('success') }}
-            </div>
+            </x-ui.alert>
         @endif
 
         <!-- Create Category Form -->

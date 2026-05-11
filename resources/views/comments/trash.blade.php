@@ -10,12 +10,12 @@
 
         {{-- Table --}}
         <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-
-            @if(session('success'))
-                <div class="mb-4 text-green-400">
-                    {{ session('success') }}
-                </div>
-            @endif
+     
+        @if(session('success'))
+            <x-ui.alert>
+                {{ session('success') }}
+            </x-ui.alert>
+        @endif
 
             <table class="w-full text-left text-gray-200">
 

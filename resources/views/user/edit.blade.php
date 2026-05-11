@@ -4,7 +4,11 @@
         {{ __('Edit User') }}
     </x-slot>
 
+    <!-- Display success message if there's any -->
+        @if(session('success'))
+            <x-ui.alert>
                 {{ session('success') }}
+            </x-ui.alert>
         @endif
 
         <!-- Main content area for editing user -->

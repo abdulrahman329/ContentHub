@@ -1,18 +1,14 @@
 <x-app-layout>
     <!-- Header -->
-    <x-slot name="header">
-        <h2 class="font-semibold text-2xl text-white leading-tight">
-            {{ __('Create User') }}
-        </h2>
+    <x-slot name="header">    
+        {{ __('Create User') }}
     </x-slot>
 
-    <div class="container mx-auto px-6 py-12 overflow-hidden">
-
         {{-- Success Message --}}
-        @if (session('success'))
-            <div class="bg-green-600 text-white p-4 mb-6 rounded-lg shadow-lg">
+        @if(session('success'))
+            <x-ui.alert>
                 {{ session('success') }}
-            </div>
+            </x-ui.alert>
         @endif
 
         {{-- Create User --}}

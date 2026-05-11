@@ -27,7 +27,7 @@
             <h3 class="text-3xl text-white mb-6">Existing Categories</h3>          
             <!-- Loop through the categories and display each one -->
             <ul class="space-y-6">
-                @foreach ($categories as $category)
+                @forelse ($categories as $category)
                     <li class="flex justify-between items-center bg-gray-700 p-4 rounded-lg shadow w-full overflow-hidden">
                         <div class="flex-1 max-w-[70%]">
                             <!-- Display the Category Name -->
@@ -59,7 +59,10 @@
                         </div>
                         @endcan
                     </li>
-                @endforeach
+                    @empty
+                    <x-ui.empty-state message="No categories found."/>
+
+                @endforelse
             </ul>
             <div class="mt-6">
             {{ $categories->links() }} <!-- Pagination links for categories -->

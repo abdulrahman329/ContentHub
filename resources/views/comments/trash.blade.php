@@ -75,8 +75,8 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="text-center py-6 text-gray-400">
-                            No deleted comments
+                        <td colspan="4">
+                        <x-ui.empty-state message="No deleted comments." />
                         </td>
                     </tr>
                 @endforelse

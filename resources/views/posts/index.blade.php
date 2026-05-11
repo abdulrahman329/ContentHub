@@ -77,7 +77,7 @@
 
         <!-- Check if no posts are available, and display a message -->
         @if($posts->isEmpty())
-            <div class="text-center text-gray-500 text-lg">No posts available. Please create one.</div>
+            <x-ui.empty-state message="No posts available. Please create one." />
         @else
             <!-- Display the posts in a grid layout -->
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">

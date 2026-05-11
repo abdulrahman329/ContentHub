@@ -22,14 +22,18 @@
             @isset($header)
                 <header class=" dark:bg-gray-800 shadow">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                    <h2 class="font-semibold text-xl text-gray-200 leading-tight">
                         {{ $header }}
+                    </h2>
                     </div>
                 </header>
             @endisset
 
             <!-- Page Content -->
             <main>
-                {{ $slot }}
+            <div class="container mx-auto px-8 py-12">
+            {{ $slot }}
+            </div>
             </main>
         </div>
     </body>

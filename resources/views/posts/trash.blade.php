@@ -1,12 +1,7 @@
 <x-app-layout>
-
-<x-slot name="header">
-    <h2 class="font-semibold text-xl text-gray-200 leading-tight">
+    <x-slot name="header">    
         {{ __('Trashed Posts') }}
-    </h2>
-</x-slot>
-
-<div class="container mx-auto px-10 py-14">
+    </x-slot>
 
     <h1 class="text-3xl font-bold mb-10 text-center text-white">
         🗑️ Trashed Posts
@@ -118,7 +113,4 @@
             Back
         </a>
     </div>
-
-</div>
-
 </x-app-layout>

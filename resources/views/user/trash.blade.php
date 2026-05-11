@@ -1,12 +1,7 @@
 <x-app-layout>
-
 <x-slot name="header">
-    <h2 class="font-semibold text-xl text-gray-200 leading-tight">
-        {{ __('Trashed Users') }}
-    </h2>
+    {{ __('Trashed Users') }}
 </x-slot>
-
-<div class="container mx-auto px-10 py-14">
 
     {{-- Success Message --}}
     @if (session('success'))
@@ -104,7 +99,4 @@
         </div>
 
     @endif
-
-</div>
-
 </x-app-layout>

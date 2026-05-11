@@ -14,14 +14,9 @@
 </script>
 
 <x-app-layout>
-
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-200 leading-tight">
-            {{ __('Show Post') }}
-        </h2>
+        {{ __('Show Post') }}
     </x-slot>
-
-    <div class="container mx-auto px-8 py-12">
 
         {{-- Title --}}
         <h1 class="text-5xl font-extrabold text-white text-center mb-6">
@@ -193,7 +188,4 @@
             </div>
 
         </div>
-
-    </div>
-
 </x-app-layout>

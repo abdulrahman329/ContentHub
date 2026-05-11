@@ -1,12 +1,9 @@
 <x-app-layout>
     <!-- Header Section for "Manage Categories" page -->
-    <x-slot name="header">
-        <h2 class="font-semibold text-2xl text-white leading-tight">
-            {{ __('Manage Categories') }}
-        </h2>
+    <x-slot name="header">    
+        {{ __('Manage Categories') }}
     </x-slot>
 
-    <div class="container mx-auto px-6 py-12 overflow-hidden">
         <!-- Success Message: This will display a success message when a category is created successfully -->
         @if (session('success'))
             <div class="bg-green-600 text-white p-4 mb-6 rounded-lg shadow-lg">
@@ -63,7 +60,6 @@
             </ul>
             <div class="mt-6">
             {{ $categories->links() }} <!-- Pagination links for categories -->
-            </div>
         </div>
         @endcan
     </div>

@@ -1,12 +1,7 @@
 <x-app-layout>
-
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-200 leading-tight">
-            Deleted Comments
-        </h2>
+    <x-slot name="header">    
+        {{ __('Deleted Comments') }}
     </x-slot>
-
-    <div class="container mx-auto px-8 py-12">
 
         {{-- Title --}}
         <h1 class="text-3xl font-bold text-white mb-6">
@@ -104,7 +99,4 @@
                 Back
             </a>
         </div>
-
-    </div>
-
 </x-app-layout>

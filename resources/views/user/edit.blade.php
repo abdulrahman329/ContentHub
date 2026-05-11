@@ -1,17 +1,10 @@
 <x-app-layout>
     <!-- Header section for the page -->
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-200 leading-tight">
-            {{ __('Edit User') }}
-        </h2>
+        {{ __('Edit User') }}
     </x-slot>
 
-    <div class="container mx-auto px-8 py-12">
-        <!-- Display success message if there's any -->
-        @if (session('success'))
-            <div class="bg-green-500 text-white p-4 mb-6 rounded">
                 {{ session('success') }}
-            </div>
         @endif
 
         <!-- Main content area for editing user -->
@@ -22,5 +15,4 @@
             <x-user.form :user="$user" :roles="$roles" />
             @endcan
         </div>
-    </div>
 </x-app-layout>

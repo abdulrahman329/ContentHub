@@ -1,14 +1,10 @@
 <x-app-layout>
     <!-- Header section -->
-    <x-slot name="header">
-        <!-- Display 'Posts' heading -->
-        <h2 class="font-semibold text-xl text-gray-200 leading-tight">
-            {{ __('Posts') }}
-        </h2>
+    <x-slot name="header">    
+        {{ __('Posts') }}
     </x-slot>
 
-    <div class="container mx-auto px-4 py-12">
-        <!-- Page Title: Displays the title of the page 'Latest Posts' -->
+    <!-- Page Title: Displays the title of the page 'Latest Posts' -->
         <h1 class="text-3xl font-bold my-6 text-center text-white">Latest Posts</h1>
         <div class="text-center mb-4">
 
@@ -92,6 +88,5 @@
         @endif
         <div class='p-4'>
         {{ $posts->appends(request()->query())->links() }}
-    </div>
     </div>
 </x-app-layout>

@@ -1,12 +1,7 @@
 <x-app-layout>
-
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-200 leading-tight">
-            {{ __('Edit Comment') }}
-        </h2>
+    <x-slot name="header">    
+        {{ __('Edit Comment') }}
     </x-slot>
-
-    <div class="container mx-auto px-4 py-12">
 
         <h1 class="text-3xl font-bold my-6 text-center text-white">
             Edit Comment
@@ -31,7 +26,4 @@
         </p>
 
         @endcan
-
-    </div>
-
 </x-app-layout>

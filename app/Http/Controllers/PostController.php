@@ -147,8 +147,11 @@ class PostController extends Controller
     {
         $this->authorize('viewTrash', Post::class);
 
-        $posts = Post::onlyTrashed()->latest()->paginate(10);
-
+        $posts = Post::with(['user', 'category'])
+        ->onlyTrashed()
+        ->latest()
+        ->paginate(10);
+        
         return view('posts.trash', compact('posts'));
     }
 

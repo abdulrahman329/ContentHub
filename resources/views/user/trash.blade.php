@@ -39,9 +39,7 @@
 
                         {{-- User Image --}}
                         <img
-                            src="{{ $user->image 
-                                ? asset('storage/'.$user->image) 
-                                : asset('storage/images/user_image.png') }}"
+                            src="{{ $user->image_url }}"
                             class="w-16 h-16 rounded-full object-cover border-2 border-gray-600"
                             alt="{{ $user->name }}"
                         >

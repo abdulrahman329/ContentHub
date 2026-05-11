@@ -97,7 +97,7 @@ $selectedRole = old('role', $user?->roles?->first()?->name);
 
     @if($user && $user->image)
         <div class="mt-3">
-            <img src="{{ asset('storage/' . $user->image) }}"
+            <img src="{{ $user->image_url }}"
                 class="w-20 h-20 object-cover rounded-full">
         </div>
     @endif

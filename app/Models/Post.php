@@ -33,6 +33,17 @@ class Post extends Model
     'type',
 ];
 
+    public function getImageUrlAttribute(): ?string
+    {
+        if (!$this->image) {
+            return null;
+        }
+
+        return filter_var($this->image, FILTER_VALIDATE_URL)
+            ? $this->image
+            : asset('storage/' . $this->image);
+    }
+
 
     // Scope to include comment count
     public function scopeWithCommentCount($query)
@@ -56,7 +67,6 @@ class Post extends Model
     {
         return $query->where('category_id', $category_id);
     }
-
 
 
     // Method to count trashed posts

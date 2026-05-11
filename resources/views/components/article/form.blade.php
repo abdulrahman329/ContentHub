@@ -91,9 +91,7 @@
             class="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md bg-gray-700 text-gray-300">
 
         @if($isEdit && $model->image)
-            <img src="{{ filter_var($model->image, FILTER_VALIDATE_URL)
-                ? $model->image
-                : asset('storage/'.$model->image) }}"
+            <img src="{{ $item->image_url }}"
                 class="w-32 h-32 object-cover rounded mt-3">
         @endif
     </div>

@@ -5,9 +5,7 @@
     {{-- Image --}}
     @if($item->image)
         <a href="{{ route('posts.show', $item->id) }}">
-            <img src="{{ filter_var($item->image, FILTER_VALIDATE_URL)
-                ? $item->image
-                : asset('storage/'.$item->image) }}"
+            <img src="{{ $item->image_url }}"
                 class="w-full h-56 object-cover">
         </a>
     @endif

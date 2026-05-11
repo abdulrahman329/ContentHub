@@ -54,9 +54,7 @@
                             {{-- User --}}
                             <div class="flex items-center gap-2">
                                 <img
-                                    src="{{ $post->user?->image 
-                                        ? asset('storage/'.$post->user->image)
-                                        : asset('storage/images/user_image.png') }}"
+                                src="{{ $post->user?->image_url }}"
                                     class="w-8 h-8 rounded-full object-cover border border-gray-600"
                                 >
 

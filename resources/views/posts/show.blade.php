@@ -28,9 +28,7 @@
             <div class="mb-8 flex justify-center">
                 <div class="relative overflow-hidden rounded-lg shadow-xl w-4/5 h-96">
                     <img 
-                        src="{{ filter_var($post->image, FILTER_VALIDATE_URL) 
-                            ? $post->image 
-                            : asset('storage/'.$post->image) }}"
+                        src="{{ $post->image_url }}"
                         class="w-full h-96 object-cover"
                     >
                 </div>
@@ -42,9 +40,7 @@
 
             <div class="flex items-center mb-4">
                 <img 
-                    src="{{ $post->user?->image 
-                        ? asset('storage/'.$post->user->image) 
-                        : asset('storage/images/user_image.png') }}"
+                    src="{{ $post->user?->image_url }}"
                     class="w-10 h-10 rounded-full object-cover mr-2"
                 >
 

@@ -37,7 +37,7 @@
                 @if(auth()->user()->image)
                     <div class="mt-6">
                         <p class="text-sm text-gray-400 mb-2">{{ __('Current image:') }}</p>
-                        <img src="{{ $item->image_url }}"
+                        <img src="{{ $user->image_url }}"
                              alt="Profile Image"
                              class="w-20 h-20 object-cover rounded-full border border-gray-600"
                         >

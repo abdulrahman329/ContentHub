@@ -13,11 +13,12 @@
     {{-- Title --}}
     <div class="flex justify-between items-center mb-10">
         <h3 class="text-3xl font-bold text-white">Deleted Users</h3>
-
-        <a href="{{ route('users.create') }}"
-           class="bg-blue-600 hover:bg-blue-800 text-white px-6 py-3 rounded-md text-lg transition">
-            Back
-        </a>
+            <x-ui.buttons.actions.link
+                href="{{ route('users.create') }}">       
+                    <x-ui.buttons.variants variant="back">
+                    back
+                    </x-ui.buttons.variants>
+            </x-ui.buttons.actions.link>
     </div>
 
     {{-- Empty state --}}
@@ -65,24 +66,20 @@
                     <div class="flex items-center gap-6 text-lg">
 
                         {{-- Restore --}}
-                        <form method="POST" action="{{ route('users.restore', $user->id) }}">
-                            @csrf
-                            <button class="text-green-400 hover:text-green-300 font-semibold">
+                        <x-ui.buttons.actions.form
+                            action="{{ route('users.restore', $user->id) }}">       
+                                <x-ui.buttons.variants variant="restore">
                                 Restore
-                            </button>
-                        </form>
+                                </x-ui.buttons.variants>
+                        </x-ui.buttons.actions.form>
 
                         {{-- Force Delete --}}
-                        <form method="POST" action="{{ route('users.forceDelete', $user->id) }}"
-                              onsubmit="return confirm('Are you sure you want to permanently delete this user?')">
-                            @csrf
-                            @method('DELETE')
-
-                            <button class="text-red-500 hover:text-red-400 font-semibold">
+                        <x-ui.buttons.actions.form
+                            action="{{ route('users.forceDelete', $user->id) }}">       
+                                <x-ui.buttons.variants variant="danger">
                                 Delete Forever
-                            </button>
-                        </form>
-
+                                </x-ui.buttons.variants>
+                        </x-ui.buttons.actions.form>
                     </div>
 
                 </div>

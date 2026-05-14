@@ -23,10 +23,12 @@
                 {{-- Header + Trash Button --}}
                 <div class="flex justify-between items-center mb-6">
                     <h3 class="text-3xl text-white">Existing Users</h3>
-                        <a href="{{ route('users.trash') }}"
-                           class="bg-gray-600 hover:bg-gray-800 text-white font-bold px-5 py-2 rounded-md shadow transition">
-                            🗑 Recycle Bin ({{ $trashedCount }})
-                        </a>
+                        <x-ui.buttons.actions.link
+                            href="{{ route('users.trash') }}">
+                                <x-ui.buttons.variants variant="trash">
+                                    🗑 Recycle Bin ({{ $trashedCount }})                                    
+                                </x-ui.buttons.variants>
+                        </x-ui.buttons.actions.link>
                 </div>
 
                 {{-- Users List --}}
@@ -69,30 +71,26 @@
                             <div class="flex items-center gap-5 ml-4 text-lg">
 
                                 @can('update', $user)
-                                    <x-ui.buttons.edit 
-                                    href="{{ route('users.edit', $user->id) }}">
-                                        Edit
-                                    </x-ui.buttons.edit>
-                                @endcan
+                                    <x-ui.buttons.actions.link
+                                        href="{{ route('users.edit', $user->id) }}">
+                                            <x-ui.buttons.variants variant="warning">
+                                                Edit
+                                            </x-ui.buttons.variants>
+                                    </x-ui.buttons.actions.link>
+                                @endcan 
 
                                 @can('delete', $user)
-                                    <form action="{{ route('users.destroy', $user->id) }}" method="POST">
-                                        @csrf
-                                        @method('DELETE')
-
-                                        <button
-                                            type="submit"
-                                            class="text-red-500 hover:text-red-400 font-semibold"
-                                            onclick="return confirm('Are you sure you want to delete this user?')">
-                                            Delete
-                                        </button>
-                                    </form>
+                                    <x-ui.buttons.actions.form
+                                        action="{{ route('users.destroy', $user->id) }}"
+                                        method="DELETE"
+                                    >
+                                            <x-ui.buttons.variants variant="danger">
+                                                Delete
+                                            </x-ui.buttons.variants>
+                                    </x-ui.buttons.actions.form>
                                 @endcan
-
                             </div>
-
                         </li>
-
                     @endforeach
                 </ul>
                 

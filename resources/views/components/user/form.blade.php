@@ -7,12 +7,12 @@
 $selectedRole = old('role', $user?->roles?->first()?->name);
 @endphp
 
-<form method="POST"
-      action="{{ $user 
+<x-ui.buttons.actions.form
+    action="{{ $user 
             ? route('users.update', $user->id) 
             : route('users.store') }}"
       enctype="multipart/form-data">
-
+      
 @csrf
 @if($user)
     @method('PUT')
@@ -88,28 +88,29 @@ $selectedRole = old('role', $user?->roles?->first()?->name);
     @endif
 </div>
 
-<!-- Image -->
-<div class="mb-6">
-    <label class="block text-gray-300 text-sm font-medium mb-2">Profile Image</label>
-    <input type="file" name="image"
-        class="w-full p-3 border border-gray-600 text-gray-300 bg-gray-700 rounded-md"
-        accept="image/*">
+    <!-- Image -->
+    <div class="mb-6">
+        <label class="block text-gray-300 text-sm font-medium mb-2">Profile Image</label>
+        <input type="file" name="image"
+            class="w-full p-3 border border-gray-600 text-gray-300 bg-gray-700 rounded-md"
+            accept="image/*">
 
-    @if($user && $user->image)
-        <div class="mt-3">
-            <img src="{{ $user->image_url }}"
-                class="w-20 h-20 object-cover rounded-full">
-        </div>
-    @endif
+        @if($user && $user->image)
+            <div class="mt-3">
+                <img src="{{ $user->image_url }}"
+                    class="w-20 h-20 object-cover rounded-full">
+            </div>
+        @endif
 
-    @error('image')
-        <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
-    @enderror
+        @error('image')
+            <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
+        @enderror
+    </div>
+
+    <!-- Button --> 
+    <div class='text-center'>
+    <x-ui.buttons.variants :variant="$user ? 'update' : 'create'">
+        {{ $user ? 'Update User' : 'Create User' }}
+    </x-ui.buttons.variants>
 </div>
-
-<!-- Button -->
-<button type="submit"
-    class="bg-indigo-600 text-white py-3 px-6 rounded-md hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-600 w-full transition">
-    {{ $user ? 'Update User' : 'Create User' }}
-</button>
-</form>
+</x-ui.buttons.actions.form>

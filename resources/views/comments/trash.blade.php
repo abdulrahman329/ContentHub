@@ -1,50 +1,78 @@
 <x-app-layout>
+
     <x-slot name="header">    
         {{ __('Deleted Comments') }}
     </x-slot>
 
-        {{-- Title --}}
-        <h1 class="text-3xl font-bold text-white mb-6">
-            🗑️ Deleted Comments
-        </h1>
+    {{-- TITLE --}}
+    <h1 class="text-3xl font-bold mb-6
+        text-gray-900 dark:text-white transition-colors">
+        🗑️ Deleted Comments
+    </h1>
 
-        {{-- Table --}}
-        <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-     
+    {{-- TABLE WRAPPER --}}
+    <div class="rounded-2xl shadow-lg overflow-hidden transition-colors
+        bg-white border border-gray-200
+        dark:bg-gray-800 dark:border-gray-700">
+
+        {{-- SUCCESS --}}
         @if(session('success'))
-            <x-ui.alert>
-                {{ session('success') }}
-            </x-ui.alert>
+
+            <div class="p-6 pb-0">
+                <x-ui.alert>
+                    {{ session('success') }}
+                </x-ui.alert>
+            </div>
         @endif
 
-            <table class="w-full text-left text-gray-200">
+        {{-- TABLE --}}
+        <div class="overflow-x-auto">
+            <table class="w-full text-left transition-colors">
 
-                <thead>
-                    <tr class="border-b border-gray-600">
-                        <th class="py-2">Content</th>
-                        <th class="py-2">User</th>
-                        <th class="py-2">Deleted At</th>
-                        <th class="py-2 text-right">Actions</th>
+                {{-- HEAD --}}
+                <thead class="border-b
+                    border-gray-200 bg-gray-50
+                    dark:border-gray-700 dark:bg-gray-900/40">
+                    <tr>
+                        <th class="py-4 px-6 font-semibold
+                            text-gray-700 dark:text-gray-300">
+                            Content
+                        </th>
+                        <th class="py-4 px-6 font-semibold
+                            text-gray-700 dark:text-gray-300">
+                            User
+                        </th>
+                        <th class="py-4 px-6 font-semibold
+                            text-gray-700 dark:text-gray-300">
+                            Deleted At
+                        </th>
+                        <th class="py-4 px-6 text-right font-semibold
+                            text-gray-700 dark:text-gray-300">
+                            Actions
+                        </th>
                     </tr>
                 </thead>
 
+                {{-- BODY --}}
                 <tbody>
-
                 @forelse($comments as $comment)
-                    <tr class="border-b border-gray-700">
-
-                        {{-- Content --}}
-                        <td class="py-3">
-                            {{ Str::limit($comment->content, 50) }}
+                    <tr class="border-b transition-colors
+                        border-gray-200 hover:bg-gray-50
+                        dark:border-gray-700 dark:hover:bg-gray-900/40">
+                        {{-- CONTENT --}}
+                        <td class="py-4 px-6
+                            text-gray-800 dark:text-gray-200 
+                            break-words break-all whitespace-pre-line">
+                            {{ ($comment->content) }}
                         </td>
-
-                        {{-- User --}}
-                        <td class="py-3">
+                        {{-- USER --}}
+                        <td class="py-4 px-6
+                            text-gray-700 dark:text-gray-300">
                             {{ $comment->user?->name ?? 'Deleted User' }}
                         </td>
-
-                        {{-- Deleted At --}}
-                        <td class="py-3 text-gray-400 text-sm">
+                        {{-- DATE --}}
+                        <td class="py-4 px-6 text-sm
+                            text-gray-500 dark:text-gray-400">
                             {{ $comment->deleted_at }}
                         </td>
 
@@ -75,28 +103,18 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4">
-                        <x-ui.empty-state message="No deleted comments." />
+                        <td colspan="4" class="p-8">
+                            <x-ui.empty-state
+                                message="No deleted comments." />
                         </td>
                     </tr>
                 @endforelse
-
                 </tbody>
-
             </table>
-
-            {{-- Pagination --}}
-            <div class="mt-4">
-                {{ $comments->links() }}
-            </div>
-
         </div>
-
-        {{-- Back Button --}}
-        <div class="mt-6">
-            <a href="{{ route('posts.index') }}"
-                class="text-white bg-blue-600 hover:bg-blue-800 px-4 py-2 rounded-md">
-                Back
-            </a>
+        {{-- PAGINATION --}}
+        <div class="p-6 border-t
+            border-gray-200 dark:border-gray-700">
+            {{ $comments->links() }}
         </div>
 </x-app-layout>

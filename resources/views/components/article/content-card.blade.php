@@ -1,40 +1,32 @@
 @props(['item'])
 
-<div class="bg-gray-800 text-white rounded-lg shadow-lg overflow-hidden flex flex-col">
+<article class="group rounded-2xl overflow-hidden border shadow-sm transition-all duration-300
+    bg-white border-gray-200 hover:border-gray-300 hover:shadow-xl hover:-translate-y-1
+    dark:bg-gray-900 dark:border-gray-800 dark:hover:bg-gray-850 dark:hover:border-gray-700">
 
-    {{-- Image --}}
-    @if($item->image)
-        <a href="{{ route('posts.show', $item->id) }}">
-            <img src="{{ $item->image_url }}"
-                class="w-full h-56 object-cover">
-        </a>
-    @endif
+    {{-- HEADER --}}
+    <div class="flex items-center justify-between px-5 py-4 border-b
+        border-gray-200
+        dark:border-gray-800">
 
-    {{-- Content --}}
-    <div class="px-6 py-4 flex-grow">
-
+        {{-- TYPE --}}
         @if($item->type)
-            <span class="inline-block mb-2 px-3 py-1 text-xs font-bold rounded-full
-                {{ $item->type === 'news' ? 'bg-green-600 text-white' : 'bg-blue-600 text-white' }}">
+            <span class="text-xs font-bold tracking-wide px-3 py-1 rounded-full
+                {{ $item->type === 'news'
+                    ? 'bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400'
+                    : 'bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400' }}">
                 {{ strtoupper($item->type) }}
             </span>
         @endif
-        
-        <div class="font-bold text-xl">
-            {{ $item->title }}
-        </div>
 
-        <p class="text-gray-300 text-sm">
-            {{ Str::limit($item->content, 100) }}
-        </p>
-    </div>
-
-    {{-- Actions --}}
-    <div class="px-6 pb-4 space-y-2">
-
+        {{-- READ --}}
         <a href="{{ route('posts.show', $item->id) }}"
-            class="inline-block mb-2 bg-blue-600 text-black py-2 px-4 rounded-lg hover:bg-blue-800 transform transition-all duration-200 ease-in-out w-full text-center">            View
+            class="text-sm font-medium transition
+            text-gray-500 hover:text-gray-900
+            dark:text-gray-400 dark:hover:text-white">
+            Read 
         </a>
+    </div>
 
         @can('update', $item)
             <a href="{{ route('posts.edit', $item->id) }}"
@@ -54,23 +46,70 @@
             </form>
         @endcan
 
-        {{-- Meta --}}
-        <div class="mt-3 text-gray-400 text-sm space-y-1">
+    {{-- BODY --}}
+    <div class="p-5">
 
-            @if($item->category)
-                <p>
-                    <strong>Category:</strong>{{ $item->category?->name ?? 'Uncategorized' }}
-                </p>
-            @endif
+        {{-- TITLE --}}
+        <h2 class="text-xl font-bold leading-snug mb-3 transition
+            text-gray-900 group-hover:text-black
+            dark:text-white dark:group-hover:text-gray-200">
+            {{ Str::limit($item->title, 30) }}
+        </h2>
 
-
-            @if(isset($item->comments_count))
-                <p>
-                    <strong>Comments:</strong> {{ $item->comments_count }}
-                </p>
-            @endif
+        {{-- CONTENT --}}
+        <p class="text-sm leading-relaxed mb-5
+            text-gray-600
+            dark:text-gray-400">
+            {{ Str::limit($item->content, 40) }}
+        </p>
+        
+        {{-- IMAGE --}}
+        <a href="{{ route('posts.show', $item->id) }}" class="block mb-5">
+            <div class="relative w-full h-52 rounded-xl overflow-hidden
+                bg-gray-100
+                dark:bg-gray-800">
+                @if($item->image)
+                    <img
+                        src="{{ $item->image_url }}"
+                        class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                @else
+                    <div class="w-full h-full bg-gradient-to-br
+                        from-gray-100 to-gray-200
+                        dark:from-gray-800 dark:to-gray-900">
+                    </div>
+                @endif
+            </div>
+        </a>
 
         </div>
 
+        {{-- META --}}
+        <div class="flex items-center justify-between mt-5 pt-4 border-t
+            border-gray-200
+            dark:border-gray-800">
+            {{-- COMMENTS LEFT --}}
+            <div class="flex items-center gap-2 text-sm
+                text-gray-500
+                dark:text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    class="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 10h8M8 14h5m-9 7l2.5-2.5A2 2 0 014 18h12a2 2 0 002-2V6a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h1.5L3 21z" />
+                </svg>
+                <span>{{ $item->comments_count ?? 0 }} Comments</span>
+            </div>
+
+            {{-- CATEGORY RIGHT --}}
+            <div class="px-3 py-1 rounded-full text-xs font-medium border
+                bg-gray-100 border-gray-300 text-gray-700
+                dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300">
+                {{ $item->category?->name ?? 'Uncategorized' }}
+            </div>
+        </div>
     </div>
-</div>
+</article>

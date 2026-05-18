@@ -1,116 +1,126 @@
 @props([
-'user' => null,
-'roles' => []
+    'user' => null,
+    'roles' => []
 ])
 
 @php
-$selectedRole = old('role', $user?->roles?->first()?->name);
+    $isEdit = $user !== null;
+    $selectedRole = old('role', $user?->roles?->first()?->name);
 @endphp
 
 <x-ui.buttons.actions.form
-    action="{{ $user 
-            ? route('users.update', $user->id) 
-            : route('users.store') }}"
-      enctype="multipart/form-data">
-      
-@csrf
-@if($user)
-    @method('PUT')
-@endif
+    action="{{ $isEdit
+        ? route('users.update', $user->id)
+        : route('users.store') }}"
+    enctype="multipart/form-data">
 
-<!-- Name -->
-<div class="mb-6">
-    <label class="block text-gray-300 text-sm font-medium">User Name</label>
-    <input type="text" name="name"
-        class="w-full p-3 mt-2 border border-gray-600 rounded-md focus:ring-2 focus:ring-indigo-600 bg-gray-700 text-white"
-        placeholder="Enter User name"
-        required
-        value="{{ old('name', $user->name ?? '') }}">
-
-    @error('name')
-        <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
-    @enderror
-</div>
-
-<!-- Email -->
-<div class="mb-6">
-    <label class="block text-gray-300 text-sm font-medium">User Email</label>
-    <input type="email" name="email"
-        class="w-full p-3 mt-2 border border-gray-600 rounded-md focus:ring-2 focus:ring-indigo-600 bg-gray-700 text-white"
-        placeholder="Enter User email"
-        required
-        value="{{ old('email', $user->email ?? '') }}">
-
-    @error('email')
-        <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
-    @enderror
-</div>
-
-<!-- Password -->
-<div class="mb-6">
-    <label class="block text-gray-300 text-sm font-medium">Password</label>
-    <input type="password" name="password"
-        class="w-full p-3 mt-2 border border-gray-600 rounded-md focus:ring-2 focus:ring-indigo-600 bg-gray-700 text-white"
-        placeholder="{{ $user ? 'Leave blank to keep current password' : 'Enter User password' }}"
-        {{ $user ? '' : 'required' }}>
-
-    @error('password')
-        <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
-    @enderror
-</div>
-
-<!-- Role -->
-<div class="mb-6">
-    <label class="block text-gray-300 text-sm font-medium">Role</label>
-    <select name="role"
-        class="w-full p-3 mt-2 border border-gray-600 rounded-md focus:ring-2 focus:ring-indigo-600 bg-gray-700 text-white"
-        required>
-
-        @foreach($roles as $role)
-            <option value="{{ $role->name }}"
-                {{ $selectedRole == $role->name ? 'selected' : '' }}>
-                {{ $role->name }}
-            </option>
-        @endforeach
-    </select>
-
-    @error('role')
-        <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
-    @enderror
-
-    @if($user)
-        <p class="text-gray-400 text-sm mt-2">
-            Current Role:
-            <span class="text-blue-400 font-semibold">
-                {{ $user->roles->first()?->name ?? 'No role' }}
-            </span>
-        </p>
+    @csrf
+    @if($isEdit)
+        @method('PUT')
     @endif
-</div>
 
-    <!-- Image -->
-    <div class="mb-6">
-        <label class="block text-gray-300 text-sm font-medium mb-2">Profile Image</label>
-        <input type="file" name="image"
-            class="w-full p-3 border border-gray-600 text-gray-300 bg-gray-700 rounded-md"
-            accept="image/*">
+    <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 space-y-6 shadow-xl transition-colors">
 
-        @if($user && $user->image)
-            <div class="mt-3">
-                <img src="{{ $user->image_url }}"
-                    class="w-20 h-20 object-cover rounded-full">
-            </div>
-        @endif
+        {{-- TITLE --}}
+        <div class="text-center mb-2">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white">
+                {{ $isEdit ? 'Update User' : 'Create User' }}
+            </h2>
+            <p class="text-gray-500 dark:text-gray-400 text-sm">
+                {{ $isEdit ? 'Edit user details' : 'Add a new user to system' }}
+            </p>
+        </div>
 
-        @error('image')
-            <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
-        @enderror
+        {{-- NAME --}}
+        <div>
+            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                Name
+            </label>
+
+            <input type="text"
+                name="name"
+                value="{{ old('name', $user->name ?? '') }}"
+                placeholder="Enter user name..."
+                class="w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-200 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition"
+                required>
+        </div>
+
+        {{-- EMAIL --}}
+        <div>
+            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                Email
+            </label>
+
+            <input type="email"
+                name="email"
+                value="{{ old('email', $user->email ?? '') }}"
+                placeholder="Enter email..."
+                class="w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-200 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition"
+                required>
+        </div>
+
+        {{-- PASSWORD --}}
+        <div>
+            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                Password
+            </label>
+
+            <input type="password"
+                name="password"
+                placeholder="{{ $isEdit ? 'Leave empty to keep password' : 'Enter password' }}"
+                class="w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-200 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition"
+                {{ $isEdit ? '' : 'required' }}>
+        </div>
+
+        {{-- ROLE --}}
+        <div>
+            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                Role
+            </label>
+
+            <select name="role"
+                class="w-full px-4 py-3 rounded-xl bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-gray-200 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition"
+                required>
+
+                @foreach($roles as $role)
+                    <option value="{{ $role->name }}"
+                        @selected($selectedRole == $role->name)>
+                        {{ $role->name }}
+                    </option>
+                @endforeach
+
+            </select>
+
+            @if($isEdit)
+                <p class="text-gray-500 dark:text-gray-400 text-xs mt-2">
+                    Current:
+                    <span class="text-blue-500 font-semibold">
+                        {{ $user->roles->first()?->name ?? 'No role' }}
+                    </span>
+                </p>
+            @endif
+        </div>
+
+        {{-- IMAGE --}}
+        <div>
+            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                Profile Image
+            </label>
+
+            <input type="file"
+                name="image"
+                class="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-600 dark:text-gray-400 file:bg-gray-100 dark:file:bg-gray-900 file:text-gray-800 dark:file:text-gray-200 file:border-0 file:px-4 file:py-2 file:rounded-lg hover:file:bg-gray-200 dark:hover:file:bg-gray-700 transition">
+
+            @if($isEdit && $user->image)
+                <div class="mt-4 flex justify-start">
+                    <img src="{{ $user->image_url }}"
+                        class="w-20 h-20 rounded-full object-cover border border-gray-300 dark:border-gray-700">
+                </div>
+            @endif
+        </div>
+
+        {{-- BUTTON --}}
+        <div class="flex justify-center pt-2">
+        </div>
     </div>
-
-    <!-- Button --> 
-    <div class='text-center'>
-    <x-ui.buttons.variants :variant="$user ? 'update' : 'create'">
-        {{ $user ? 'Update User' : 'Create User' }}
-    </x-ui.buttons.variants>
-</div>
 </x-ui.buttons.actions.form>

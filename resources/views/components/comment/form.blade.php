@@ -11,24 +11,24 @@
 
     @csrf
 
-    @if($comment)
+    @if($isEdit)
         @method('PUT')
     @endif
 
-    <!-- Always Post -->
     <input type="hidden" name="commentable_id" value="{{ $parentId }}">
     <input type="hidden" name="commentable_type" value="post">
 
-    <!-- Content -->
-    <textarea name="content"
-        class="w-full p-4 text-gray-300 bg-gray-700 border border-gray-600 rounded-md"
-        rows="4"
+    {{-- INPUT --}}
+    <textarea
+        name="content"
+        rows="1"
         placeholder="Write a comment..."
+        class="flex-1 px-2 py-1
+               bg-transparent
+               text-gray-800 dark:text-gray-200
+               placeholder-gray-500 dark:placeholder-gray-400
+               text-sm resize-none focus:outline-none"
         required>{{ old('content', $comment->content ?? '') }}</textarea>
-
-    @error('content')
-        <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
-    @enderror
 
     <!-- Button -->
     <button type="submit"

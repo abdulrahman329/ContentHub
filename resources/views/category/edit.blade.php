@@ -11,8 +11,8 @@
         </x-ui.alert>
     @endif
 
-    <div class="bg-gray-800 p-8 rounded-lg shadow-lg">
-        <h3 class="text-2xl text-white mb-4">Edit Category</h3>
+    <div class="bg-gray-200 dark:bg-gray-900 p-8 rounded-lg shadow-lg">
+        <h3 class="text-2xl text-gray-900 dark:text-white mb-4">Edit Category</h3>
             <x-category.form :category="$category" />
     </div>
 </x-app-layout>

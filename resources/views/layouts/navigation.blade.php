@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }"  class="fixed top-0 w-full z-50 bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 shadow-md">
+<nav x-data="theme()" x-init="init()" class="fixed top-0 w-full z-50 bg-white dark:bg-gray-900 border-b border-gray-700 shadow-md">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -52,8 +52,8 @@
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <!-- User profile dropdown trigger -->
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-                        <img src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : asset('storage/images/user_image.png') }}" alt="{{ Auth::user()->name }}" class="w-10 h-10 rounded-full object-cover mr-2">
+                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-900 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">                        
+                            <img src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : asset('storage/images/user_image.png') }}" alt="{{ Auth::user()->name }}" class="w-10 h-10 rounded-full object-cover mr-2">
                             <div>{{ Auth::user()->name }}</div>
 
                             <!-- Dropdown icon -->
@@ -83,7 +83,22 @@
                             </x-dropdown-link>
                         </form>
                     </x-slot>
-                </x-dropdown>
+                </x-dropdown> 
+            <button
+                @click="toggleTheme"
+                class="group flex ml-4 items-center gap-2 px-3 py-2 rounded-full text-sm font-medium
+                    bg-white dark:bg-gray-900
+                    text-gray-700 dark:text-gray-200
+                    hover:bg-gray-200 dark:hover:bg-gray-700
+                    transition-all duration-200 shadow-sm">
+
+                <span class="text-base">
+                    <span x-text="isDark ? '🌙' : '☀️'"></span>
+                </span>
+
+                <span class="hidden md:inline" x-text="isDark ? 'Dark' : 'Light'"></span>
+            </button>
+
             </div>
 
             <!-- Hamburger (Mobile Navigation) -->
@@ -140,3 +155,29 @@
 </nav>
 
 <div class="pt-16"></div>
+
+<script>
+function theme() {
+    return {
+        isDark: true,
+
+        init() {
+            this.isDark = localStorage.getItem('theme')
+                ? localStorage.getItem('theme') === 'dark'
+                : true;
+
+            this.apply();
+        },
+
+        toggleTheme() {
+            this.isDark = !this.isDark;
+            localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
+            this.apply();
+        },
+
+        apply() {
+            document.documentElement.classList.toggle('dark', this.isDark);
+        }
+    }
+}
+</script>

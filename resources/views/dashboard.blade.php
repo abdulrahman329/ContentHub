@@ -42,16 +42,33 @@
 
                         <!-- Posts -->
                         <a href="{{ route('posts.index') }}"
-                           class="group bg-blue-700 hover:bg-blue-900 text-white rounded-xl p-6 shadow-md transition transform hover:-translate-y-1 hover:shadow-xl">
+                        class="group relative overflow-hidden rounded-2xl p-6
+       
+       bg-gray-100/80 dark:bg-gray-900/80
+       backdrop-blur border border-gray-200 dark:border-gray-800
+       
+       hover:border-blue-400/50 dark:hover:border-blue-500/50
+       hover:shadow-[0_0_25px_rgba(59,130,246,0.15)]
+       
+       transition-all duration-300 hover:-translate-y-1">
 
                             <div class="flex flex-col items-center text-center">
-                                <div class="text-4xl mb-3">📝</div>
-                                <span class="text-lg font-semibold group-hover:scale-105 transition">
+
+                                <!-- ICON -->
+                                <div class="text-4xl mb-3 transition-transform duration-300 group-hover:scale-110">
+                                    📝
+                                </div>
+
+                                <!-- TITLE -->
+                                <span class="text-lg font-bold">
                                     Go to Posts
                                 </span>
-                                <p class="text-sm text-blue-100 mt-1">
+
+                                <!-- DESC -->
+                                <p class="text-sm mt-1 text-gray-500 dark:text-gray-400">
                                     Create & manage posts
                                 </p>
+
                             </div>
                         </a>
 

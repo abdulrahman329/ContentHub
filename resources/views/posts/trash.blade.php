@@ -1,68 +1,79 @@
 <x-app-layout>
+
     <x-slot name="header">    
         {{ __('Trashed Posts') }}
     </x-slot>
 
-    <h1 class="text-3xl font-bold mb-10 text-center text-white">
+    {{-- PAGE TITLE --}}
+    <h1 class="text-3xl font-bold mb-10 text-center
+        text-gray-900 dark:text-white transition-colors">
         🗑️ Trashed Posts
     </h1>
 
+    {{-- EMPTY STATE --}}
     @if($posts->isEmpty())
-        <div class="bg-gray-800 text-gray-300 p-8 rounded-xl text-center">
+        <div class="rounded-xl text-center p-8 transition-colors
+            bg-white border border-gray-200 text-gray-700 shadow-sm
+            dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300">
             No deleted posts found.
         </div>
     @else
-
         <div class="space-y-6">
-
             @foreach($posts as $post)
+            <div class="rounded-2xl overflow-hidden transition-all duration-300
+                bg-white border border-gray-200 shadow-sm hover:shadow-xl
+                dark:bg-gray-900 dark:border-gray-700 dark:hover:border-gray-600">
+                <div class="flex flex-col md:flex-row">
 
-            <div class="bg-gray-800 border border-gray-700 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition">
+                    {{-- IMAGE --}}
+                    @if(!empty($post->image))
+                        <div class="w-full md:w-48 h-52 md:h-40 flex-shrink-0">
+                            <img
+                                src="{{ asset('storage/'.$post->image) }}"
+                                class="w-full h-full object-cover">
+                        </div>
+                    @endif
 
-            <div class="flex">
+                    {{-- CONTENT --}}
+                    <div class="flex flex-col justify-between p-6 w-full">
 
-                {{-- Image (only if exists) --}}
-                @if(!empty($post->image))
-                    <div class="w-48 h-40 flex-shrink-0">
-                        <img
-                            src="{{ asset('storage/'.$post->image) }}"
-                            class="w-full h-full object-cover"
-                        >
-                    </div>
-                @endif
+                        {{-- TOP --}}
+                        <div>
 
-                {{-- Content --}}
-                <div class="flex flex-col justify-between p-6 w-full">
+                            {{-- TITLE --}}
+                            <h3 class="text-2xl font-bold mb-2 break-words
+                                text-gray-900 dark:text-white transition-colors">
+                                {{ $post->title }}
+                            </h3>
 
-                    {{-- Top --}}
-                    <div>
+                            {{-- CATEGORY --}}
+                            <p class="text-sm mb-4
+                                text-gray-500 dark:text-gray-400">
+                                {{ $post->category?->name ?? 'Uncategorized' }}
+                            </p>
 
-                        <h3 class="text-2xl font-bold text-white mb-2">
-                            {{ $post->title }}
-                        </h3>
-
-                        <p class="text-sm text-gray-400 mb-3">
-                            {{ $post->category?->name ?? 'Uncategorized' }}
-                        </p>
-
-                        <div class="flex items-center gap-3 flex-wrap">
-
-                            <span class="text-xs px-3 py-1 rounded-full bg-blue-600 text-white">
-                                {{ strtoupper($post->type) }}
-                            </span>
-
-                            {{-- User --}}
-                            <div class="flex items-center gap-2">
-                                <img
-                                src="{{ $post->user?->image_url }}"
-                                    class="w-8 h-8 rounded-full object-cover border border-gray-600"
-                                >
-
-                                <span class="text-sm text-gray-300">
-                                    {{ $post->user->name ?? 'Unknown' }}
+                            <div class="flex items-center gap-4 flex-wrap">
+                                {{-- TYPE --}}
+                                <span class="text-xs px-3 py-1 rounded-full font-semibold
+                                        {{ $post->type === 'news'
+                                            ? 'bg-green-100 text-green-700 dark:bg-green-500/20 dark:text-green-400'
+                                            : 'bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-400' }}">
+                                        {{ strtoupper($post->type) }}
                                 </span>
-                            </div>
 
+                                {{-- USER --}}
+                                <div class="flex items-center gap-2">
+                                    <img
+                                        src="{{ $post->user?->image_url }}"
+                                        class="w-8 h-8 rounded-full object-cover border
+                                        border-gray-300 dark:border-gray-600">
+
+                                    <span class="text-sm
+                                        text-gray-700 dark:text-gray-300">
+                                        {{ $post->user->name ?? 'Unknown' }}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
@@ -88,20 +99,14 @@
                         </form>
 
                     </div>
-
                 </div>
-
             </div>
-
-        </div>
             @endforeach
-
         </div>
-
+        {{-- PAGINATION --}}
         <div class="mt-10">
             {{ $posts->links() }}
         </div>
-
     @endif
 
     {{-- Back --}}

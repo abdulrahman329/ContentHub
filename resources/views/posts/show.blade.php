@@ -1,117 +1,59 @@
-<script>
-    // This function is triggered when the "Submit Comment" button is clicked
-    function handleClick(event, button) {
-        // Prevents the default form submission behavior (which reloads the page)
-        event.preventDefault();
-
-        // Disables the button to prevent multiple clicks
-        button.disabled = true;
-
-        // Manually submits the form after disabling the button
-        // 'event.target' refers to the button clicked, so we use 'closest('form')' to find the closest form element
-        event.target.closest('form').submit();
-    }
-</script>
-
 <x-app-layout>
+
     <x-slot name="header">
-        {{ __('Show Post') }}
+        <span class="text-gray-900 dark:text-white">
+            {{ __('Show Post') }}
+        </span>
     </x-slot>
 
-        {{-- Title --}}
-        <h1 class="text-5xl font-extrabold text-white text-center mb-6">
-            {{ $post->title }}
-        </h1>
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 py-8">
 
-        {{-- Image --}}
-        @if($post->image)
-            <div class="mb-8 flex justify-center">
-                <div class="relative overflow-hidden rounded-lg shadow-xl w-4/5 h-96">
-                    <img 
-                        src="{{ $post->image_url }}"
-                        class="w-full h-96 object-cover"
-                    >
-                </div>
-            </div>
-        @endif
+        {{-- LEFT / MAIN CONTENT --}}
+        <div class="lg:col-span-8 space-y-8">
 
-        {{-- Post Info --}}
-        <div class="bg-gray-800 p-8 rounded-lg shadow-lg mb-8">
+            {{-- POST CARD --}}
+            <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl p-8 shadow-sm dark:shadow-none transition">
 
-            <div class="flex items-center mb-4">
-                <img 
-                    src="{{ $post->user?->image_url }}"
-                    class="w-10 h-10 rounded-full object-cover mr-2"
-                >
+                {{-- TOP META --}}
+                <div class="flex items-center gap-3 text-gray-500 dark:text-gray-400 text-sm mb-6">
+                    <img
+                        src="{{ $post->user?->image_url }}"
+                        class="w-10 h-10 rounded-full object-cover border border-gray-300 dark:border-gray-700">
+                    <span class="font-medium">
+                        {{ $post->user?->name ?? 'Unknown' }}
+                    </span>
 
-                <span class="text-white text-2xl">
-                    {{ $post->user?->name ?? 'Unknown Author' }}                
-                </span>
-            </div>
-
-            <p class="text-gray-300">
-                <strong>Category:</strong>
-                {{ $post->category?->name ?? 'Uncategorized' }}
-            </p>
-
-            <p class="text-gray-200 mt-4 text-lg">
-                {{ $post->content }}
-            </p>
-
-        </div>
-
-        {{-- Comment Form --}}
-        @can('create', App\Models\Comment::class)
-            @auth
-                <div class="bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
-                    <x-comment.form :parentId="$post->id" />
-                </div>
-            @endauth
-        @endcan
-
-        {{-- Comments --}}
-        <div class="bg-gray-800 p-8 rounded-lg shadow-lg">
-
-            <h3 class="text-2xl text-white mb-4">Comments</h3>
+                    <span>•</span>
 
             @can('viewTrash', App\Models\Comment::class)
                 <div class="mb-4 flex justify-end">
                     <a href="{{ route('comments.trash') }}"
                     class="text-sm text-white bg-gray-600 hover:bg-gray-800 px-4 py-2 rounded-md transition-all">
                         View Deleted Comments
-                    <span class="ml-2 bg-red-600 text-white text-xs px-2 py-1 rounded-full">
-                        {{ $trashedCommentsCount }}
+                    <span class="px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs border border-gray-200 dark:border-gray-700">
+                        {{ $post->category?->name ?? 'Uncategorized' }}
                     </span>
                     </a>
                 </div>
-            @endcan
-            
-            @forelse($comments as $comment)
-                <div class="bg-gray-700 p-4 rounded-md mb-4">
 
-                    <div class="flex items-center mb-2">
-                        <img 
-                            src="{{ $comment->user?->image 
-                                ? asset('storage/'.$comment->user->image)
-                                : asset('storage/images/user_image.png') }}"
-                            class="w-10 h-10 rounded-full mr-2"
+                {{-- TITLE --}}
+                <h1 class="text-4xl break-words font-bold text-gray-900 dark:text-white mb-6 leading-tight">
+                    {{ $post->title }}
+                </h1>
+
+                {{-- IMAGE --}}
+                @if($post->image)
+                    <div class="rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 mb-8">
+                        <img
+                            src="{{ $post->image_url }}"
+                            class="w-full max-h-[450px] object-cover hover:scale-[1.01] transition duration-500"
                         >
-
-                        <span class="text-gray-200 font-bold">
-                            {{ $comment->user->name }}
-                        </span>
                     </div>
 
-                    <p class="text-gray-300">
-                        {{ $comment->content }}
-                    </p>
-
-                    <p class="text-sm text-gray-400 mt-2">
-                        {{ $comment->created_at->diffForHumans() }}
-                    </p>
-
-                    {{-- Actions --}}
-                    <div class="flex justify-end space-x-4 mt-4">
+                {{-- CONTENT --}}
+                <div class="text-gray-700 dark:text-gray-300 break-words text-lg leading-relaxed whitespace-pre-line">
+                    {{ $post->content }}
+                </div>
 
                         @can('update', $comment)
                         <x-ui.buttons.edit 
@@ -134,18 +76,9 @@
                                 </button>
                             </form>
                         @endcan
-
                     </div>
-
                 </div>
-            @empty
-                <p class="text-gray-400">No comments yet.</p>
-            @endforelse
-
-            <div class="mt-4">
-                {{ $comments->links() }}
             </div>
-
         </div>
 
         {{-- Actions --}}
@@ -183,6 +116,16 @@
                 @endcan
 
             </div>
-
         </div>
+    </div>
 </x-app-layout>
+
+<script>
+function toggleEdit(id) {
+    const view = document.getElementById('view-' + id);
+    const edit = document.getElementById('edit-' + id);
+
+    view.classList.toggle('hidden');
+    edit.classList.toggle('hidden');
+}
+</script>

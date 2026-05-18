@@ -1,41 +1,82 @@
 <x-app-layout>
-    <!-- Header Section for "Manage Categories" page -->
-    <x-slot name="header">    
-        {{ __('Manage Categories') }}
+
+    {{-- HEADER --}}
+    <x-slot name="header">
+        <span class="text-gray-900 dark:text-white">
+            {{ __('Manage Categories') }}
+        </span>
     </x-slot>
 
-        <!-- Success Message: This will display a success message when a category is created successfully -->
-        @if(session('success'))
-            <x-ui.alert>
-                {{ session('success') }}
-            </x-ui.alert>
-        @endif
+    {{-- SUCCESS MESSAGE --}}
+    @if(session('success'))
+        <x-ui.alert>
+            {{ session('success') }}
+        </x-ui.alert>
+    @endif
 
-        <!-- Create Category Form -->
-        <div class="bg-gray-800 p-8 rounded-lg shadow-lg mb-8 border border-gray-700 max-w-full">
-            <h3 class="text-3xl text-white mb-6">Create Category</h3>
-            <!-- Form for Creating a New Category -->
-            <x-category.form/>
+    {{-- CREATE CATEGORY --}}
+    <div class="bg-white dark:bg-gray-900
+                border border-gray-200 dark:border-gray-800
+                rounded-3xl p-8 shadow-sm mb-8 transition">
+
+        <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+            Create Category
+        </h3>
+
+        <x-category.form/>
+
+    </div>
+
+    {{-- EXISTING CATEGORIES --}}
+    <div class="bg-white dark:bg-gray-900
+                border border-gray-200 dark:border-gray-800
+                rounded-3xl p-8 shadow-sm transition">
+
+        {{-- TOP --}}
+        <div class="flex items-center justify-between mb-8">
+
+            <h3 class="text-3xl font-bold text-gray-900 dark:text-white">
+                Existing Categories
+            </h3>
+
+            <div class="text-sm text-gray-500 dark:text-gray-400">
+                Total:
+                <span class="font-semibold text-gray-800 dark:text-gray-200">
+                    {{ $categories->total() }}
+                </span>
+            </div>
 
         </div>
 
-        <!-- List of Existing Categories -->
-        <div class="bg-gray-800 p-8 rounded-lg shadow-lg border border-gray-700 max-w-full">
-            <h3 class="text-3xl text-white mb-6">Existing Categories</h3>          
-            <!-- Loop through the categories and display each one -->
-            <ul class="space-y-6">
-                @forelse ($categories as $category)
-                    <li class="flex justify-between items-center bg-gray-700 p-4 rounded-lg shadow w-full overflow-hidden">
-                        <div class="flex-1 max-w-[70%]">
-                            <!-- Display the Category Name -->
-                            <div class="flex items-center mb-2">
-                                <span class="font-medium text-gray-300 mr-2">Category Name:</span>
-                                <span class=" text-blue-500 text-lg">{{ $category->name }}</span>
-                            </div>
-                        </div>
+        {{-- LIST --}}
+        <ul class="space-y-5">
 
-                        <!-- Edit and Delete Button Section -->
-                        <div class="flex space-x-4 ml-4 min-w-[120px]">
+            @forelse ($categories as $category)
+
+                <li class="flex flex-col md:flex-row md:items-center md:justify-between
+                           gap-5
+                           bg-gray-50 dark:bg-gray-800/70
+                           border border-gray-200 dark:border-gray-700
+                           rounded-2xl p-5 transition hover:shadow-md">
+
+                    {{-- LEFT --}}
+                    <div class="flex-1 overflow-hidden">
+
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                            Category Name
+                        </p>
+
+                        <h4 class="text-xl font-semibold
+                                   text-gray-900 dark:text-white
+                                   break-words">
+                            {{ $category->name }}
+                        </h4>
+
+                    </div>
+
+                    {{-- ACTIONS --}}
+                    <div class="flex items-center gap-3 shrink-0">
+
                         @can('update', $category)
                             <!-- Edit Button: Links to the page where the category can be edited -->
                             <x-ui.buttons.edit 
@@ -54,15 +95,15 @@
                                 <button type="submit" class="text-red-600 hover:text-red-500" onclick="return confirm('Are you sure you want to delete this category?')">Delete</button>
                             </form>
                         @endcan
-                        </div>
-                    </li>
-                    @empty
-                    <x-ui.empty-state message="No categories found."/>
-
-                @endforelse
-            </ul>
-        <div class="mt-6">
-            {{ $categories->links() }} <!-- Pagination links for categories -->
+                    </div>
+                </li>
+            @empty
+                <x-ui.empty-state message="No categories found."/>
+            @endforelse
+        </ul>
+        {{-- PAGINATION --}}
+        <div class="mt-8">
+            {{ $categories->links() }}
         </div>
     </div>
 </x-app-layout>

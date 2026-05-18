@@ -20,79 +20,134 @@
         @method('PUT')
     @endif
 
-    <!-- Title -->
-    <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-300">Title</label>
-        <input type="text" name="title"
+    {{-- TITLE --}}
+    <div>
+        <label class="block text-sm font-semibold mb-2
+            text-gray-700
+            dark:text-gray-300">
+            Title
+        </label>
+        <input type="text"
+            name="title"
             value="{{ old('title', $model->title ?? '') }}"
-            class="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md bg-gray-700 text-gray-300"
+            placeholder="Enter title..."
+            class="w-full px-4 py-3 rounded-xl border transition-all duration-200
+
+            bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-400
+            focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20
+
+            dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:placeholder-gray-500"
             required>
     </div>
 
-    <!-- Content -->
-    <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-300">Content</label>
-        <textarea name="content"
-            rows="4"
-            class="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md bg-gray-700 text-gray-300"
-            required>{{ old('content', $model->content ?? '') }}</textarea>
+    {{-- CONTENT --}}
+    <div>
+        <label class="block text-sm font-semibold mb-2
+            text-gray-700
+            dark:text-gray-300">
+            Content
+        </label>
+
+        <textarea
+            name="content"
+            rows="6"
+            placeholder="Write something..."
+            class="w-full px-4 py-3 rounded-xl border resize-none transition-all duration-200
+
+            bg-gray-50 border-gray-300 text-gray-900 placeholder-gray-400
+            focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20
+
+            dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:placeholder-gray-500"
+
+            required>{{ old('content', $model->content ?? '') }}
+        </textarea>
     </div>
 
-    <!-- Category -->
-    <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-300">Category</label>
-        <select name="category_id"
-            class="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md bg-gray-700 text-gray-300"
-            required>
+    {{-- CATEGORY + TYPE --}}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-            @foreach($categories as $category)
-                <option value="{{ $category->id }}"
-                    {{ old('category_id', $model->category_id ?? '') == $category->id ? 'selected' : '' }}>
-                    {{ $category->name }}
+        {{-- CATEGORY --}}
+        <div>
+            <label class="block text-sm font-semibold mb-2
+                text-gray-700
+                dark:text-gray-300">
+                Category
+            </label>
+            <select name="category_id"
+                class="w-full px-4 py-3 rounded-xl border transition-all duration-200
+
+                bg-gray-50 border-gray-300 text-gray-900
+                focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20
+
+                dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
+
+                required>
+
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}"
+                        @selected(old('category_id', $model->category_id ?? '') == $category->id)>
+                        {{ $category->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        {{-- TYPE --}}
+        <div>
+            <label class="block text-sm font-semibold mb-2
+                text-gray-700
+                dark:text-gray-300">
+                Type
+            </label>
+            <select name="type"
+                class="w-full px-4 py-3 rounded-xl border transition-all duration-200
+
+                bg-gray-50 border-gray-300 text-gray-900
+                focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20
+
+                dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200"
+                required>
+
+                <option value="post"
+                    @selected(old('type', $model->type ?? 'post') == 'post')>
+                    Post
                 </option>
-            @endforeach
-        </select>
-
-        @if($model)
-            <div class="mt-2 text-gray-300">
-                Current category:
-                <span class="text-blue-400 font-bold">
-                    {{ $model->category->name }}
-                </span>
-            </div>
-        @endif
+                <option value="news"
+                    @selected(old('type', $model->type ?? '') == 'news')>
+                    News
+                </option>
+            </select>
+        </div>
     </div>
 
-    <!-- Type -->
-    <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-300">Type</label>
+    {{-- IMAGE --}}
+    <div>
+        <label class="block text-sm font-semibold mb-2
+            text-gray-700
+            dark:text-gray-300">
+            Image
+        </label>
+        <input type="file"
+            name="image"
+            class="block w-full text-sm rounded-xl border transition-all duration-200
 
-        <select name="type"
-            class="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md bg-gray-700 text-gray-300"
-            required>
+            bg-gray-50 border-gray-300 text-gray-700
+            file:mr-4 file:px-4 file:py-2
+            file:border-0 file:rounded-lg
+            file:bg-gray-200 file:text-gray-800
+            hover:file:bg-gray-300
 
-         <option value="post"
-            @selected(old('type', $model->type ?? 'post') == 'post')>
-            Post
-        </option>
-
-        <option value="news"
-            @selected(old('type', $model->type ?? '') == 'news')>
-            News
-        </option>
-
-        </select>
-    </div>
-
-    <!-- Image -->
-    <div class="mb-4">
-        <label class="block text-sm font-medium text-gray-300">Image</label>
-        <input type="file" name="image"
-            class="mt-1 block w-full px-3 py-2 border border-gray-600 rounded-md bg-gray-700 text-gray-300">
-
+            dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300
+            dark:file:bg-gray-900 dark:file:text-gray-200
+            dark:hover:file:bg-gray-700">
         @if($isEdit && $model->image)
-            <img src="{{ $item->image_url }}"
-                class="w-32 h-32 object-cover rounded mt-3">
+            <div class="mt-4">
+                <img
+                    src="{{ $model->image_url }}"
+                    class="w-full max-w-xs h-40 object-cover rounded-xl border
+                    border-gray-300
+                    dark:border-gray-700">
+            </div>
         @endif
     </div>
 

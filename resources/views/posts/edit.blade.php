@@ -11,7 +11,7 @@
         @endif
 
         <!-- Page Title: Display "Edit Post" at the center of the page -->  
-        <h1 class="text-3xl font-bold my-6 text-center text-white">Edit Post</h1>
+        <h1 class="text-3xl font-bold my-6 text-center text-gray-900 dark:text-white">Edit Post</h1>
 
         @can('update', $post)
         <x-article.form :model="$post" :categories="$categories" />

@@ -9,6 +9,14 @@
         text-gray-900 dark:text-white transition-colors">
         🗑️ Trashed Posts
     </h1>
+    {{-- BACK BUTTON --}}
+    <div class="flex justify-end mb-10">
+        <x-ui.buttons.actions.link href="{{ route('posts.index') }}">
+            <x-ui.buttons.variants variant="back">
+                Back
+            </x-ui.buttons.variants>
+        </x-ui.buttons.actions.link>
+    </div>
 
     {{-- EMPTY STATE --}}
     @if($posts->isEmpty())
@@ -76,28 +84,28 @@
                             </div>
                         </div>
 
-                    </div>
+                        {{-- ACTIONS --}}
+                        <div class="flex justify-end gap-6 mt-8">
 
-                    {{-- Bottom Actions --}}
-                    <div class="flex justify-end gap-6 mt-6">
+                            {{-- RESTORE --}}
+                            <x-ui.buttons.actions.form
+                                action="{{ route('posts.restore', $post->id) }}"
+                                method="POST">
+                                <x-ui.buttons.variants variant="restore">
+                                    Restore
+                                </x-ui.buttons.variants>
+                            </x-ui.buttons.actions.form>
 
-                        <form method="POST" action="{{ route('posts.restore', $post->id) }}">
-                            @csrf
-                            <button class="text-green-400 hover:text-green-300 font-semibold">
-                                Restore
-                            </button>
-                        </form>
+                            {{-- FORCE DELETE --}}
+                            <x-ui.buttons.actions.form
+                                action="{{ route('posts.forceDelete', $post->id) }}"
+                                method="DELETE">
+                                <x-ui.buttons.variants variant="danger">
+                                    Delete Forever
+                                </x-ui.buttons.variants>
+                            </x-ui.buttons.actions.form>
 
-                        <form method="POST" action="{{ route('posts.forceDelete', $post->id) }}"
-                            onsubmit="return confirm('Delete this post forever?')">
-                            @csrf
-                            @method('DELETE')
-
-                            <button class="text-red-500 hover:text-red-400 font-semibold">
-                                Delete Forever
-                            </button>
-                        </form>
-
+                        </div>
                     </div>
                 </div>
             </div>
@@ -108,12 +116,4 @@
             {{ $posts->links() }}
         </div>
     @endif
-
-    {{-- Back --}}
-    <div class="flex justify-start mt-10">
-        <a href="{{ route('posts.index') }}"
-           class="bg-blue-600 hover:bg-blue-800 text-white px-6 py-3 rounded-md font-semibold transition">
-            Back
-        </a>
-    </div>
 </x-app-layout>

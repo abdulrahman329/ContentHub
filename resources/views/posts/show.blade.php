@@ -25,15 +25,9 @@
 
                     <span>•</span>
 
-            @can('viewTrash', App\Models\Comment::class)
-                <div class="mb-4 flex justify-end">
-                    <a href="{{ route('comments.trash') }}"
-                    class="text-sm text-white bg-gray-600 hover:bg-gray-800 px-4 py-2 rounded-md transition-all">
-                        View Deleted Comments
                     <span class="px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs border border-gray-200 dark:border-gray-700">
                         {{ $post->category?->name ?? 'Uncategorized' }}
                     </span>
-                    </a>
                 </div>
 
                 {{-- TITLE --}}
@@ -49,72 +43,139 @@
                             class="w-full max-h-[450px] object-cover hover:scale-[1.01] transition duration-500"
                         >
                     </div>
+                @endif
 
                 {{-- CONTENT --}}
                 <div class="text-gray-700 dark:text-gray-300 break-words text-lg leading-relaxed whitespace-pre-line">
                     {{ $post->content }}
                 </div>
 
-                        @can('update', $comment)
-                        <x-ui.buttons.edit 
-                            href="{{ route('comments.edit', $comment->id) }}">
-                            Edit
-                        </x-ui.buttons.edit>
+                {{-- ACTIONS --}}
+                <div class="flex items-center pt-8 mt-8 border-t border-gray-200 dark:border-gray-800">
+
+                    {{-- BACK --}}
+                    <x-ui.buttons.actions.link href="{{ route('posts.index') }}">
+                        <x-ui.buttons.variants variant="back">
+                            Back
+                        </x-ui.buttons.variants>
+                    </x-ui.buttons.actions.link>
+
+                    {{-- RIGHT ACTIONS --}}
+                    <div class="flex gap-3 ml-auto">
+                        @can('update', $post)
+                            <x-ui.buttons.actions.link href="{{ route('posts.edit', $post->id) }}">
+                                <x-ui.buttons.variants variant="show-edit">
+                                    Edit
+                                </x-ui.buttons.variants>
+                            </x-ui.buttons.actions.link>
                         @endcan
-
-                        @can('delete', $comment)
-                            <form method="POST"
-                                  action="{{ route('comments.destroy', $comment->id) }}">
-                                @csrf
-                                @method('DELETE')
-
-                                <button
-                                    type="submit"
-                                    class="text-red-500 hover:text-red-700"
-                                    onclick="return confirm('Delete comment?')">
-                                    Delete
-                                </button>
-                            </form>
+                        @can('delete', $post)
+                            <x-ui.buttons.actions.form
+                                action="{{ route('posts.destroy', $post->id) }}"
+                                method="DELETE">
+                                    <x-ui.buttons.variants variant="show-delete">
+                                        Delete
+                                    </x-ui.buttons.variants>
+                            </x-ui.buttons.actions.form>
                         @endcan
                     </div>
                 </div>
             </div>
         </div>
 
-        {{-- Actions --}}
-        <div class="flex justify-between items-center mt-8">
+        {{-- RIGHT / COMMENTS --}}
+        <div class="lg:col-span-4">
+            <div class="sticky top-24 space-y-6">
 
-            <a href="{{ route('posts.index') }}"
-            class="text-lg text-white bg-blue-600 hover:bg-blue-800 hover:scale-105 duration-200 px-6 py-2 rounded-md font-semibold transition-all">
-            Back
-            </a>
+                {{-- COMMENTS HEADER --}}
+                <div class="flex justify-between items-center">
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white">
+                        Comments
+                    </h3>
+                    @can('viewTrash', App\Models\Comment::class)
+                        <x-ui.buttons.actions.link href="{{ route('comments.trash') }}">
+                            <x-ui.buttons.variants variant="trash">
+                                {{ $trashedCommentsCount }}
+                            </x-ui.buttons.variants>
+                        </x-ui.buttons.actions.link>
+                    @endcan
+                </div>
 
-            <div class="space-x-4">
-
-                @can('update', $post)
-                <a href="{{ route('posts.edit', $post->id) }}"
-                    class="inline-block text-lg text-white bg-yellow-500 hover:bg-yellow-700 hover:scale-105 duration-200 px-6 py-2 rounded-md font-semibold transition-all"> 
-                    Edit
-                </a>
-
+                {{-- COMMENT FORM --}}
+                @can('create', App\Models\Comment::class)
+                    @auth
+                        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm">
+                            <x-comment.form :parentId="$post->id" />
+                            @error('content')
+                                <p class="text-red-500 text-xs mt-2">
+                                    {{ $message }}
+                                </p>
+                            @enderror
+                        </div>
+                    @endauth
                 @endcan
 
-                @can('delete', $post)
-                    <form method="POST"
-                          action="{{ route('posts.destroy', $post->id) }}"
-                          class="inline-block">
+                {{-- COMMENTS LIST --}}
+                <div class="space-y-4 max-h-[700px] overflow-y-auto pr-2">
+                    @forelse($comments as $comment)
+                        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 shadow-sm transition">
 
-                        @csrf
-                        @method('DELETE')
+                            {{-- USER --}}
+                            <div class="flex items-center gap-3 mb-4">
+                                <img
+                                    src="{{ $comment->user->image_url }}"
+                                    class="w-9 h-9 rounded-full object-cover border 
+                                    border-gray-300  dark:border-gray-700">
+                                <div>
+                                    <p class="text-sm font-semibold text-gray-900 dark:text-white">
+                                        {{ $comment->user->name }}
+                                    </p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">
+                                        {{ $comment->created_at->diffForHumans() }}
+                                    </p>
+                                </div>
+                            </div>
 
-                        <button type="submit"
-                        class="text-lg text-white bg-red-500 hover:bg-red-800 hover:scale-105 duration-200 px-6 py-2 rounded-md font-semibold transition-all"                                
-                        onclick="return confirm('Delete post?')">
-                            Delete
-                        </button>
-                    </form>
-                @endcan
+                            {{-- VIEW MODE --}}
+                            <div id="view-{{ $comment->id }}"
+                                 class="text-gray-700 dark:text-gray-300 text-sm break-words leading-relaxed">
+                                {{ $comment->content }}
+                            </div>
 
+                            {{-- EDIT MODE --}}
+                            <div id="edit-{{ $comment->id }}" class="hidden mt-4">
+                                <x-comment.form :comment="$comment" :parentId="$post->id"/>
+                            </div>
+
+                            {{-- ACTIONS --}}
+                            <div class="flex gap-5 mt-4 pt-4 border-t border-gray-100 dark:border-gray-800 text-sm">
+                            @can('update', $comment)
+                                <x-ui.buttons.variants
+                                    variant="warning"
+                                    type="button"
+                                    onclick="toggleEdit({{ $comment->id }})">
+                                        Edit
+                                </x-ui.buttons.variants>
+                            @endcan
+                            @can('delete', $comment)
+                                <x-ui.buttons.actions.form
+                                    action="{{ route('comments.destroy', $comment->id) }}"
+                                    method="DELETE">
+                                        <x-ui.buttons.variants variant="danger">
+                                            Delete
+                                        </x-ui.buttons.variants>
+                                </x-ui.buttons.actions.form>
+                            @endcan
+                            </div>
+                        </div>
+                    @empty
+                        <div class="bg-white dark:bg-gray-900 border border-dashed border-gray-300 dark:border-gray-700 rounded-2xl p-8 text-center">
+                            <p class="text-gray-500 dark:text-gray-400">
+                                No comments yet
+                            </p>
+                        </div>
+                    @endforelse
+                </div>
             </div>
         </div>
     </div>

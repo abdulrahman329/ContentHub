@@ -7,12 +7,17 @@
     $isEdit = $model !== null;
 @endphp
 
-<form method="POST"
-      action="{{ $isEdit
-            ? route('posts.update', $model->id)
-            : route('posts.store') }}"
-      enctype="multipart/form-data"
-      class="bg-gray-800 p-6 rounded-lg shadow-md">
+<x-ui.buttons.actions.form
+    :action="$isEdit
+        ? route('posts.update', $model->id)
+        : route('posts.store')"
+    :method="$isEdit ? 'PUT' : 'POST'"
+
+    enctype="multipart/form-data"
+
+    class="rounded-2xl border p-6 space-y-6 shadow-lg transition-all duration-300
+    bg-white border-gray-200
+    dark:bg-gray-900 dark:border-gray-800">
 
     @csrf
 
@@ -151,12 +156,11 @@
         @endif
     </div>
 
-    <!-- Button -->
-    <div class="text-center">
-        <button type="submit"
-            class="px-6 py-2 rounded font-bold
-            {{ $isEdit ? 'bg-yellow-500 text-black hover:bg-yellow-700' : 'bg-blue-600 text-white hover:bg-blue-800' }}">
-            {{ $isEdit ? 'Update Post' : 'Create Post' }}
-        </button>
+    {{-- BUTTON --}}
+    <div class="flex justify-center pt-2">
+        <x-ui.buttons.variants
+        :variant="$isEdit ? 'update' : 'create'">
+            {{ $isEdit ? 'Update Post' : 'create Post' }}
+        </x-ui.buttons.variants>
     </div>
-</form>
+</x-ui.buttons.actions.form>

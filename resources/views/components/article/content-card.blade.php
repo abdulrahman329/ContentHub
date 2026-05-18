@@ -28,24 +28,6 @@
         </a>
     </div>
 
-        @can('update', $item)
-            <a href="{{ route('posts.edit', $item->id) }}"
-                class="inline-block bg-yellow-500 text-black py-2 px-4 rounded-lg hover:bg-yellow-700 transform transition-all duration-200 ease-in-out w-full text-center">                Edit
-            </a>
-        @endcan
-
-        @can('delete', $item)
-            <form method="POST" action="{{ route('posts.destroy', $item->id) }}">
-                @csrf
-                @method('DELETE')
-
-                <button class="bg-red-600 text-black py-2 px-4 rounded-lg hover:bg-red-800 transform transition-all duration-200 ease-in-out w-full text-center" 
-                    onclick="return confirm('Are you sure?')">
-                    Delete
-                </button>
-            </form>
-        @endcan
-
     {{-- BODY --}}
     <div class="p-5">
 
@@ -81,6 +63,36 @@
             </div>
         </a>
 
+        {{-- ACTIONS --}}
+        <div class="flex items-center justify-between">
+
+            {{-- VIEW --}}
+            <div>
+                <x-ui.buttons.actions.link href="{{ route('posts.show', $item->id) }}">
+                    <x-ui.buttons.variants variant="back">
+                        View
+                    </x-ui.buttons.variants>
+                </x-ui.buttons.actions.link>
+            </div>
+            {{-- EDIT + DELETE --}}
+            <div class="flex gap-2">
+                @can('update', $item)
+                    <x-ui.buttons.actions.link href="{{ route('posts.edit', $item->id) }}">
+                        <x-ui.buttons.variants variant="show-edit">
+                            Edit
+                        </x-ui.buttons.variants>
+                    </x-ui.buttons.actions.link>
+                @endcan
+                @can('delete', $item)
+                    <x-ui.buttons.actions.form
+                        action="{{ route('posts.destroy', $item->id) }}"
+                        method="DELETE">
+                        <x-ui.buttons.variants variant="show-delete">
+                            Delete
+                        </x-ui.buttons.variants>
+                    </x-ui.buttons.actions.form>
+                @endcan
+            </div>
         </div>
 
         {{-- META --}}

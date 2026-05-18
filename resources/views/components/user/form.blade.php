@@ -121,6 +121,10 @@
 
         {{-- BUTTON --}}
         <div class="flex justify-center pt-2">
+            <x-ui.buttons.variants
+                :variant="$isEdit ? 'update' : 'create'">
+                {{ $isEdit ? 'Update User' : 'Create User' }}
+            </x-ui.buttons.variants>
         </div>
     </div>
 </x-ui.buttons.actions.form>

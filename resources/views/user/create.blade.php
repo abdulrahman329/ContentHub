@@ -3,92 +3,84 @@
     <div class="max-w-7xl mx-auto py-8 space-y-8
                 text-gray-900 dark:text-gray-100">
 
-        {{-- Create User --}}
-            <div class="bg-gray-800 p-8 rounded-lg shadow-lg mb-8 border border-gray-700">
-                <h3 class="text-3xl text-white mb-6">Create User</h3>
-                <x-user.form :roles="$roles" />
+        {{-- HEADER --}}
+            <x-slot name="header">    
+                {{ __('Users') }}
+            </x-slot>
+
+        {{-- CREATE USER --}}
+        <x-user.form :roles="$roles" />
+
+        {{-- USERS LIST --}}
+        <div class="bg-white dark:bg-gray-900
+                    border border-gray-200 dark:border-gray-800
+                    rounded-2xl p-6 shadow-lg">
+            <h2 class="text-xl font-bold">
+                Existing Users
+            </h2>
+            {{-- Recycle Bin --}}
+            <div class=" pb-6 flex justify-end">
+                <x-ui.buttons.actions.link href="{{ route('users.trash') }}">
+                    <x-ui.buttons.variants variant="trash">
+                        🗑 Recycle Bin ({{ $trashedCount }})
+                    </x-ui.buttons.variants>
+                </x-ui.buttons.actions.link>
             </div>
+            <div class="space-y-5">
+                @foreach ($users as $user)
+                    <div class="flex items-center justify-between
+                                bg-gray-50 dark:bg-gray-800
+                                border border-gray-200 dark:border-gray-700
+                                rounded-xl p-5
+                                hover:shadow-md hover:border-blue-400
+                                transition">
 
-        {{-- Existing Users --}}
-            <div class="bg-gray-800 p-8 rounded-lg shadow-lg border border-gray-700">
-
-                {{-- Header + Trash Button --}}
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-3xl text-white">Existing Users</h3>
-                        <x-ui.buttons.actions.link
-                            href="{{ route('users.trash') }}">
-                                <x-ui.buttons.variants variant="trash">
-                                    🗑 Recycle Bin ({{ $trashedCount }})                                    
-                                </x-ui.buttons.variants>
-                        </x-ui.buttons.actions.link>
-                </div>
-
-                {{-- Users List --}}
-                <ul class="space-y-6">
-                    @foreach ($users as $user)
-
-                        <li class="flex justify-between items-center bg-gray-700 p-5 rounded-lg shadow">
-
-                            {{-- Left: User Info --}}
-                            <div class="flex items-center gap-4 flex-1">
-
-                                {{-- Image --}}
-                                <img
-                                    src="{{ $user->image_url }}"
-                                    class="w-14 h-14 rounded-full object-cover border border-gray-600"
-                                    alt="{{ $user->name }}"
-                                >
-
-                                {{-- Info --}}
-                                <div>
-                                    <p class="text-xl font-bold text-white">
-                                        {{ $user->name }}
-                                    </p>
-
-                                    <p class="text-gray-300 text-sm">
-                                        {{ $user->email }}
-                                    </p>
-
-                                    {{-- Roles --}}
-                                    <div class="mt-2">
-                                        <span class="text-blue-400 text-sm font-medium">
-                                            {{ $user->roles->pluck('name')->join(', ') }}
-                                        </span>
-                                    </div>
-                                </div>
-
+                        {{-- LEFT LIST --}}
+                        <div class="flex items-center gap-5">
+                            <img
+                                src="{{ $user->image_url }}"
+                                class="w-14 h-14 rounded-full object-cover
+                                       border border-gray-300 dark:border-gray-600">    
+                            <div>
+                                <p class="text-lg font-bold">
+                                    {{ $user->name }}
+                                </p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">
+                                    {{ $user->email }}
+                                </p>
+                                <p class="text-xs mt-2 text-blue-600 dark:text-blue-400">
+                                    {{ $user->roles->pluck('name')->join(', ') }}
+                                </p>
                             </div>
+                        </div>
 
-                            {{-- Right: Actions --}}
-                            <div class="flex items-center gap-5 ml-4 text-lg">
-
-                                @can('update', $user)
-                                    <x-ui.buttons.actions.link
-                                        href="{{ route('users.edit', $user->id) }}">
-                                            <x-ui.buttons.variants variant="warning">
-                                                Edit
-                                            </x-ui.buttons.variants>
-                                    </x-ui.buttons.actions.link>
-                                @endcan 
-
-                                @can('delete', $user)
-                                    <x-ui.buttons.actions.form
-                                        action="{{ route('users.destroy', $user->id) }}"
-                                        method="DELETE"
-                                    >
-                                            <x-ui.buttons.variants variant="danger">
-                                                Delete
-                                            </x-ui.buttons.variants>
-                                    </x-ui.buttons.actions.form>
-                                @endcan
-                            </div>
-                        </li>
-                    @endforeach
-                </ul>
-                
+                        {{-- RIGHT ACTIONS --}}
+                        <div class="flex items-center gap-3">
+                            @can('update', $user)
+                                <x-ui.buttons.actions.link href="{{ route('users.edit', $user->id) }}">
+                                    <x-ui.buttons.variants variant="show-edit">
+                                        Edit
+                                    </x-ui.buttons.variants>
+                                </x-ui.buttons.actions.link>
+                            @endcan
+                            @can('delete', $user)
+                                <x-ui.buttons.actions.form
+                                    action="{{ route('users.destroy', $user->id) }}"
+                                    method="DELETE">
+                                    <x-ui.buttons.variants variant="show-delete">
+                                        Delete
+                                    </x-ui.buttons.variants>
+                                </x-ui.buttons.actions.form>
+                            @endcan
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            
             {{-- Pagination --}}
             <div class="mt-6">
                 {{ $users->links() }}
             </div>
         </div>
+    </div>
 </x-app-layout>

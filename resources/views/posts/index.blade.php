@@ -16,12 +16,16 @@
     {{-- FILTER BOX --}}
     <div class="rounded-2xl p-4 mb-8 border shadow-sm transition-all duration-300
 
-        <!-- Left: Filters -->
-        <form action="{{ route('posts.index') }}" method="GET"
-            class="flex flex-col md:flex-row gap-3 flex-1">
+        bg-white border-gray-200
+        dark:bg-gray-900 dark:border-gray-800">
 
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
 
+            {{-- FILTERS FORM --}}
+            <x-ui.buttons.actions.form
+                action="{{ route('posts.index')}}"
+                method="GET"
+                class="flex flex-col sm:flex-row gap-3 flex-1">
 
                 {{-- TYPE --}}
                 <select name="type"
@@ -41,43 +45,68 @@
                         @selected(request('type') == 'news')>
                         News
                     </option>
-                @endforeach
+                </select>
 
-            </select>
+                {{-- CATEGORY --}}
+                <select name="category_id"
+                    class="px-4 py-2 rounded-xl border transition
 
-            <!-- Filter Button -->
-            <button type="submit"
-                class="bg-blue-600 hover:bg-blue-800 text-white font-bold px-5 py-2 rounded-md transition">
-                Filter
-            </button>
-            
-            <!-- Reset -->
-            <a href="{{ route('posts.index') }}"
-                class="text-gray-300 hover:text-white underline text-sm self-center">
-                Reset Filter
-            </a>
-        </form>
-        
-        <!-- Right: Create Button -->
-        <div class="flex justify-end">
+                    bg-gray-50 border-gray-300 text-gray-800
+                    focus:border-blue-500 focus:ring-blue-500
 
-            @can('create', App\Models\Post::class)
-                <a href="{{ route('posts.create') }}"
-                    class="bg-green-600 hover:bg-green-700 text-white font-bold px-6 py-2 rounded-md shadow-md transition transform hover:scale-105">
-                    + Create Post
-                </a>
-            @endcan
+                    dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200">
 
-            {{-- Trash Button --}}
-            <a href="{{ route('posts.trash') }}"
-                class="bg-gray-600 ml-6 hover:bg-gray-700 text-white font-bold px-6 py-2 rounded-md shadow-md transition">
-                🗑 Recycle Bin ({{ $trashedCount }})
-            </a>
+                    <option value="">All Categories</option>
+
+                    @foreach($categories as $category)
+
+                        <option value="{{ $category->id }}"
+                            @selected(request('category_id') == $category->id)>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
+
+                {{-- FILTER BUTTON --}}
+                <x-ui.buttons.variants 
+                type="submit" 
+                variant="create">
+                    Filter
+                </x-ui.buttons.variants>
+            </x-ui.buttons.actions.form>
+
+            {{-- ACTIONS --}}
+            <div class="flex items-center gap-3 justify-end">
+
+                {{-- RESET FILTER --}}
+                <x-ui.buttons.actions.link
+                href="{{ route('posts.index') }}">
+                    <x-ui.buttons.variants variant="reset">
+                        Reset Filter
+                    </x-ui.buttons.variants>
+                </x-ui.buttons.actions.link>
+
+                {{-- Create POST --}}
+                @can('create', App\Models\Post::class)
+                    <x-ui.buttons.actions.link
+                        href="{{ route('posts.create') }}">
+                        <x-ui.buttons.variants variant="create">
+                            Create
+                        </x-ui.buttons.variants>
+                    </x-ui.buttons.actions.link>
+                @endcan
+
+                {{-- TRASH --}}
+                <x-ui.buttons.actions.link
+                    href="{{ route('posts.trash') }}">
+                    <x-ui.buttons.variants variant="trash">
+                        🗑 {{ $trashedCount }}
+                    </x-ui.buttons.variants>
+                </x-ui.buttons.actions.link>
+            </div>
         </div>
-
     </div>
 
-</div>
     {{-- POSTS --}}
     @if($posts->isEmpty())
 

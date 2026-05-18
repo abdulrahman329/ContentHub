@@ -78,22 +78,27 @@
                     <div class="flex items-center gap-3 shrink-0">
 
                         @can('update', $category)
-                            <!-- Edit Button: Links to the page where the category can be edited -->
-                            <x-ui.buttons.edit 
+
+                            <x-ui.buttons.actions.link
                                 href="{{ route('categories.edit', $category->id) }}">
-                                Edit
-                            </x-ui.buttons.edit>
+
+                                <x-ui.buttons.variants variant="warning">
+                                    Edit
+                                </x-ui.buttons.variants>
+
+                            </x-ui.buttons.actions.link>
+
                         @endcan
 
                         @can('delete', $category)
-                            <!-- Delete Form: Allows the category to be deleted -->
-                            <form action="{{ route('categories.destroy', $category->id) }}" method="POST" class="inline-block">
-                                @csrf <!-- CSRF Token for security -->
-                                @method('DELETE') <!-- Method Spoofing for DELETE HTTP request -->
-                                
-                                <!-- Delete Button with confirmation prompt -->
-                                <button type="submit" class="text-red-600 hover:text-red-500" onclick="return confirm('Are you sure you want to delete this category?')">Delete</button>
-                            </form>
+
+                            <x-ui.buttons.actions.form
+                                action="{{ route('categories.destroy', $category->id) }}"
+                                method="DELETE">
+                                    <x-ui.buttons.variants variant="danger">
+                                        Delete
+                                    </x-ui.buttons.variants>
+                            </x-ui.buttons.actions.form>
                         @endcan
                     </div>
                 </li>

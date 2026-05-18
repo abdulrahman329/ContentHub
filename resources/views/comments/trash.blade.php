@@ -75,31 +75,29 @@
                             text-gray-500 dark:text-gray-400">
                             {{ $comment->deleted_at }}
                         </td>
-
-                        {{-- Actions --}}
-                        <td class="py-3 text-right space-x-2">
-
-                            {{-- Restore --}}
-                            <form action="{{ route('comments.restore', $comment->id) }}" method="POST" class="inline">
-                                @csrf
-                                <button class="bg-green-600 hover:bg-green-800 px-3 py-1 rounded text-white text-sm">
+                        {{-- ACTIONS --}}
+                        <td class="py-4 px-6">
+                            <div class="flex justify-end gap-3">
+                                
+                            {{-- RESTORE --}}
+                            <x-ui.buttons.actions.form
+                                action="{{ route('comments.restore', $comment->id) }}"
+                                method="POST">
+                                <x-ui.buttons.variants variant="restore">
                                     Restore
-                                </button>
-                            </form>
+                                </x-ui.buttons.variants>
+                            </x-ui.buttons.actions.form>
 
-                            {{-- Force Delete --}}
-                            <form action="{{ route('comments.forceDelete', $comment->id) }}" method="POST" class="inline">
-                                @csrf
-                                @method('DELETE')
-
-                                <button onclick="return confirm('Delete permanently?')"
-                                        class="bg-red-600 hover:bg-red-800 px-3 py-1 rounded text-white text-sm">
+                            {{-- FORCE DELETE --}}
+                            <x-ui.buttons.actions.form
+                                action="{{ route('comments.forceDelete', $comment->id) }}"
+                                method="DELETE">
+                                <x-ui.buttons.variants variant="danger">
                                     Delete
-                                </button>
-                            </form>
-
+                                </x-ui.buttons.variants>
+                            </x-ui.buttons.actions.form>
+                            </div>
                         </td>
-
                     </tr>
                 @empty
                     <tr>
@@ -117,4 +115,13 @@
             border-gray-200 dark:border-gray-700">
             {{ $comments->links() }}
         </div>
+    </div>
+    {{-- BACK --}}
+    <div class="mt-6">
+        <x-ui.buttons.actions.link href="{{ route('posts.index') }}">
+            <x-ui.buttons.variants variant="back">
+                Back
+            </x-ui.buttons.variants>
+        </x-ui.buttons.actions.link>
+    </div>
 </x-app-layout>

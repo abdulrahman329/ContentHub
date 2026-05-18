@@ -3,11 +3,21 @@
     'parentId'
 ])
 
-<form method="POST"
-      action="{{ $comment 
-            ? route('comments.update', $comment->id) 
-            : route('comments.store') }}"
-      class="space-y-4">
+@php
+    $isEdit = $comment !== null;
+@endphp
+
+<x-ui.buttons.actions.form
+    :action="$isEdit
+        ? route('comments.update', $comment->id)
+        : route('comments.store')"
+
+    :method="$isEdit ? 'PUT' : 'POST'"
+
+    class="flex items-center gap-2
+           bg-white dark:bg-gray-900
+           border border-gray-300 dark:border-gray-800
+           rounded-md p-2 transition">
 
     @csrf
 
@@ -30,10 +40,9 @@
                text-sm resize-none focus:outline-none"
         required>{{ old('content', $comment->content ?? '') }}</textarea>
 
-    <!-- Button -->
-    <button type="submit"
-        class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-800 w-full">
-        {{ $comment ? 'Update Comment' : 'Submit Comment' }}
-    </button>
-
-</form>
+    {{-- BUTTON --}}
+     <x-ui.buttons.variants
+        :variant="$isEdit ? 'comment' : 'comment'">
+        {{ $isEdit ? 'Update' : 'Send' }}
+    </x-ui.buttons.variants>
+</x-ui.buttons.actions.form>

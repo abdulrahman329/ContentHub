@@ -2,10 +2,14 @@
     'category' => null
 ])
 
-<form method="POST"
-      action="{{ $category 
-            ? route('categories.update', $category->id) 
-            : route('categories.store') }}">
+<x-ui.buttons.actions.form
+    :action="$category
+        ? route('categories.update', $category->id)
+        : route('categories.store')"
+    
+    :method="$category ? 'PUT' : 'POST'"
+
+      class="space-y-5">
 
     @csrf
 
@@ -42,7 +46,11 @@
         @enderror
     </div>
 
-    <button class="bg-blue-600 text-white py-2 px-4 rounded-md w-full">
-        {{ $category ? 'Update Category' : 'Create Category' }}
-    </button>
-</form>
+    {{-- BUTTON --}}
+    <div class="flex justify-center pt-2">
+        <x-ui.buttons.variants
+            :variant="$category ? 'update' : 'create'">
+                {{ $category ? 'Update Category' : 'create Category' }}
+        </x-ui.buttons.variants>
+    </div>
+</x-ui.buttons.actions.form>

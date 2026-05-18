@@ -3,9 +3,14 @@
     'method' => 'POST',
 ])
 
-<form action="{{ $action }}" method="POST">
+<form
+    action="{{ $action }}"
+    method="{{ strtoupper($method) === 'GET' ? 'GET' : 'POST' }}"
+    {{ $attributes->merge(['class' => '']) }}>
 
-    @csrf
+    @if(strtoupper($method) !== 'GET')
+        @csrf
+    @endif
 
     @if(in_array(strtoupper($method), ['PUT', 'PATCH', 'DELETE']))
         @method($method)

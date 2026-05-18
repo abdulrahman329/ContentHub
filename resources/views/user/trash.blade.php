@@ -6,23 +6,6 @@
 
     {{-- Success Message --}}
     @if(session('success'))
-            <x-ui.buttons.actions.link
-                href="{{ route('users.create') }}">       
-                    <x-ui.buttons.variants variant="back">
-                    back
-                    </x-ui.buttons.variants>
-            </x-ui.buttons.actions.link>
-    </div>
-
-    {{-- Empty state --}}
-    @if($users->isEmpty())
-        <div class="bg-gray-800 text-gray-300 p-10 rounded-xl text-center text-lg">
-            No deleted users found.
-        </div>
-    @else
-
-        {{-- Users list --}}
-        <div class="space-y-6">
         <x-ui.alert>
             {{ session('success') }}
         </x-ui.alert>
@@ -38,6 +21,11 @@
                 Deleted Users
             </h3>
 
+            <x-ui.buttons.actions.link href="{{ route('users.create') }}">
+                <x-ui.buttons.variants variant="back">
+                    Back
+                </x-ui.buttons.variants>
+            </x-ui.buttons.actions.link>
 
         </div>
 
@@ -96,36 +84,32 @@
                         {{-- RIGHT --}}
                         <div class="flex items-center gap-3">
 
-                    {{-- Actions --}}
-                    <div class="flex items-center gap-6 text-lg">
-
-                        {{-- Restore --}}
-                        <x-ui.buttons.actions.form
-                            action="{{ route('users.restore', $user->id) }}">       
+                            {{-- RESTORE --}}
+                            <x-ui.buttons.actions.form
+                                action="{{ route('users.restore', $user->id) }}"
+                                method="POST">
                                 <x-ui.buttons.variants variant="restore">
-                                Restore
+                                    Restore
                                 </x-ui.buttons.variants>
-                        </x-ui.buttons.actions.form>
+                            </x-ui.buttons.actions.form>
 
-                        {{-- Force Delete --}}
-                        <x-ui.buttons.actions.form
-                            action="{{ route('users.forceDelete', $user->id) }}">       
+                            {{-- FORCE DELETE --}}
+                            <x-ui.buttons.actions.form
+                                action="{{ route('users.forceDelete', $user->id) }}"
+                                method="DELETE">
                                 <x-ui.buttons.variants variant="danger">
-                                Delete Forever
+                                    Delete Forever
                                 </x-ui.buttons.variants>
-                        </x-ui.buttons.actions.form>
+                            </x-ui.buttons.actions.form>
+                        </div>
                     </div>
+                @endforeach
+            </div>
 
-                </div>
-
-            @endforeach
-
-        </div>
-
-        {{-- Pagination --}}
-        <div class="mt-10">
-            {{ $users->links() }}
-        </div>
-
-    @endif
+            {{-- PAGINATION --}}
+            <div class="mt-8">
+                {{ $users->links() }}
+            </div>
+        @endif
+    </div>
 </x-app-layout>

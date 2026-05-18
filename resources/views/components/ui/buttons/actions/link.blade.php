@@ -2,6 +2,7 @@
     'href' => '#',
 ])
 
-<a href="{{ $href }}">
-    {{ $slot }}
+<a href="{{ $href }}"
+   {{ $attributes->merge(['class' => '']) }}>
+       {{ $slot }}
 </a>

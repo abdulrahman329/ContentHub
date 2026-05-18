@@ -25,7 +25,7 @@ class UpdateCategoryRequest extends FormRequest
     {
         // The 'name' field must be required, a string, and have a maximum length of 255 characters.
         return [
-            'name' => ['required', 'string', 'max:255', Rule::unique('categories', 'name')->ignore($this->route('category'))],        
+            'name' => ['required', 'string', 'max:15', Rule::unique('categories', 'name')->ignore($this->route('category'))],        
         ];
     }
 }

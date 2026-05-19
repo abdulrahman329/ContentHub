@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 
 class RoleSeeder extends Seeder
@@ -76,8 +77,8 @@ $superAdmin = User::firstOrCreate(
     [
         'name' => 'Super Admin',
         'image' => 'images/user_image.png',
-        'password' => bcrypt('12345678'),
-    ]
+        'password' => '12345678',
+        ]
 );
 
 $superAdmin->syncRoles(['super_admin']);

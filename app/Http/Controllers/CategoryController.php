@@ -54,15 +54,14 @@ class CategoryController extends Controller
         return redirect()->route('categories.create')->with('success', 'Category updated successfully!');
     }
 
-public function destroy(Category $category)
-{
-    $this->authorize('delete', $category);
+    public function destroy(Category $category)
+    {
+        $this->authorize('delete', $category);
 
-    // Delete the category
-    $category->delete();
+        // Delete the category
+        $category->delete();
 
-    // Redirect with success message
-    return redirect()->route('categories.create')->with('success', 'Category deleted successfully!');
-}
-
+        // Redirect with success message
+        return redirect()->route('categories.create')->with('success', 'Category deleted successfully!');
+    }
 }

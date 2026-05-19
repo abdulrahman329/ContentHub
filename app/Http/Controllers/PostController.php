@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\Category;
+use App\Models\Like;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Http\Requests\Post\StorePostRequest;
@@ -76,6 +77,7 @@ class PostController extends Controller
     public function show(Post $post)
     {
         $this->authorize('view', $post);
+        
 
         $trashedCommentsCount = $post->comments()
         ->onlyTrashedVisibleToUser()
@@ -87,9 +89,14 @@ class PostController extends Controller
         ]);
 
         $comments = $post->comments()
-        ->with(['user' => fn ($q) => $q->withTrashed()])
+        ->with([
+            'user' => fn ($q) => $q->withTrashed(),     
+            'likes'
+        ])
+        ->withCount('likes')
         ->latest()
         ->paginate(6);
+        
 
         return view('posts.show', compact('post', 'comments', 'trashedCommentsCount'));
     }
@@ -182,5 +189,4 @@ class PostController extends Controller
 
         return back()->with('success', 'Post deleted permanently!');
     }
-
 }

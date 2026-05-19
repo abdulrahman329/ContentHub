@@ -5,6 +5,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\LikeController;
 use App\Http\Controllers\JsonController;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Role;
@@ -63,7 +64,7 @@ Route::middleware(['auth', 'role:super_admin|admin'])->group(function () {
     // ------- Users trash -------
     Route::get('/users/trash', [UserController::class, 'trash'])->name('users.trash');
     Route::post('/users/{id}/restore', [UserController::class, 'restore'])->name('users.restore');
-    Route::delete('/users/{id}/force-delete', [UserController::class, 'forceDelete'])->name('users.forceDelete');
+    Route::delete('/users/{id}/forceDelete', [UserController::class, 'forceDelete'])->name('users.forceDelete');
     
 });
 
@@ -83,7 +84,7 @@ Route::middleware(['auth', 'role:super_admin|admin|writer'])->group(function () 
     // ------- Posts trash -------
     Route::get('/posts/trash', [PostController::class, 'trash'])->name('posts.trash');
     Route::post('/posts/{id}/restore', [PostController::class, 'restore'])->name('posts.restore');
-    Route::delete('/posts/{id}/force-delete', [PostController::class, 'forceDelete'])->name('posts.forceDelete');
+    Route::delete('/posts/{id}/forcedelete', [PostController::class, 'forceDelete'])->name('posts.forceDelete');
 
 });
 
@@ -102,8 +103,10 @@ Route::middleware(['auth', 'role:super_admin|admin|writer|user'])->group(functio
     // ------- Comments trash -------
     Route::get('/comments/trash', [CommentController::class, 'trash'])->name('comments.trash');
     Route::post('/comments/{id}/restore', [CommentController::class, 'restore'])->name('comments.restore');
-    Route::delete('/comments/{id}/force-delete', [CommentController::class, 'forceDelete'])->name('comments.forceDelete');
+    Route::delete('/comments/{id}/forcedelete', [CommentController::class, 'forceDelete'])->name('comments.forceDelete');
     
+    Route::post('/likes/toggle', [LikeController::class, 'toggle'])->name('likes.toggle');
+
     // ------- Public Viewable Posts -------
     Route::resource('posts', PostController::class)->only(['index', 'show']);
 

@@ -33,6 +33,18 @@ class Post extends Model
     'type',
 ];
 
+    protected $withCount = ['likes'];
+
+    public function isLikedBy(?User $user): bool
+    {
+        if (!$user) return false;
+
+        return $this->likes()
+            ->where('user_id', $user->id)
+            ->exists();
+    }
+
+
     public function getImageUrlAttribute(): ?string
     {
         if (!$this->image) {
@@ -75,10 +87,17 @@ class Post extends Model
         return self::onlyTrashed()->count();
     }
 
+
+
     // Define relationships
     public function user()
     {
         return $this->belongsTo(User::class)->withTrashed();
+    }
+
+    public function likes()
+    {
+        return $this->morphMany(Like::class, 'likeable');
     }
 
     public function category()

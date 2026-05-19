@@ -120,8 +120,9 @@
                     @forelse($comments as $comment)
                         <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 shadow-sm transition">
 
-                            {{-- USER --}}
-                            <div class="flex items-center gap-3 mb-4">
+                            {{-- HEADER --}}
+                            <div class="flex items-start gap-3">
+
                                 <img
                                     src="{{ $comment->user->image_url }}"
                                     class="w-9 h-9 rounded-full object-cover border 
@@ -136,28 +137,57 @@
                                 </div>
                             </div>
 
-                            {{-- VIEW MODE --}}
+                            {{-- CONTENT --}}
                             <div id="view-{{ $comment->id }}"
-                                 class="text-gray-700 dark:text-gray-300 text-sm break-words leading-relaxed">
+                                class="mt-3 text-sm text-gray-700 dark:text-gray-300 break-words leading-relaxed">
+
                                 {{ $comment->content }}
+
+                                {{-- LIKE --}}
+                                <form action="{{ route('likes.toggle') }}" method="POST" class="mt-3 flex items-center gap-2">
+                                    @csrf
+
+                                    <input type="hidden" name="type" value="comment">
+                                    <input type="hidden" name="id" value="{{ $comment->id }}">
+
+                                    <button type="submit" class="text-lg hover:scale-110 transition">
+                                        {{ $comment->isLikedBy(auth()->user()) ? '❤️' : '🤍' }}
+                                    </button>
+
+                                    <span class="text-xs text-gray-500">
+                                        {{ $comment->likes_count }}
+                                    </span>
+
+                                    {{-- NEW: Author liked badge --}}
+                                    @if($comment->likes->contains('user_id', $post->user_id))
+                                    <span class="ml-2 text-[10px] px-2 py-0.5 rounded-full
+                                                    bg-blue-100 text-blue-600
+                                                    dark:bg-blue-900 dark:text-blue-300">
+                                            Author liked
+                                        </span>
+                                    @endif
+                                </form>
+
                             </div>
 
                             {{-- EDIT MODE --}}
-                            <div id="edit-{{ $comment->id }}" class="hidden mt-4">
+                            <div id="edit-{{ $comment->id }}" class="hidden mt-3">
                                 <x-comment.form :comment="$comment" :parentId="$post->id"/>
                             </div>
 
                             {{-- ACTIONS --}}
-                            <div class="flex gap-5 mt-4 pt-4 border-t border-gray-100 dark:border-gray-800 text-sm">
-                            @can('update', $comment)
+                            <div class="flex gap-4 mt-3 pt-3 border-t border-gray-100 dark:border-gray-800 text-xs">
+
+                                @can('update', $comment)
                                 <x-ui.buttons.variants
                                     variant="warning"
-                                    type="button"
-                                    onclick="toggleEdit({{ $comment->id }})">
+                                        type="button"
+                                        class="text-yellow-500 hover:underline"
+                                        onclick="toggleEdit({{ $comment->id }})">
                                         Edit
                                 </x-ui.buttons.variants>
-                            @endcan
-                            @can('delete', $comment)
+                                @endcan
+                                @can('delete', $comment)
                                 <x-ui.buttons.actions.form
                                     action="{{ route('comments.destroy', $comment->id) }}"
                                     method="DELETE">
@@ -165,9 +195,12 @@
                                             Delete
                                         </x-ui.buttons.variants>
                                 </x-ui.buttons.actions.form>
-                            @endcan
+                                @endcan
+
                             </div>
+
                         </div>
+
                     @empty
                         <div class="bg-white dark:bg-gray-900 border border-dashed border-gray-300 dark:border-gray-700 rounded-2xl p-8 text-center">
                             <p class="text-gray-500 dark:text-gray-400">

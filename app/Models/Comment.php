@@ -16,6 +16,11 @@ class Comment extends Model
         'user_id',
         'commentable_id',
         'commentable_type',
+        'edited_at',
+        'edited_by',
+    ];
+    protected $casts = [
+        'edited_at' => 'datetime',
     ];
 
     protected $withCount = ['likes'];
@@ -46,6 +51,10 @@ class Comment extends Model
         return $this->belongsTo(User::class)->withTrashed();
     }
 
+    public function editor()
+    {
+        return $this->belongsTo(User::class, 'edited_by');
+    }
 
     public function likes()
     {

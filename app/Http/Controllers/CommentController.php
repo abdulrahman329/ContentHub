@@ -42,7 +42,11 @@ class CommentController extends Controller
     // UPDATE the comment
     public function update(UpdateCommentRequest $request, Comment $comment)
     {
-        $comment->update($request->validated());
+        $comment->update([
+            'content' => $request->validated()['content'],
+            'edited_by' => auth()->id(),
+            'edited_at' => now(),
+        ]);
 
         // Redirect back to the parent post/news page after updating the comment
         return redirect()->route('posts.show', $comment->commentable_id)->with('success', 'Comment updated!');

@@ -17,6 +17,8 @@ return new class extends Migration
             $table->morphs('commentable');
             $table->softDeletes()->index();
             $table->timestamps();
+            $table->foreignId('edited_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->timestamp('edited_at')->nullable();
         });
     }
 

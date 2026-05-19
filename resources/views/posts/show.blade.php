@@ -125,15 +125,42 @@
 
                                 <img
                                     src="{{ $comment->user->image_url }}"
-                                    class="w-9 h-9 rounded-full object-cover border 
-                                    border-gray-300  dark:border-gray-700">
-                                <div>
-                                    <p class="text-sm font-semibold text-gray-900 dark:text-white">
-                                        {{ $comment->user->name }}
-                                    </p>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400">
-                                        {{ $comment->created_at->diffForHumans() }}
-                                    </p>
+                                    class="w-9 h-9 rounded-full object-cover border border-gray-300 dark:border-gray-700">
+
+                                <div class="flex-1">
+
+                                    {{-- NAME + BADGE --}}
+                                    <div class="flex items-center gap-2">
+
+                                        <p class="text-sm font-semibold text-gray-900 dark:text-white">
+                                            {{ $comment->user->name }}
+                                        </p>
+
+                                        @if($comment->user_id === $post->user_id)
+                                            <span class="text-[10px] px-2 py-0.5 rounded bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300">
+                                                Author
+                                            </span>
+                                        @endif
+
+                                    </div>
+
+                                    {{-- TIME + EDIT INFO --}}
+                                    <div class="text-xs text-gray-500 mt-0.5 space-x-1">
+
+                                        <span>{{ $comment->created_at->diffForHumans() }}</span>
+
+                                        @if($comment->edited_at)
+                                            <span>•</span>
+                                            <span class="text-amber-500">
+                                                edited
+                                                @if($comment->edited_by && $comment->edited_by !== $comment->user_id)
+                                                    by {{ $comment->editor?->name }}
+                                                @endif
+                                            </span>
+                                        @endif
+
+                                    </div>
+
                                 </div>
                             </div>
 

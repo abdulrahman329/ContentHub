@@ -57,10 +57,14 @@ class User extends Authenticatable
 
     public function setPasswordAttribute($value): void
     {
-        // Only hash the password if it's not empty to avoid overwriting with null or empty string
-        if (!empty($value)) {
-            $this->attributes['password'] = Hash::make($value);
+        // Skip empty values and prevent double hashing
+        if (empty($value) || ! Hash::needsRehash($value)) {
+            $this->attributes['password'] = $value;
+            return;
         }
+
+        // Hash plain passwords before saving
+        $this->attributes['password'] = Hash::make($value);
     }
 
 

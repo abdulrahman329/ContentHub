@@ -15,6 +15,29 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans text-gray-900 antialiased">
+        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900 relative">
+            <!-- Theme Toggle Button -->
+            <button
+                x-data="{ isDark: document.documentElement.classList.contains('dark') }"
+                @click="
+                    toggleDarkMode();
+                    isDark = !isDark;
+                "
+                class="fixed top-8 right-8 group flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium
+                bg-gray-100 dark:bg-gray-900
+                text-gray-700 dark:text-gray-200
+                hover:border-gray-400 dark:hover:border-gray-700
+                transition-all duration-200 shadow-md border border-gray-300 dark:border-gray-700"
+            >
+                <!-- Theme Icon -->
+                <span class="text-base" x-text="isDark ? '🌙' : '☀️'"></span>
+
+                <!-- Theme Text -->
+                <span class="hidden md:inline"
+                    x-text="isDark ? 'Dark' : 'Light'">
+                </span>
+            </button>
+
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
             <div>
                 <a href="/">

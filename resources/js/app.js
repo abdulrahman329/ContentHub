@@ -6,7 +6,7 @@ window.Alpine = Alpine;
 
 Alpine.start();
 
-import { toggleLike } from './features/likes';
+import { toggleLike } from './features/toggleLike';
 import { toggleEdit } from './features/comments';
 
 window.toggleLike = toggleLike;

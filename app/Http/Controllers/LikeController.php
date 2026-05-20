@@ -15,29 +15,38 @@ class LikeController extends Controller
             'id' => ['required', 'integer'],
         ]);
 
-        $model = match ($request->type) {
-            'post' => Post::class,
-            'comment' => Comment::class,
-        };
+        $type = $request->type;
+        $id = $request->id;
 
-        $likeable = $model::findOrFail($request->id);
+        $model = $type === 'post'
+            ? Post::findOrFail($id)
+            : Comment::findOrFail($id);
 
-        $userId = auth()->id();
+        $liked = $model->likes()
+            ->where('user_id', auth()->id())
+            ->exists();
 
-        $like = $likeable->likes()
-            ->where('user_id', $userId)
-            ->first();
+        if ($liked) {
+            $model->likes()
+                ->where('user_id', auth()->id())
+                ->delete();
 
-        if ($like) {
-            $like->delete();
             $liked = false;
         } else {
-            $likeable->likes()->create([
-                'user_id' => $userId,
+            $model->likes()->create([
+                'user_id' => auth()->id()
             ]);
+
             $liked = true;
         }
 
-        return back(); 
+        return response()->json([
+            'liked' => $liked,
+            'likes_count' => $model->likes()->count(),
+
+            'author_liked' => $model->likes()
+                ->where('user_id', $model->user_id)
+                ->exists(),
+        ]);
     }
 }

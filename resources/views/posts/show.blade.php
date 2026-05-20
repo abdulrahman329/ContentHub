@@ -59,6 +59,25 @@
                             Back
                         </x-ui.buttons.variants>
                     </x-ui.buttons.actions.link>
+                    
+                    {{-- LIKE --}}
+                    <div class="flex items-center gap-2 ml-4">
+                        
+                        <x-ui.buttons.variants 
+                        onclick="toggleLike('post', {{ $post->id }}, this)"
+                        variant="like">
+                            <span>
+                                {{ $post->isLikedBy(auth()->user()) ? '❤️' : '🤍' }}
+                            </span>                     
+                        </x-ui.buttons.variants>
+                        <span
+                            id="like-count-post-{{ $post->id }}"
+                            class=" text-base text-gray-500"
+                        >
+                            ( {{ $post->likes_count }} )
+                        </span>
+
+                    </div>
 
                     {{-- RIGHT ACTIONS --}}
                     <div class="flex gap-3 ml-auto">
@@ -124,7 +143,7 @@
                             <div class="flex items-start gap-3">
 
                                 <img
-                                    src="{{ $comment->user->image_url }}"
+                                    src="{{ $comment->user?->image_url }}"
                                     class="w-9 h-9 rounded-full object-cover border border-gray-300 dark:border-gray-700">
 
                                 <div class="flex-1">
@@ -133,7 +152,7 @@
                                     <div class="flex items-center gap-2">
 
                                         <p class="text-sm font-semibold text-gray-900 dark:text-white">
-                                            {{ $comment->user->name }}
+                                            {{ $comment->user?->name ?? 'Deleted User' }}                                        
                                         </p>
 
                                         @if($comment->user_id === $post->user_id)
@@ -171,30 +190,29 @@
                                 {{ $comment->content }}
 
                                 {{-- LIKE --}}
-                                <form action="{{ route('likes.toggle') }}" method="POST" class="mt-3 flex items-center gap-2">
-                                    @csrf
+                                <div class="mt-3 flex items-center gap-2">
+                                    <x-ui.buttons.variants 
+                                    onclick="toggleLike('comment', {{ $comment->id }}, this)"
+                                    variant="like">
+                                        <span>
+                                            {{ $comment->isLikedBy(auth()->user()) ? '❤️' : '🤍' }}
+                                        </span>                     
+                                    </x-ui.buttons.variants>
 
-                                    <input type="hidden" name="type" value="comment">
-                                    <input type="hidden" name="id" value="{{ $comment->id }}">
-
-                                    <button type="submit" class="text-lg hover:scale-110 transition">
-                                        {{ $comment->isLikedBy(auth()->user()) ? '❤️' : '🤍' }}
-                                    </button>
-
-                                    <span class="text-xs text-gray-500">
-                                        {{ $comment->likes_count }}
+                                    <span
+                                        id="like-count-comment-{{ $comment->id }}"
+                                        class="text-xs text-gray-500"
+                                    >
+                                       ( {{ $comment->likes_count }} )
                                     </span>
-
-                                    {{-- NEW: Author liked badge --}}
-                                    @if($comment->likes->contains('user_id', $post->user_id))
-                                    <span class="ml-2 text-[10px] px-2 py-0.5 rounded-full
-                                                    bg-blue-100 text-blue-600
-                                                    dark:bg-blue-900 dark:text-blue-300">
-                                            Author liked
-                                        </span>
-                                    @endif
-                                </form>
-
+                                        {{-- NEW: Author liked badge --}}
+                                        <span  id="author-badge-comment-{{ $comment->id }}"
+                                         class="ml-2 text-[10px] px-2 py-0.5 rounded-full
+                                                        bg-blue-100 text-blue-600
+                                                        dark:bg-blue-900 dark:text-blue-300 hidden">
+                                                Author liked
+                                            </span>
+                                </div>
                             </div>
 
                             {{-- EDIT MODE --}}

@@ -114,26 +114,17 @@
                         d="M8 10h8M8 14h5m-9 7l2.5-2.5A2 2 0 014 18h12a2 2 0 002-2V6a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2h1.5L3 21z" />
                 </svg>
                 <span>{{ $item->comments_count ?? 0 }} Comments</span>
-                <x-ui.buttons.actions.form
-                        action="{{ route('likes.toggle') }}"
-                        method="POST"> 
-
-                        <input type="hidden" name="type" value="post">
-                        <input type="hidden" name="id" value="{{ $item->id }}">
                             
-                            <x-ui.buttons.variants variant="danger">
-                            @auth
-                                    @if($item->isLikedBy(auth()->user()))
-                                        ❤️
-                                    @else
-                                        🤍
-                                    @endif
-                                @else
-                                    🤍
-                                @endauth                        
+                            <x-ui.buttons.variants 
+                            onclick="toggleLike('post', {{ $item->id }}, this)"
+                            variant="like">
+                                <span>
+                                {{ $item->isLikedBy(auth()->user()) ? '❤️' : '🤍' }}
+                                </span>                     
                             </x-ui.buttons.variants>
-                        <span>{{ $item->likes_count }}</span>                 
-                    </x-ui.buttons.actions.form>
+                            <span id="like-count-post-{{ $item->id }}">
+                               ( {{ $item->likes_count }} )
+                            </span>
             </div>
 
             {{-- CATEGORY RIGHT --}}

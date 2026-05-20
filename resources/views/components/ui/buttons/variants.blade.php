@@ -118,6 +118,23 @@ $classes = match($variant) {
         dark:text-gray-400 dark:hover:text-white
 ',
 
+'like' => '
+    inline-flex items-center justify-center
+    h-8
+
+    text-gray-500 dark:text-gray-400
+
+    transition-all duration-200 ease-out
+    transform
+
+    hover:text-red-500
+    hover:scale-125
+
+    active:scale-90
+
+    select-none
+',
+
     default => '
         bg-blue-600 text-white hover:bg-blue-800
         dark:bg-blue-500 dark:hover:bg-blue-600

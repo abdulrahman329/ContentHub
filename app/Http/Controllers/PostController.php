@@ -95,7 +95,7 @@ class PostController extends Controller
         ])
         ->withCount('likes')
         ->latest()
-        ->paginate(6);
+        ->get();
         
 
         return view('posts.show', compact('post', 'comments', 'trashedCommentsCount'));

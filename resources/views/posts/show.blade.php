@@ -74,9 +74,8 @@
                             id="like-count-post-{{ $post->id }}"
                             class=" text-base text-gray-500"
                         >
-                            ( {{ $post->likes_count }} )
+                            {{ $post->likes_count }}
                         </span>
-
                     </div>
 
                     {{-- RIGHT ACTIONS --}}
@@ -203,15 +202,17 @@
                                         id="like-count-comment-{{ $comment->id }}"
                                         class="text-xs text-gray-500"
                                     >
-                                       ( {{ $comment->likes_count }} )
+                                        {{ $comment->likes_count }}
                                     </span>
                                         {{-- NEW: Author liked badge --}}
-                                        <span  id="author-badge-comment-{{ $comment->id }}"
-                                         class="ml-2 text-[10px] px-2 py-0.5 rounded-full
-                                                        bg-blue-100 text-blue-600
-                                                        dark:bg-blue-900 dark:text-blue-300 hidden">
-                                                Author liked
-                                            </span>
+                                        <span  
+                                            id="author-badge-comment-{{ $comment->id }}"
+                                            class="ml-2 text-[10px] px-2 py-0.5 rounded-full
+                                                bg-blue-100 text-blue-600
+                                                dark:bg-blue-900 dark:text-blue-300
+                                                {{ $comment->author_liked ? '' : 'hidden' }}">
+                                            Author liked
+                                        </span>
                                 </div>
                             </div>
 
@@ -243,7 +244,7 @@
                                 @endcan
 
                             </div>
-
+            
                         </div>
 
                     @empty

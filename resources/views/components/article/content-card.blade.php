@@ -100,7 +100,7 @@
             border-gray-200
             dark:border-gray-800">
             {{-- COMMENTS LEFT --}}
-            <div class="flex items-center gap-2 text-sm
+            <div class="flex items-center gap-1 text-sm
                 text-gray-500
                 dark:text-gray-400">
                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -123,7 +123,7 @@
                                 </span>                     
                             </x-ui.buttons.variants>
                             <span id="like-count-post-{{ $item->id }}">
-                               ( {{ $item->likes_count }} )
+                               {{ $item->likes_count }} 
                             </span>
             </div>
 

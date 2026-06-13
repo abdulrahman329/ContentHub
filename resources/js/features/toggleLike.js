@@ -23,7 +23,7 @@ export async function toggleLike(type, id, btn) {
     // count of likes
     const counter = document.getElementById(`like-count-${type}-${id}`);
     if (counter) {
-        counter.innerText = `( ${data.likes_count} )`;    
+        counter.innerText = data.likes_count;
     }
 
     // badge of author

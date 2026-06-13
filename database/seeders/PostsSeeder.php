@@ -49,8 +49,7 @@ class PostsSeeder extends Seeder
         $faker = Faker::create('en_US');  // Create an instance of Faker
 
         // Fetch all category IDs from the categories table
-        $categories = Category::all()->pluck('id')->toArray();
-
+        $categories = Category::pluck('id')->all();
         // Generate 10 random news records
         foreach (range(1, 10) as $index) {
             // Pick a random category

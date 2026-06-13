@@ -26,7 +26,7 @@ class UpdatePostRequest extends FormRequest
         return [
             'title' => ['required', 'max:255'], // Ensure a title is provided and does not exceed 255 characters
 
-            'content' => ['required'],  // Ensure content is provided
+            'content' => ['required', 'string'],  // Ensure content is provided
 
             'category_id' => ['required','exists:categories,id'], // Ensure a category is selected
 

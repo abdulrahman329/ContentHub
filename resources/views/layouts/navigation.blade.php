@@ -53,9 +53,8 @@
                     <x-slot name="trigger">
                         <!-- User profile dropdown trigger -->
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-900 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">                        
-                            <img src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : asset('storage/images/user_image.png') }}" alt="{{ Auth::user()->name }}" class="w-10 h-10 rounded-full object-cover mr-2">
+                            <img src="{{ Auth::user()->image ? asset('storage/' . Auth::user()->image) : asset('storage/images/user_image.png') }}" alt="{{ Auth::user()->name }}" class="w-10 h-10 rounded-full object-cover border border-gray-300 dark:border-gray-700 mr-2">
                             <div>{{ Auth::user()->name }}</div>
-
                             <!-- Dropdown icon -->
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4 " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">

@@ -4,9 +4,9 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\File;  
-use app\Models\Post;
+use App\Models\Post;
 use App\Models\Category; 
-use app\Models\User;
+use App\Models\User;
 use Faker\Factory as Faker;
 
 

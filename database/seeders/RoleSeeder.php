@@ -77,7 +77,7 @@ $superAdmin = User::firstOrCreate(
     [
         'name' => 'Super Admin',
         'image' => 'images/user_image.png',
-        'password' => '12345678',
+        'password' => bcrypt('12345678'),
         ]
 );
 

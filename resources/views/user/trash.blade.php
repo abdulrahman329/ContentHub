@@ -21,7 +21,7 @@
                 Deleted Users
             </h3>
 
-            <x-ui.buttons.actions.link href="{{ route('users.create') }}">
+            <x-ui.buttons.actions.link href="{{ route('users.index') }}">
                 <x-ui.buttons.variants variant="back">
                     Back
                 </x-ui.buttons.variants>

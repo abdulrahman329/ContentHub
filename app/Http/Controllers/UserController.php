@@ -18,6 +18,17 @@ class UserController extends Controller
 
     use AuthorizesRequests;
 
+    public function index()
+    {
+         // Get the latest users with their roles, paginated to show 5 users per page
+         $users = User::with('roles')->latest()->paginate(5);
+
+         // Get the count of soft-deleted users to display in the view
+         $trashedCount = User::onlyTrashed()->count();
+ 
+         // Return the view with users and roles to show the user creation form
+         return view('user.index', compact('users', 'trashedCount'));
+    }
     // Show the User creation form
     public function create()
     {
@@ -26,14 +37,8 @@ class UserController extends Controller
         // Retrieve all roles except 'super_admin' to assign to the new user
         $roles = Role::where('name', '!=', 'super_admin')->get();
 
-        // Get the latest users with their roles, paginated to show 5 users per page
-        $users = User::with('roles')->latest()->paginate(5);
-
-        // Get the count of soft-deleted users to display in the view
-        $trashedCount = User::onlyTrashed()->count();
-
         // Return the view with users and roles to show the user creation form
-        return view('user.create', compact('users', 'roles', 'trashedCount'));
+        return view('user.create', compact('roles'));
     }
 
     // Store the newly created User
@@ -52,7 +57,7 @@ class UserController extends Controller
         $user->syncRoles([$validated['role']]);
 
         // Redirect to the User creation page with a success message
-        return redirect()->route('users.create')->with('success', 'User created successfully!');
+        return redirect()->route('users.index')->with('success', 'User created successfully!');
     }
 
     // Show the form to edit a User
@@ -92,7 +97,7 @@ class UserController extends Controller
 
 
         // Redirect with a success message
-        return redirect()->route('users.create')->with('success', 'User updated successfully!');
+        return redirect()->route('users.index')->with('success', 'User updated successfully!');
     }
 
     // Delete the User
@@ -104,7 +109,7 @@ class UserController extends Controller
         $user->delete();
 
         // Redirect with a success message
-        return redirect()->route('users.create')->with('success', 'User deleted successfully!');
+        return redirect()->route('users.index')->with('success', 'User deleted successfully!');
     }
 
     public function trash()

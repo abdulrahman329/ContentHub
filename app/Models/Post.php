@@ -35,6 +35,11 @@ class Post extends Model
 
     protected $withCount = ['likes'];
 
+    public function getUserImageUrlAttribute(): string
+    {
+        return $this->user?->image_url
+            ?? asset('storage/' . User::DEFAULT_IMAGE);
+    } 
     public function isLikedBy(?User $user): bool
     {
         if (!$user) return false;

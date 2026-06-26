@@ -17,7 +17,7 @@
                 {{-- TOP META --}}
                 <div class="flex items-center gap-3 text-gray-500 dark:text-gray-400 text-sm mb-6">
                     <img
-                        src="{{ $post->user?->image_url }}"
+                        src="{{ $post->user_image_url  }}"
                         class="w-10 h-10 rounded-full object-cover border border-gray-300 dark:border-gray-700">
                     <span class="font-medium">
                         {{ $post->user?->name ?? 'Unknown' }}

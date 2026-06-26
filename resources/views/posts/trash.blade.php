@@ -72,7 +72,7 @@
                                 {{-- USER --}}
                                 <div class="flex items-center gap-2">
                                     <img
-                                        src="{{ $post->user?->image_url }}"
+                                        src="{{ $post->user_image_url }}"
                                         class="w-8 h-8 rounded-full object-cover border
                                         border-gray-300 dark:border-gray-600">
 

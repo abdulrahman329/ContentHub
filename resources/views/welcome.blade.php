@@ -41,7 +41,7 @@
                         @if (Route::has('register'))
                             <a
                                 href="{{ route('register') }}"
-                                class="inline-block px-5 py-1.5 dark:text-[#EDEDEC] border-[#19140035] hover:border-[#1915014a] border text-[#1b1b18] dark:border-[#3E3E3A] dark:hover:border-[#62605b] rounded-sm text-sm leading-normal">
+                                class="inline-block px-5 py-1.5 dark:text-[#EDEDEC] hover:border-[#1915014a] border border-transparent text-[#1b1b18] dark:hover:border-[#62605b] rounded-sm text-sm leading-normal">
                                 Register
                             </a>
                         @endif
@@ -52,11 +52,10 @@
                                 toggleDarkMode();
                                 isDark = !isDark;
                             "
-                            class="group flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium
-                            bg-[#FDFDFC] dark:bg-black
-                            text-gray-700 dark:text-gray-200
-                            hover:border-gray-400 dark:hover:border-gray-800
-                            transition-all duration-200 shadow-sm border border-gray-300 dark:border-gray-700"
+                            class="inline-block px-5 py-1.5 
+                            dark:text-[#EDEDEC] text-[#1b1b18]
+                            border border-transparent
+                            hover:border-[#1915014a] dark:hover:border-[#62605b] rounded-sm text-sm leading-normal"
                         >
                             <!-- Theme Icon -->
                             <span class="text-base" x-text="isDark ? '🌙' : '☀️'"></span>

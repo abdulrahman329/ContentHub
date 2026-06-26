@@ -14,14 +14,18 @@ class CategoryController extends Controller
 {
     use AuthorizesRequests;
 
+    public function index()
+    {
+        $categories = Category::paginate(6);
+        
+        return view('category.index', compact('categories')); 
+    }
     // Show the category creation form
     public function create()
     {
         $this->authorize('create', Category::class);
 
-        $categories = Category::paginate(6);
-        
-        return view('category.create', compact('categories')); 
+        return view('category.create'); 
     }
 
     // Store the newly created category
@@ -33,7 +37,7 @@ class CategoryController extends Controller
         Category::create($validatedData);
 
         // Redirect to a page 
-        return redirect()->route('categories.create')->with('success', 'Category created successfully!');
+        return redirect()->route('categories.index')->with('success', 'Category created successfully!');
     }
 
     public function edit(Category $category)
@@ -51,7 +55,7 @@ class CategoryController extends Controller
         $category->update($validatedData);
 
         // Redirect with success message
-        return redirect()->route('categories.create')->with('success', 'Category updated successfully!');
+        return redirect()->route('categories.index')->with('success', 'Category updated successfully!');
     }
 
     public function destroy(Category $category)
@@ -62,6 +66,6 @@ class CategoryController extends Controller
         $category->delete();
 
         // Redirect with success message
-        return redirect()->route('categories.create')->with('success', 'Category deleted successfully!');
+        return redirect()->route('categories.index')->with('success', 'Category deleted successfully!');
     }
 }

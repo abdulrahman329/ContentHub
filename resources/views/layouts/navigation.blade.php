@@ -32,8 +32,8 @@
 
                     <!-- Category Creation Link (visible only for admin) -->
                     @can('create', App\Models\Category::class)
-                    <x-nav-link :href="route('categories.create')" :active="request()->routeIs('categories.create')">
-                        {{ __('Category create') }}
+                    <x-nav-link :href="route('categories.index')" :active="request()->routeIs('categories.index')">
+                        {{ __('Categories') }}
                     </x-nav-link>
                     @endcan
 

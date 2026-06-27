@@ -28,6 +28,8 @@ class StoreCommentRequest extends FormRequest
             'commentable_id' => ['required', 'integer'],
 
             'commentable_type' => ['required', 'string'],
+            
+            'parent_id' => ['nullable', 'exists:comments,id'],
         ];
     }
 }

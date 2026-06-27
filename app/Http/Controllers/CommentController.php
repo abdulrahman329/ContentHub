@@ -26,6 +26,7 @@ class CommentController extends Controller
         $post->comments()->create([
             'content' => $validated['content'],
             'user_id' => Auth::id(),
+            'parent_id' => $request->parent_id, 
         ]);
 
         return back()->with('success', 'Comment added!');

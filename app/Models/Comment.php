@@ -18,6 +18,7 @@ class Comment extends Model
         'commentable_type',
         'edited_at',
         'edited_by',
+        'parent_id',
     ];
     protected $casts = [
         'edited_at' => 'datetime',
@@ -55,16 +56,20 @@ class Comment extends Model
             );
     }
 
+    public function repliesRecursive()
+    {
+        return $this->replies()->with('repliesRecursive');
+    }
+
+    public function editor()
+    {
+        return $this->belongsTo(User::class, 'edited_by')->withTrashed();
+    }
 
     // Define relationships
     public function user()
     {
         return $this->belongsTo(User::class)->withTrashed();
-    }
-
-    public function editor()
-    {
-        return $this->belongsTo(User::class, 'edited_by');
     }
 
     public function likes()
@@ -75,6 +80,16 @@ class Comment extends Model
     public function commentable()
     {
         return $this->morphTo();
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(Comment::class, 'parent_id');
+    }
+
+    public function replies()
+    {
+        return $this->hasMany(Comment::class, 'parent_id')->latest();
     }
 }
 

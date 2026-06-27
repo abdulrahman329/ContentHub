@@ -89,9 +89,13 @@ class PostController extends Controller
         ]);
 
         $comments = $post->comments()
+        ->whereNull('parent_id')
         ->with([
-            'user' => fn ($q) => $q->withTrashed(),     
-            'likes'
+            'user',
+            'editor',
+            'likes',
+            'repliesRecursive.user',
+            'repliesRecursive.likes'
         ])
         ->withCount('likes')
         ->latest()

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->softDeletes()->index();
             $table->timestamps();
             $table->foreignId('edited_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('parent_id')->nullable()->constrained('comments')->cascadeOnDelete();
             $table->timestamp('edited_at')->nullable();
         });
     }

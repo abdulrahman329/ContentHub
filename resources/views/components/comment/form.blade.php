@@ -1,6 +1,7 @@
 @props([
     'comment' => null,
-    'parentId'
+    'commentableId',
+    'parentCommentId' => null
 ])
 
 @php
@@ -25,8 +26,11 @@
         @method('PUT')
     @endif
 
-    <input type="hidden" name="commentable_id" value="{{ $parentId }}">
     <input type="hidden" name="commentable_type" value="post">
+
+    <input type="hidden" name="commentable_id" value="{{ $commentableId }}">
+
+    <input type="hidden" name="parent_id" value="{{ $parentCommentId }}">
 
     {{-- INPUT --}}
     <textarea

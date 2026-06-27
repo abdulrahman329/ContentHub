@@ -9,7 +9,7 @@
     <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 py-8">
 
         {{-- LEFT / MAIN CONTENT --}}
-        <div class="lg:col-span-8 space-y-8">
+        <div class="lg:col-span-7 space-y-8">
 
             {{-- POST CARD --}}
             <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl p-8 shadow-sm dark:shadow-none transition">
@@ -102,7 +102,7 @@
         </div>
 
         {{-- RIGHT / COMMENTS --}}
-        <div class="lg:col-span-4">
+        <div class="lg:col-span-5">
             <div class="sticky top-24 space-y-6">
 
                 {{-- COMMENTS HEADER --}}
@@ -123,7 +123,7 @@
                 @can('create', App\Models\Comment::class)
                     @auth
                         <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm">
-                            <x-comment.form :parentId="$post->id" />
+                            <x-comment.form :commentableId="$post->id" />
                             @error('content')
                                 <p class="text-red-500 text-xs mt-2">
                                     {{ $message }}
@@ -136,116 +136,7 @@
                 {{-- COMMENTS LIST --}}
                 <div class="space-y-4 max-h-[700px] overflow-y-auto pr-2">
                     @forelse($comments as $comment)
-                        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 shadow-sm transition">
-
-                            {{-- HEADER --}}
-                            <div class="flex items-start gap-3">
-
-                                <img
-                                    src="{{ $comment->user?->image_url }}"
-                                    class="w-9 h-9 rounded-full object-cover border border-gray-300 dark:border-gray-700">
-
-                                <div class="flex-1">
-
-                                    {{-- NAME + BADGE --}}
-                                    <div class="flex items-center gap-2">
-
-                                        <p class="text-sm font-semibold text-gray-900 dark:text-white">
-                                            {{ $comment->user?->name ?? 'Deleted User' }}                                        
-                                        </p>
-
-                                        @if($comment->user_id === $post->user_id)
-                                            <span class="text-[10px] px-2 py-0.5 rounded bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300">
-                                                Author
-                                            </span>
-                                        @endif
-
-                                    </div>
-
-                                    {{-- TIME + EDIT INFO --}}
-                                    <div class="text-xs text-gray-500 mt-0.5 space-x-1">
-
-                                        <span>{{ $comment->created_at->diffForHumans() }}</span>
-
-                                        @if($comment->edited_at)
-                                            <span>•</span>
-                                            <span class="text-amber-500">
-                                                edited
-                                                @if($comment->edited_by && $comment->edited_by !== $comment->user_id)
-                                                    by {{ $comment->editor?->name }}
-                                                @endif
-                                            </span>
-                                        @endif
-
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            {{-- CONTENT --}}
-                            <div id="view-{{ $comment->id }}"
-                                class="mt-3 text-sm text-gray-700 dark:text-gray-300 break-words leading-relaxed">
-
-                                {{ $comment->content }}
-
-                                {{-- LIKE --}}
-                                <div class="mt-3 flex items-center gap-2">
-                                    <x-ui.buttons.variants 
-                                    onclick="toggleLike('comment', {{ $comment->id }}, this)"
-                                    variant="like">
-                                        <span>
-                                            {{ $comment->isLikedBy(auth()->user()) ? '❤️' : '🤍' }}
-                                        </span>                     
-                                    </x-ui.buttons.variants>
-
-                                    <span
-                                        id="like-count-comment-{{ $comment->id }}"
-                                        class="text-xs text-gray-500"
-                                    >
-                                        {{ $comment->likes_count }}
-                                    </span>
-                                        {{-- NEW: Author liked badge --}}
-                                        <span  
-                                            id="author-badge-comment-{{ $comment->id }}"
-                                            class="ml-2 text-[10px] px-2 py-0.5 rounded-full
-                                                bg-blue-100 text-blue-600
-                                                dark:bg-blue-900 dark:text-blue-300
-                                                {{ $comment->author_liked ? '' : 'hidden' }}">
-                                            Author liked
-                                        </span>
-                                </div>
-                            </div>
-
-                            {{-- EDIT MODE --}}
-                            <div id="edit-{{ $comment->id }}" class="hidden mt-3">
-                                <x-comment.form :comment="$comment" :parentId="$post->id"/>
-                            </div>
-
-                            {{-- ACTIONS --}}
-                            <div class="flex gap-4 mt-3 pt-3 border-t border-gray-100 dark:border-gray-800 text-xs">
-
-                                @can('update', $comment)
-                                <x-ui.buttons.variants
-                                    variant="warning"
-                                        type="button"
-                                        class="text-yellow-500 hover:underline"
-                                        onclick="toggleEdit({{ $comment->id }})">
-                                        Edit
-                                </x-ui.buttons.variants>
-                                @endcan
-                                @can('delete', $comment)
-                                <x-ui.buttons.actions.form
-                                    action="{{ route('comments.destroy', $comment->id) }}"
-                                    method="DELETE">
-                                        <x-ui.buttons.variants variant="danger">
-                                            Delete
-                                        </x-ui.buttons.variants>
-                                </x-ui.buttons.actions.form>
-                                @endcan
-
-                            </div>
-            
-                        </div>
+                        <x-comment.card :comment="$comment" :post="$post" />
 
                     @empty
                         <div class="bg-white dark:bg-gray-900 border border-dashed border-gray-300 dark:border-gray-700 rounded-2xl p-8 text-center">

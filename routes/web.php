@@ -48,18 +48,10 @@ require __DIR__.'/auth.php';
 Route::middleware(['auth', 'role:super_admin|admin'])->group(function () {
     
     // ------- Category Management -------
-    Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
-    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
-    Route::get('/categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
-    Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
-    Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+    Route::resource('categories', CategoryController::class)->except(['show']);
 
     // ------- User Management -------
-    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
-    Route::post('/users', [UserController::class, 'store'])->name('users.store');
-    Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
-    Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
-    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::resource('users', UserController::class)->except(['show']);
 
     // ------- Users trash -------
     Route::get('/users/trash', [UserController::class, 'trash'])->name('users.trash');
@@ -74,17 +66,14 @@ Route::middleware(['auth', 'role:super_admin|admin'])->group(function () {
 
 Route::middleware(['auth', 'role:super_admin|admin|writer'])->group(function () {
 
-    // ------- Post Management -------
-    Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
-    Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
-    Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
-    Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
-    Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
-
+    
     // ------- Posts trash -------
     Route::get('/posts/trash', [PostController::class, 'trash'])->name('posts.trash');
     Route::post('/posts/{id}/restore', [PostController::class, 'restore'])->name('posts.restore');
     Route::delete('/posts/{id}/forcedelete', [PostController::class, 'forceDelete'])->name('posts.forceDelete');
+
+    // ------- Post Management -------
+    Route::resource('posts', PostController::class);
 
 });
 
@@ -94,17 +83,16 @@ Route::middleware(['auth', 'role:super_admin|admin|writer'])->group(function () 
 
 Route::middleware(['auth', 'role:super_admin|admin|writer|user'])->group(function () {
 
-    // ------- Comment Management -------
-    Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
-    Route::get('/comments/{comment}/edit', [CommentController::class, 'edit'])->name('comments.edit');
-    Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');    
-    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+    // // ------- Comment Management -------
+    // Route::resource('comments', CommentController::class)->except(['show', 'index', 'create', 'edit']); same as below but i will kep it for clarity
+    Route::resource('comments', CommentController::class)->only(['store','update','destroy']);
 
     // ------- Comments trash -------
     Route::get('/comments/trash', [CommentController::class, 'trash'])->name('comments.trash');
     Route::post('/comments/{id}/restore', [CommentController::class, 'restore'])->name('comments.restore');
     Route::delete('/comments/{id}/forcedelete', [CommentController::class, 'forceDelete'])->name('comments.forceDelete');
     
+    // ------- Public Like Toggle -------
     Route::post('/likes/toggle', [LikeController::class, 'toggle'])->name('likes.toggle');
 
     // ------- Public Viewable Posts -------

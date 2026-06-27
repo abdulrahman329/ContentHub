@@ -40,13 +40,27 @@ class LikeController extends Controller
             $liked = true;
         }
 
+        $authorLiked = false;
+
+        if ($type === 'post') {
+
+            $authorLiked = $model->likes()
+                ->where('user_id', $model->user_id)
+                ->exists();
+
+        } else {
+
+            $postAuthorId = $model->commentable->user_id;
+
+            $authorLiked = $model->likes()
+                ->where('user_id', $postAuthorId)
+                ->exists();
+        }
+
         return response()->json([
             'liked' => $liked,
             'likes_count' => $model->likes()->count(),
-
-            'author_liked' => $model->likes()
-                ->where('user_id', $model->user_id)
-                ->exists(),
+            'author_liked' => $authorLiked,
         ]);
     }
 }

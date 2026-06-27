@@ -37,6 +37,20 @@ class Comment extends Model
             $model->likes()->delete();
         });
     }
+
+    public function getAuthorLikedAttribute(): bool
+    {
+        // Get the author ID of the post or commentable entity
+        $postAuthorId = $this->commentable?->user_id;
+
+        if (!$postAuthorId) {
+            return false;
+        }
+
+        return $this->likes
+            ->contains('user_id', $postAuthorId);
+    }
+
     public function isLikedBy(?User $user): bool
     {
         if (!$user) return false;

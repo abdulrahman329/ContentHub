@@ -1,11 +1,8 @@
 window.theme = function () {
-
     return {
-
         isDark: true,
 
         init() {
-
             this.isDark = localStorage.getItem('theme')
                 ? localStorage.getItem('theme') === 'dark'
                 : true;
@@ -14,7 +11,6 @@ window.theme = function () {
         },
 
         toggleTheme() {
-
             this.isDark = !this.isDark;
 
             localStorage.setItem(
@@ -26,11 +22,10 @@ window.theme = function () {
         },
 
         apply() {
-
             document.documentElement.classList.toggle(
                 'dark',
                 this.isDark
             );
         }
-    }
-}
+    };
+};

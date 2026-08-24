@@ -29,7 +29,7 @@
 
                 {{-- TYPE --}}
                 <select name="type"
-                    class="px-4 py  -2 rounded-xl border transition
+                    class="px-4 py-2 rounded-xl border transition
 
                     bg-gray-50 border-gray-300 text-gray-800
                     focus:border-blue-500 focus:ring-blue-500

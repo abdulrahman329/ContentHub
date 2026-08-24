@@ -21,9 +21,10 @@ $classes = match($variant) {
         dark:text-green-400 dark:hover:text-green-300
     ',
 
-    'comment' => 'shrink-0 px-3 py-1 text-xs rounded
-               bg-blue-600 hover:bg-blue-700
-               text-white transition',
+    'comment' => 
+        'shrink-0 px-3 py-1 text-xs rounded
+        bg-blue-600 hover:bg-blue-700
+        text-white transition',
 
     'create' => ' 
         px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-200
@@ -144,7 +145,7 @@ $classes = match($variant) {
 
 @if($href)
     <a href="{{ $href }}"
-       {{ $attributes->merge(['class' => $classes]) }}>
+        {{ $attributes->merge(['class' => $classes]) }}>
         {{ $slot }}
     </a>
 @else

@@ -18,11 +18,11 @@
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900 relative">
             <!-- Theme Toggle Button -->
             <button
-                x-data="{ isDark: document.documentElement.classList.contains('dark') }"
+                x-data="theme()"
+                x-init="init()"
                 @click="
-                    toggleDarkMode();
-                    isDark = !isDark;
-                "
+                    toggleTheme();
+                    "
                 class="fixed top-8 right-8 group flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium
                 bg-gray-100 dark:bg-gray-900
                 text-gray-700 dark:text-gray-200

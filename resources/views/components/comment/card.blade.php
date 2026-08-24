@@ -62,7 +62,7 @@
                 <span class="text-amber-500">
                     edited
                     @if($comment->edited_by && $comment->edited_by !== $comment->user_id)
-                       by {{ $comment->editor?->name }}
+                        by {{ $comment->editor?->name }}
                     @endif
                 </span>
             @endif
@@ -130,13 +130,11 @@ class="hidden mt-3">
 
 @if($comment->replies->count())
     <div class="ml-8 mt-4 space-y-3 border-l border-gray-200 pl-4">
-
         @foreach($comment->replies as $reply)
             <x-comment.card
                 :comment="$reply"
                 :post="$post"
             />
         @endforeach
-
     </div>
 @endif

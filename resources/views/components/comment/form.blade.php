@@ -16,9 +16,9 @@
     :method="$isEdit ? 'PUT' : 'POST'"
 
     class="flex items-center gap-2
-           bg-white dark:bg-gray-900
-           border border-gray-300 dark:border-gray-800
-           rounded-md p-2 transition">
+        bg-white dark:bg-gray-900
+        border border-gray-300 dark:border-gray-800
+        rounded-md p-2 transition">
 
     @csrf
 
@@ -38,14 +38,14 @@
         rows="1"
         placeholder="Write a comment..."
         class="flex-1 px-2 py-1
-               bg-transparent
-               text-gray-800 dark:text-gray-200
-               placeholder-gray-500 dark:placeholder-gray-400
-               text-sm resize-none focus:outline-none"
+            bg-transparent
+            text-gray-800 dark:text-gray-200
+            placeholder-gray-500 dark:placeholder-gray-400
+            text-sm resize-none focus:outline-none"
         required>{{ old('content', $comment->content ?? '') }}</textarea>
 
     {{-- BUTTON --}}
-     <x-ui.buttons.variants
+    <x-ui.buttons.variants
         :variant="$isEdit ? 'comment' : 'comment'">
         {{ $isEdit ? 'Update' : 'Send' }}
     </x-ui.buttons.variants>

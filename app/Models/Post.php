@@ -40,6 +40,7 @@ class Post extends Model
         return $this->user?->image_url
             ?? asset('storage/' . User::DEFAULT_IMAGE);
     } 
+
     protected static function booted()
     {
         static::deleting(function ($model) {

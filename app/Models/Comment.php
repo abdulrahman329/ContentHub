@@ -25,12 +25,13 @@ class Comment extends Model
     ];
 
     protected $withCount = ['likes'];
-     
+    
     public function getUserImageUrlAttribute(): string
     {
         return $this->user?->image_url
             ?? asset('storage/' . User::DEFAULT_IMAGE);
     }
+
     protected static function booted()
     {
         static::deleting(function ($model) {

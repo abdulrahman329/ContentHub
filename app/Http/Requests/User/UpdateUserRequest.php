@@ -29,7 +29,7 @@ class UpdateUserRequest extends FormRequest
 
             'password' => ['nullable', 'string', 'min:8',],
 
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
 
             'role' => ['required', 'exists:roles,name', 'not_in:super_admin'],
 

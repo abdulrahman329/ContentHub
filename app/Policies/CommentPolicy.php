@@ -65,7 +65,7 @@ class CommentPolicy
         return $user->id === $comment->user_id || $user->hasRole('admin') || $user->hasRole('super_admin');
     }
 
-     public function viewTrash(User $user): bool
+    public function ViewTrash(User $user): bool
     {
         return true;
     }

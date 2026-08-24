@@ -32,7 +32,7 @@ class StorePostRequest extends FormRequest
 
             'type' => ['required', Rule::in(Post::types())], // Ensure the type is one of the allowed values defined in the Post model
             
-            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],  // Optional image upload with validation
+            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],  // Optional image upload with validation
         ];
     }
 }

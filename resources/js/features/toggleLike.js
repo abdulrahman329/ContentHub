@@ -18,7 +18,7 @@ export async function toggleLike(type, id, btn) {
     const data = await response.json();
 
     // styel for likes
-    btn.innerText = data.liked ? '❤️' : '🤍';
+    btn.querySelector('span').innerText = data.liked ? '❤️' : '🤍';
 
     // count of likes
     const counter = document.getElementById(`like-count-${type}-${id}`);

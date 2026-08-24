@@ -21,13 +21,12 @@ class UserController extends Controller
     public function index()
     {
          // Get the latest users with their roles, paginated to show 5 users per page
-         $users = User::with('roles')->latest()->paginate(5);
+        $users = User::with('roles')->latest()->paginate(5);
 
          // Get the count of soft-deleted users to display in the view
-         $trashedCount = User::onlyTrashed()->count();
- 
+        $trashedCount = User::onlyTrashed()->count();
          // Return the view with users and roles to show the user creation form
-         return view('user.index', compact('users', 'trashedCount'));
+        return view('user.index', compact('users', 'trashedCount'));
     }
     // Show the User creation form
     public function create()

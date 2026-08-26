@@ -43,8 +43,23 @@ class Post extends Model
 
     protected static function booted()
     {
-        static::deleting(function ($model) {
-            $model->likes()->delete();
+        static::deleting(function ($post) {
+            if ($post->isForceDeleting()) {
+                // real delete: take everything down with it, including already-trashed comments
+                $post->comments()->withTrashed()->get()->each(fn ($comment) => $comment->forceDelete());
+                $post->likes()->delete();
+            } else {
+                // soft delete: only trash comments that are currently active
+                $post->comments()->get()->each(fn ($comment) => $comment->delete());
+            }
+        });
+
+        static::restoring(function ($post) {
+            $post->comments()
+                ->onlyTrashed()
+                ->where('deleted_at', $post->deleted_at)   // only comments deleted at the SAME moment as the post
+                ->get()
+                ->each(fn ($comment) => $comment->restore());
         });
     }
 

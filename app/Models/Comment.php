@@ -34,8 +34,11 @@ class Comment extends Model
 
     protected static function booted()
     {
-        static::deleting(function ($model) {
-            $model->likes()->delete();
+        static::deleting(function ($comment) {
+            if ($comment->isForceDeleting()) {
+                $comment->replies()->withTrashed()->get()->each(fn ($r) => $r->forceDelete());
+                $comment->likes()->delete(); 
+            }
         });
     }
 
@@ -66,7 +69,7 @@ class Comment extends Model
     {
         return $query->onlyTrashed()
             ->when(
-                !auth()->user()->hasRole('admin'),
+                !auth()->user()->hasRole('admin') && !auth()->user()->hasRole('super_admin'),
                 fn ($q) => $q->where('user_id', auth()->id())
             );
     }

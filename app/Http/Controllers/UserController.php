@@ -73,6 +73,7 @@ class UserController extends Controller
     // Update the User details
     public function update(UpdateUserRequest $request, User $user)
     {
+        $this->authorize('changeRole', $user);
 
         $validated = $request->validated();
 
@@ -88,7 +89,6 @@ class UserController extends Controller
             unset($validated['password']);
         }
 
-        $this->authorize('changeRole', $user);
 
         $user->update($validated);
         
@@ -137,10 +137,12 @@ class UserController extends Controller
 
         $this->authorize('forceDelete', $user);
 
-        deleteImage($user->getRawOriginal('image'));
+        $imagepath = $user->getRawOriginal('image');
 
-        $user->forceDelete();
-
+        $user->forceDelete();  
+        
+        deleteImage($imagepath);
+    
         return back()->with('success', 'User permanently deleted!');
     }
 }

@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Like;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\Post\StorePostRequest;
 use App\Http\Requests\Post\UpdatePostRequest;
 
@@ -28,7 +29,7 @@ class PostController extends Controller
         ->latest();
 
         if ($request->filled('type')) {
-            $query->type($request->type);
+            $query->Type($request->type);
         }
         
         if ($request->filled('category_id')) {
@@ -131,13 +132,14 @@ class PostController extends Controller
             
             // Store the new image and update the validated data with the new image path
             $validatedData['image'] = storeImage($request->file('image'));
+            
+            $post->update($validatedData);  // if this throws, we stop here —
+                // old file is still intact, nothing broken
+                deleteImage($oldImage);    // only reached if the update succeeded
+            } else {
+                $post->update($validatedData);
+            }
         
-            // Delete the old image from storage if it exists
-            deleteImage($oldImage);
-        }
-
-        $post->update($validatedData);
-
         return redirect()->route('posts.index', ['type' => $post->type]);
     }
 
@@ -188,8 +190,15 @@ class PostController extends Controller
 
         $this->authorize('forceDelete', $post);
 
-        deleteImage($post->getRawOriginal('image'));
+        // Get the original image path before deleting the post
+        $imagepath = $post->getRawOriginal('image');
+
+        // Permanently delete the post from the database
         $post->forceDelete();
+
+        // Delete the associated image file from storage
+        deleteImage($imagepath);
+
 
         return back()->with('success', 'Post deleted permanently!');
     }

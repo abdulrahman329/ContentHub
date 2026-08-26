@@ -71,11 +71,6 @@ class Comment extends Model
             );
     }
 
-    public function repliesRecursive()
-    {
-        return $this->replies()->with('repliesRecursive');
-    }
-
     public function editor()
     {
         return $this->belongsTo(User::class, 'edited_by')->withTrashed();

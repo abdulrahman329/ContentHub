@@ -23,10 +23,20 @@ class CommentController extends Controller
 
         $post = Post::findOrFail($validated['commentable_id']);
 
+        $parentId = null;
+        
+        if ($request->parent_id) {
+            $repliedTo = Comment::findOrFail($request->parent_id);
+    
+            // If the comment being replied to is ALREADY a reply,
+            // use its parent instead — this is what caps depth at 1.
+            $parentId = $repliedTo->parent_id ?? $repliedTo->id;
+        }
+        
         $post->comments()->create([
             'content' => $validated['content'],
             'user_id' => Auth::id(),
-            'parent_id' => $request->parent_id, 
+            'parent_id' => $parentId, // parentId if you want to cap depth at 1, otherwise just use $request->parent_id
         ]);
 
         return back()->with('success', 'Comment added!');

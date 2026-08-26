@@ -94,8 +94,8 @@ class PostController extends Controller
             'user',
             'editor',
             'likes',
-            'repliesRecursive.user',
-            'repliesRecursive.likes'
+            'replies.user', 
+            'replies.likes' 
         ])
         ->withCount('likes')
         ->latest()
@@ -125,10 +125,10 @@ class PostController extends Controller
 
         // Check if a new image file was uploaded with the request and handle the image update 
         if ($request->hasFile('image')) {
-
+        
             // Store the new image and get the path
             $oldImage = $post->getRawOriginal('image');
-        
+            
             // Store the new image and update the validated data with the new image path
             $validatedData['image'] = storeImage($request->file('image'));
         

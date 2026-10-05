@@ -28,6 +28,10 @@ class PostController extends Controller
         ->withCommentCount()
         ->latest();
 
+        if ($request->filled('search')) {
+            $query->search($request->search);
+        }
+
         if ($request->filled('type')) {
             $query->Type($request->type);
         }

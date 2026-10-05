@@ -21,11 +21,20 @@
 
         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
 
-            {{-- FILTERS FORM --}}
-            <x-ui.buttons.actions.form
-                action="{{ route('posts.index')}}"
-                method="GET"
-                class="flex flex-col sm:flex-row gap-3 flex-1">
+                <x-ui.buttons.actions.form
+    action="{{ route('posts.index')}}"
+    method="GET"
+    class="flex flex-col sm:flex-row gap-3 flex-1">
+
+    {{-- SEARCH --}}
+    <input type="text"
+        name="search"
+        value="{{ request('search') }}"
+        placeholder="Search posts..."
+        class="px-4 py-2 rounded-xl border transition
+        bg-gray-50 border-gray-300 text-gray-800
+        focus:border-blue-500 focus:ring-blue-500
+        dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200">
 
                 {{-- TYPE --}}
                 <select name="type"
@@ -96,6 +105,7 @@
                     </x-ui.buttons.actions.link>
                 @endcan
 
+                @can('viewTrash', App\Models\Post::class)
                 {{-- TRASH --}}
                 <x-ui.buttons.actions.link
                     href="{{ route('posts.trash') }}">
@@ -103,6 +113,7 @@
                         🗑 {{ $trashedCount }}
                     </x-ui.buttons.variants>
                 </x-ui.buttons.actions.link>
+                @endcan
             </div>
         </div>
     </div>

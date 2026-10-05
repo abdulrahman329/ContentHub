@@ -108,6 +108,13 @@ class Post extends Model
         return $query->where('category_id', $category_id);
     }
 
+    public function scopeSearch($query, $term)
+{
+    return $query->where(function ($q) use ($term) {
+        $q->where('title', 'like', "%{$term}%")
+            ->orWhere('content', 'like', "%{$term}%");
+    });
+}
 
     // Method to count trashed posts
     public static function trashedCount()
